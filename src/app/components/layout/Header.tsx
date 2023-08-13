@@ -1,14 +1,10 @@
-import * as React from "react";
-
-interface IHeaderProps {
+interface HeaderProps {
   title: string;
   description: string;
   category?: string;
 }
 
-const Header: React.FunctionComponent<IHeaderProps> = (props) => {
-  const { title, description, category } = props;
-
+const Header = ({ title, description, category }: HeaderProps) => {
   return (
     <div className="bg-gray-100 border-b border-gray-300 p-5">
       {category && <h2 className="uppercase text-sm mb-5">{category}</h2>}
