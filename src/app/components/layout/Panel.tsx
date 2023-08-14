@@ -22,7 +22,7 @@ const Panel = () => {
   return (
     <div
       data-component="Panel"
-      className="bg-primary-blue sm:w-48 w-full sm:h-full flex flex-col"
+      className="bg-primary-blue sm:w-48 w-full flex flex-col"
     >
       <TopBar handleClick={toggleMenuVisibility} />
       <Banner />
