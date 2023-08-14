@@ -1,12 +1,17 @@
 import { Icon, Button } from "semantic-ui-react";
 
-interface TopBarProps {}
+interface TopBarProps {
+  handleClick: () => void;
+}
 
-const TopBar = ({}: TopBarProps) => {
+const TopBar = ({ handleClick }: TopBarProps) => {
   return (
-    <div className="bg-green-100 flex px-6 py-2.5 justify-between items-center sm:hidden">
-      <h1 className="text-lg m-0">Data Lab Sandbox</h1>
-      <Button icon size="small" onClick={() => console.log("toggle menu")}>
+    <div
+      data-component="TopBar"
+      className="bg-primary-blue flex px-6 h-16 justify-between items-center sm:hidden border-b border-[#32324b]"
+    >
+      <h1 className="text-lg m-0 text-white">Data Lab Sandbox</h1>
+      <Button icon size="small" onClick={handleClick}>
         <Icon name="bars" />
       </Button>
     </div>

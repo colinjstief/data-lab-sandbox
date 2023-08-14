@@ -7,7 +7,7 @@ interface BannerProps {}
 
 const Banner = ({}: BannerProps) => {
   return (
-    <Link href="/">
+    <Link data-component="Banner" href="/" className="hidden sm:block">
       <div className="p-6 text-center cursor-pointer hover:cursor-pointer">
         <h1 className="text-lg capitalize text-white mb-5">Data Lab sandbox</h1>
         <Image

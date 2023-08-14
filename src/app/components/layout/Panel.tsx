@@ -4,16 +4,29 @@ import TopBar from "@/app/components/layout/TopBar";
 import Banner from "@/app/components/other/Banner";
 import Navigation from "@/app/components/layout/Navigation";
 
+import { useState } from "react";
+
 interface PanelProps {}
 
 const Panel = () => {
+  const [menuVisible, setMenuVisible] = useState<boolean>(false);
+
+  const toggleMenuVisibility = () => {
+    if (menuVisible) {
+      setMenuVisible(false);
+    } else {
+      setMenuVisible(true);
+    }
+  };
+
   return (
-    <div className="bg-primary-blue sm:w-48 w-full sm:h-full">
-      <TopBar />
-      <div>
-        <Banner />
-        {/* <Navigation /> */}
-      </div>
+    <div
+      data-component="Panel"
+      className="bg-primary-blue sm:w-48 w-full sm:h-full flex flex-col"
+    >
+      <TopBar handleClick={toggleMenuVisibility} />
+      <Banner />
+      <Navigation menuVisible={menuVisible} />
     </div>
   );
 };
