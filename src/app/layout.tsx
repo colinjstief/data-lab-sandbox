@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="min-h-screen">
       <body
-        className={`${roboto.className} min-h-screen bg-purple-100 h-auto flex flex-1 flex-col sm:flex-row`}
+        className={`${roboto.className} min-h-screen h-auto flex flex-1 flex-col sm:flex-row`}
       >
         <Panel />
         {children}
