@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${roboto.className} bg-purple-100 flex flex-1 h-full flex-col sm:flex-row`}
+        className={`${roboto.className} flex flex-1 h-full flex-col sm:flex-row`}
       >
         <Panel />
         {children}
