@@ -26,9 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="min-h-screen">
       <body
-        className={`${roboto.className} flex flex-1 h-full flex-col sm:flex-row`}
+        className={`${roboto.className} min-h-screen bg-purple-100 h-auto flex flex-1 flex-col sm:flex-row`}
       >
         <Panel />
         {children}
