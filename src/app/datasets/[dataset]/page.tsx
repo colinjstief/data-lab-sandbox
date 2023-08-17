@@ -1,6 +1,6 @@
 import Header from "@/app/components/layout/Header";
 
-export default function Dataset({ params }: { params: { dataset: string } }) {
+const Dataset = ({ params }: { params: { dataset: string } }) => {
   const { dataset } = params;
 
   return (
@@ -8,4 +8,6 @@ export default function Dataset({ params }: { params: { dataset: string } }) {
       <Header title={`Dataset: ${dataset}`} description="Something specific" />
     </main>
   );
-}
+};
+
+export default Dataset;

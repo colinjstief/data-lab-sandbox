@@ -1,6 +1,6 @@
 import Header from "./components/layout/Header";
 
-export default function Home() {
+const Home = () => {
   return (
     <main className="flex flex-col flex-1 overflow-auto">
       <Header
@@ -9,4 +9,6 @@ export default function Home() {
       />
     </main>
   );
-}
+};
+
+export default Home;
