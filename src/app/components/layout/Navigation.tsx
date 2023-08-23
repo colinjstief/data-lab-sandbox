@@ -1,6 +1,8 @@
-import Link from "next/link";
+import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+
+import Link from "next/link";
 
 interface NavigationProps {
   menuVisible: boolean;
@@ -26,24 +28,44 @@ const Navigation = ({ menuVisible }: NavigationProps) => {
   return (
     <nav data-component="Navigation" className={styles}>
       {pages.map((page) => {
-        if (page.protected && status !== "authenticated") {
+        if (page.hide === "when-unauth" && status !== "authenticated") {
           return null;
         }
 
-        if (page.label.toLowerCase() === section) {
+        if (page.hide === "when-auth" && status === "authenticated") {
+          return null;
+        }
+
+        if (page.label.toLowerCase().replaceAll(" ", "") === section) {
           return (
-            <Link key={page.id} href={page.location} className="text-white">
-              <u>{page.label}</u>
+            <Link
+              key={page.id}
+              href={page.location}
+              className="text-white hover:text-white"
+            >
+              <b>{page.label}</b>
             </Link>
           );
         } else {
           return (
-            <Link key={page.id} href={page.location} className="text-white">
+            <Link
+              key={page.id}
+              href={page.location}
+              className="text-white hover:text-white"
+            >
               {page.label}
             </Link>
           );
         }
       })}
+      {status === "authenticated" && (
+        <button
+          className="text-white hover:text-white text-left"
+          onClick={() => signOut()}
+        >
+          Sign out
+        </button>
+      )}
     </nav>
   );
 };
@@ -55,18 +77,24 @@ const pages = [
     id: 1,
     label: "Home",
     location: "/",
-    protected: false,
+    hide: "no",
   },
   {
     id: 2,
     label: "Datasets",
     location: "/datasets",
-    protected: false,
+    hide: "no",
   },
   {
     id: 3,
+    label: "Sign in",
+    location: "/signin",
+    hide: "when-auth",
+  },
+  {
+    id: 4,
     label: "Profile",
     location: "/profile",
-    protected: true,
+    hide: "when-unauth",
   },
 ];

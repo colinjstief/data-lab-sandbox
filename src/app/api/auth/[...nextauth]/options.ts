@@ -19,27 +19,25 @@ export const options: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         if (credentials) {
-          try {
-            const params = new URLSearchParams();
-            params.append("username", credentials.email);
-            params.append("password", credentials.password);
+          const params = new URLSearchParams();
+          params.append("username", credentials.email);
+          params.append("password", credentials.password);
 
-            const res = await fetch(
-              "https://data-api.globalforestwatch.org/auth/token",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: params,
-              }
-            );
-            const user = await res.json();
-            if (res.ok && user) {
-              return user;
+          const res = await fetch(
+            "https://data-api.globalforestwatch.org/auth/token",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: params,
             }
-            return null;
-          } catch (error) {
+          );
+          const user = await res.json();
+
+          if (res.ok && user.status !== "failed") {
+            return user;
+          } else {
             return null;
           }
         } else {
@@ -48,4 +46,7 @@ export const options: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/signin",
+  },
 };
