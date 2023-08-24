@@ -117,7 +117,6 @@ const Signin = () => {
         as="a"
         color="google plus"
         href={`https://api.resourcewatch.org/auth/google?token=true&callbackUrl=${currentUrl}/profile`}
-        target="_blank"
       >
         <Icon name="google" /> Google
       </Button>
@@ -125,7 +124,6 @@ const Signin = () => {
         as="a"
         color="facebook"
         href={`https://api.resourcewatch.org/auth/facebook?token=true&callbackUrl=${currentUrl}/profile`}
-        target="_blank"
       >
         <Icon name="facebook" /> Facebook
       </Button>
