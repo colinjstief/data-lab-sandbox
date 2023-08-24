@@ -8,10 +8,13 @@ import { signIn } from "next-auth/react";
 
 import { signinSchema } from "@/lib/schema";
 import { SignInData } from "@/lib/types";
+import getUrl from "@/lib/getUrl";
 
 import { Button, Icon, Form, Message, Divider } from "semantic-ui-react";
 
 const Signin = () => {
+  console.log("NEXTAUTH_URL =>", process.env.NEXTAUTH_URL);
+
   const router = useRouter();
 
   const [async, setAsync] = useState({
@@ -111,7 +114,9 @@ const Signin = () => {
       <Button
         as="a"
         color="google plus"
-        href="https://api.resourcewatch.org/auth/google?token=true&callbackUrl=http://localhost:3000/profile"
+        href={`https://api.resourcewatch.org/auth/google?token=true&callbackUrl=${getUrl(
+          ""
+        )}profile`}
         target="_blank"
       >
         <Icon name="google" /> Google
@@ -119,7 +124,9 @@ const Signin = () => {
       <Button
         as="a"
         color="facebook"
-        href="https://api.resourcewatch.org/auth/facebook?token=true&callbackUrl=http://localhost:3000/profile"
+        href={`https://api.resourcewatch.org/auth/facebook?token=true&callbackUrl=${getUrl(
+          ""
+        )}profile`}
         target="_blank"
       >
         <Icon name="facebook" /> Facebook
