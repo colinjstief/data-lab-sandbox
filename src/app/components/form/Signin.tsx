@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,13 +8,11 @@ import { signIn } from "next-auth/react";
 
 import { signinSchema } from "@/lib/schema";
 import { SignInData } from "@/lib/types";
-import getUrl from "@/lib/getUrl";
 
 import { Button, Icon, Form, Message, Divider } from "semantic-ui-react";
 
 const Signin = () => {
-  console.log("NEXTAUTH_URL =>", process.env.NEXTAUTH_URL);
-
+  const [currentUrl, setCurrentUrl] = useState<string | null>(null);
   const router = useRouter();
 
   const [async, setAsync] = useState({
@@ -41,6 +39,10 @@ const Signin = () => {
   //     ...
   //   }
   // }
+
+  useEffect(() => {
+    setCurrentUrl(window.location.origin);
+  }, []);
 
   const onSubmit = async (data: SignInData) => {
     setAsync({
@@ -114,9 +116,7 @@ const Signin = () => {
       <Button
         as="a"
         color="google plus"
-        href={`https://api.resourcewatch.org/auth/google?token=true&callbackUrl=${getUrl(
-          ""
-        )}profile`}
+        href={`https://api.resourcewatch.org/auth/google?token=true&callbackUrl=${currentUrl}/profile`}
         target="_blank"
       >
         <Icon name="google" /> Google
@@ -124,9 +124,7 @@ const Signin = () => {
       <Button
         as="a"
         color="facebook"
-        href={`https://api.resourcewatch.org/auth/facebook?token=true&callbackUrl=${getUrl(
-          ""
-        )}profile`}
+        href={`https://api.resourcewatch.org/auth/facebook?token=true&callbackUrl=${currentUrl}/profile`}
         target="_blank"
       >
         <Icon name="facebook" /> Facebook
