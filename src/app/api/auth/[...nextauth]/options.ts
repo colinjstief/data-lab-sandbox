@@ -16,29 +16,65 @@ export const options: NextAuthOptions = {
           type: "password",
           placeholder: "",
         },
+        token: {
+          label: "Token: ",
+          type: "token",
+          placeholder: "",
+        },
       },
       async authorize(credentials, req) {
+        console.log("credential =>");
+
         if (credentials) {
-          const params = new URLSearchParams();
-          params.append("username", credentials.email);
-          params.append("password", credentials.password);
+          if (credentials.token) {
+            console.log("token here =>", credentials.token);
+            const res = await fetch(
+              "https://api.resourcewatch.org/auth/user/me",
+              {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${credentials.token}`,
+                },
+              }
+            );
+            const user = await res.json();
+            console.log("user (after /auth/user/me call) =>", user);
 
-          const res = await fetch(
-            "https://data-api.globalforestwatch.org/auth/token",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-              body: params,
+            if (res.ok && user.status !== "failed") {
+              return {
+                data: {
+                  access_token: credentials.token,
+                  token_type: "bearer",
+                },
+                status: "success",
+              };
+            } else {
+              return null;
             }
-          );
-          const user = await res.json();
-
-          if (res.ok && user.status !== "failed") {
-            return user;
           } else {
-            return null;
+            const params = new URLSearchParams();
+            params.append("username", credentials.email);
+            params.append("password", credentials.password);
+
+            const res = await fetch(
+              "https://data-api.globalforestwatch.org/auth/token",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: params,
+              }
+            );
+            const user = await res.json();
+
+            console.log("user (after /auth/toekn call) =>", user);
+
+            if (res.ok && user.status !== "failed") {
+              return user;
+            } else {
+              return null;
+            }
           }
         } else {
           return null;

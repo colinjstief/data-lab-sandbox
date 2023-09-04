@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 
@@ -13,7 +13,10 @@ import { Button, Icon, Form, Message, Divider } from "semantic-ui-react";
 
 const Signin = () => {
   const [currentUrl, setCurrentUrl] = useState<string | null>(null);
+
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const rwToken = searchParams.get("token");
 
   const [async, setAsync] = useState({
     status: "",
@@ -40,9 +43,34 @@ const Signin = () => {
   //   }
   // }
 
-  useEffect(() => {
-    setCurrentUrl(window.location.origin);
-  }, []);
+  const tryToken = async (data: any) => {
+    setAsync({
+      status: "Loading",
+      message: "",
+      loading: true,
+    });
+    const user = await signIn("credentials", {
+      email: "",
+      password: "",
+      token: data.rwToken,
+      redirect: false,
+    });
+
+    if (user && !user.error) {
+      setAsync({
+        status: "Success",
+        message: "Login complete",
+        loading: false,
+      });
+      router.push("/profile");
+    } else {
+      setAsync({
+        status: "Error",
+        message: "Could not sign in, check your credentials.",
+        loading: false,
+      });
+    }
+  };
 
   const onSubmit = async (data: SignInData) => {
     setAsync({
@@ -71,6 +99,16 @@ const Signin = () => {
       });
     }
   };
+
+  useEffect(() => {
+    setCurrentUrl(window.location.origin);
+  }, []);
+
+  useEffect(() => {
+    if (rwToken) {
+      tryToken({ rwToken });
+    }
+  }, []);
 
   return (
     <div className="p-5 mx-auto">
@@ -116,14 +154,14 @@ const Signin = () => {
       <Button
         as="a"
         color="google plus"
-        href={`https://api.resourcewatch.org/auth/google?token=true&callbackUrl=${currentUrl}/profile`}
+        href={`https://api.resourcewatch.org/auth/google?token=true&callbackUrl=${currentUrl}/signin`}
       >
         <Icon name="google" /> Google
       </Button>
       <Button
         as="a"
         color="facebook"
-        href={`https://api.resourcewatch.org/auth/facebook?token=true&callbackUrl=${currentUrl}/profile`}
+        href={`https://api.resourcewatch.org/auth/facebook?token=true&callbackUrl=${currentUrl}/signin`}
       >
         <Icon name="facebook" /> Facebook
       </Button>
