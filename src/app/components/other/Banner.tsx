@@ -16,6 +16,7 @@ const Banner = ({}: BannerProps) => {
           width={200}
           alt="Illustration of doughnut people"
           className="w-48 m-auto"
+          priority
         />
       </div>
     </Link>
