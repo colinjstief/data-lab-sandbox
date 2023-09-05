@@ -27,4 +27,9 @@ export default async function middleware(
   if (req.nextUrl.pathname.startsWith("/signin") && isAuthenticated) {
     return NextResponse.redirect(new URL("/profile", req.url));
   }
+
+  // Restrict access to logged in users
+  if (req.nextUrl.pathname.startsWith("/profile") && !isAuthenticated) {
+    return NextResponse.redirect(new URL("/signin", req.url));
+  }
 }
