@@ -5,6 +5,12 @@ import Header from "@/app/components/layout/Header";
 
 interface ProfileProps {}
 
+const colors = {
+  "primary-blue": "bg-primary-blue",
+  "primary-green": "bg-primary-green",
+  "primary-salmon": "bg-primary-salmon",
+};
+
 const getData = async (token: string) => {
   const res = await fetch("https://api.resourcewatch.org/v2/user", {
     headers: {
@@ -68,7 +74,14 @@ const Profile = async (props: ProfileProps) => {
                   } else {
                     valueFormatted = value.map((tag: any, index: any) => {
                       return (
-                        <span key={index} className="p-2 mr-4">
+                        <span
+                          key={index}
+                          className={`p-2 mr-2 mb-2 rounded-md text-white text-sm ${
+                            Object.values(colors)[
+                              index % Object.values(colors).length
+                            ]
+                          }`}
+                        >
                           {tag}
                         </span>
                       );
@@ -82,7 +95,7 @@ const Profile = async (props: ProfileProps) => {
 
               return (
                 <div key={index} className="py-2 mr-10 mb-6">
-                  <h4 className="font-bold">{property}</h4>
+                  <h4 className="font-bold mb-2">{property}</h4>
                   <div className="flex flex-wrap">{valueFormatted}</div>
                 </div>
               );
@@ -98,7 +111,7 @@ const Profile = async (props: ProfileProps) => {
   return (
     <main className="flex flex-col flex-1 overflow-auto">
       <Header title="Profile" description="Your MyGFW profile" />
-      <div className="flex flex-col bg-white shadow-md border border-gray-300 rounded m-5">
+      <div className="flex flex-col shadow-md border border-gray-300 rounded m-5">
         {rwData}
         {gfwData}
       </div>
