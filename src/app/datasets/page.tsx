@@ -7,6 +7,14 @@ const Datasets = () => {
         title="Datasets"
         description="All that the GFW Data API has to offer"
       />
+      <div className="p-5 mx-auto">
+        {/* <PaginatedTable
+          api={"gfw"}
+          dataUrl={dataUrl}
+          defaultSize={5}
+          fields={fields}
+        /> */}
+      </div>
     </main>
   );
 };

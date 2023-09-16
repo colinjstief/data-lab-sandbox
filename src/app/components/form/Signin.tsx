@@ -111,7 +111,7 @@ const Signin = () => {
   }, []);
 
   return (
-    <div className="p-5 mx-auto">
+    <div>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Field error={!!errors.email}>
           <label>Email</label>

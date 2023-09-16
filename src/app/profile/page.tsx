@@ -40,21 +40,21 @@ const Profile = async (props: ProfileProps) => {
       <div className="p-5 border-b border-gray-300">
         <h2 className="font-bold uppercase mb-2">Resource Watch API</h2>
         <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
-          <h3 className="italic mb-2 pl-2 pr-5">Role</h3>
+          <h3 className="italic mb-2 pr-5">Role</h3>
           <div className="flex flex-wrap justify-end">{data.data.type}</div>
         </div>
         <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
-          <h3 className="italic mb-2 pl-2 pr-5">ID</h3>
+          <h3 className="italic mb-2 pr-5">ID</h3>
           <div className="flex flex-wrap justify-end">{data.data.id}</div>
         </div>
         <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
-          <h3 className="italic mb-2 pl-2 pr-5">Email</h3>
+          <h3 className="italic mb-2 pr-5">Email</h3>
           <div className="flex flex-wrap justify-end">
             {data.data.attributes.email}
           </div>
         </div>
         <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
-          <h3 className="italic mb-2 pl-2 pr-5">Created on</h3>
+          <h3 className="italic mb-2 pr-5">Created on</h3>
           <div className="flex flex-wrap justify-end">
             {data.data.attributes.createdAt}
           </div>
@@ -92,7 +92,7 @@ const Profile = async (props: ProfileProps) => {
                       return (
                         <span
                           key={index}
-                          className={`p-2 mr-2 mb-2 rounded-md text-white text-sm ${
+                          className={`p-2 ml-2 mb-2 rounded-md text-white text-sm ${
                             Object.values(colors)[
                               index % Object.values(colors).length
                             ]
@@ -114,7 +114,7 @@ const Profile = async (props: ProfileProps) => {
                   key={index}
                   className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between"
                 >
-                  <h3 className="italic mb-2 pl-2 pr-5">{property}</h3>
+                  <h3 className="italic mb-2 pr-5">{property}</h3>
                   <div className="flex flex-wrap justify-end">
                     {valueFormatted}
                   </div>

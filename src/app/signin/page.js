@@ -6,7 +6,9 @@ const SignInPage = () => {
   return (
     <main className="flex flex-col flex-1 overflow-auto">
       <Header title="Sign in" description="Access your stuff" />
-      <Signin />
+      <div className="p-5 mx-auto">
+        <Signin />
+      </div>
     </main>
   );
 };
