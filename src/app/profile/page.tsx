@@ -38,10 +38,26 @@ const Profile = async (props: ProfileProps) => {
   if (data?.data) {
     rwData = (
       <div className="p-5 border-b border-gray-300">
-        <h2 className="font-bold uppercase">Resource Watch API</h2>
-        <div className="py-2">
-          <h3>Role</h3>
-          <p>{data.data.type}</p>
+        <h2 className="font-bold uppercase mb-2">Resource Watch API</h2>
+        <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
+          <h3 className="italic mb-2 pl-2 pr-5">Role</h3>
+          <div className="flex flex-wrap justify-end">{data.data.type}</div>
+        </div>
+        <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
+          <h3 className="italic mb-2 pl-2 pr-5">ID</h3>
+          <div className="flex flex-wrap justify-end">{data.data.id}</div>
+        </div>
+        <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
+          <h3 className="italic mb-2 pl-2 pr-5">Email</h3>
+          <div className="flex flex-wrap justify-end">
+            {data.data.attributes.email}
+          </div>
+        </div>
+        <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
+          <h3 className="italic mb-2 pl-2 pr-5">Created on</h3>
+          <div className="flex flex-wrap justify-end">
+            {data.data.attributes.createdAt}
+          </div>
         </div>
       </div>
     );
@@ -53,8 +69,8 @@ const Profile = async (props: ProfileProps) => {
   if (data?.data?.attributes?.applicationData?.gfw) {
     gfwData = (
       <div className="p-5">
-        <h2 className="font-bold uppercase">MyGFW Profile</h2>
-        <div className="flex flex-wrap">
+        <h2 className="font-bold uppercase mb-2">MyGFW Profile</h2>
+        <div>
           {Object.entries(data.data.attributes.applicationData.gfw).map(
             ([property, value]: any, index) => {
               let valueFormatted;
@@ -94,9 +110,14 @@ const Profile = async (props: ProfileProps) => {
               }
 
               return (
-                <div key={index} className="py-2 mr-10 mb-6">
-                  <h4 className="font-bold mb-2">{property}</h4>
-                  <div className="flex flex-wrap">{valueFormatted}</div>
+                <div
+                  key={index}
+                  className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between"
+                >
+                  <h3 className="italic mb-2 pl-2 pr-5">{property}</h3>
+                  <div className="flex flex-wrap justify-end">
+                    {valueFormatted}
+                  </div>
                 </div>
               );
             }
