@@ -12,6 +12,7 @@ const colors = {
 };
 
 const getData = async (token: string) => {
+  console.log("apiURL =>", apiURL);
   const res = await fetch(`${apiURL}/v2/user`, {
     headers: {
       Authorization: `Bearer ${token}`,
