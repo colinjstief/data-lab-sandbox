@@ -4,9 +4,9 @@ import "semantic-ui-css/semantic.min.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 
-import AuthProvider from "./context/AuthProvider";
-
-import Panel from "./components/layout/Panel";
+import AuthProvider from "@/app/context/AuthProvider";
+import Panel from "@/app/components/layout/Panel";
+import Header from "@/app/components/layout/Header";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -31,7 +31,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       >
         <AuthProvider>
           <Panel />
-          {children}
+          <main className="flex flex-col flex-1 overflow-auto">
+            <Header />
+            <div className="p-5">{children}</div>
+          </main>
         </AuthProvider>
       </body>
     </html>

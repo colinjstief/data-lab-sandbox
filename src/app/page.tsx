@@ -1,14 +1,7 @@
 import Header from "./components/layout/Header";
 
 const Home = () => {
-  return (
-    <main className="flex flex-col flex-1 overflow-auto">
-      <Header
-        title="Welcome!"
-        description="This is a place to try out the cool things the Data Lab APIs offer."
-      />
-    </main>
-  );
+  return <p>Home page</p>;
 };
 
 export default Home;

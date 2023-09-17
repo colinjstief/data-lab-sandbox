@@ -111,7 +111,7 @@ const Signin = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Field error={!!errors.email}>
           <label>Email</label>
@@ -165,7 +165,7 @@ const Signin = () => {
       >
         <Icon name="facebook" /> Facebook
       </Button>
-    </div>
+    </>
   );
 };
 
