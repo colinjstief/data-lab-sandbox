@@ -6,7 +6,7 @@ const DatasetTable = async ({}: DatasetTableProps) => {
 
   return (
     <div className="bg-gray-100 border-b border-gray-300 p-5">
-      <p>datasets</p>
+      <p>Datasets</p>
     </div>
   );
 };
