@@ -1,9 +1,7 @@
-import Header from "@/app/components/layout/Header";
+interface DatasetProps {}
 
-const Dataset = ({ params }: { params: { dataset: string } }) => {
-  const { dataset } = params;
-
-  return <p>Datset here</p>;
+const Dataset = (props: DatasetProps) => {
+  return <p>Dataset</p>;
 };
 
 export default Dataset;

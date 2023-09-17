@@ -8,7 +8,7 @@ import Navigation from "@/app/components/layout/Navigation";
 
 interface PanelProps {}
 
-const Panel = () => {
+const Panel = ({}: PanelProps) => {
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   const toggleMenuVisibility = () => {
@@ -26,7 +26,7 @@ const Panel = () => {
     >
       <TopBar handleClick={toggleMenuVisibility} />
       <Banner />
-      <Navigation menuVisible={menuVisible} />
+      <Navigation menuVisible={menuVisible} hideMenu={toggleMenuVisibility} />
     </div>
   );
 };

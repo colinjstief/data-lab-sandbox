@@ -5,7 +5,7 @@ import doughnuts from "@/../public/doughnuts.svg";
 
 interface BannerProps {}
 
-const Banner = ({}: BannerProps) => {
+const Banner = (props: BannerProps) => {
   return (
     <Link data-component="Banner" href="/" className="hidden sm:block">
       <div className="p-6 text-center cursor-pointer hover:cursor-pointer">

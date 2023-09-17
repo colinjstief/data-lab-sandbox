@@ -8,9 +8,10 @@ import Link from "next/link";
 
 interface NavigationProps {
   menuVisible: boolean;
+  hideMenu: () => void;
 }
 
-const Navigation = ({ menuVisible }: NavigationProps) => {
+const Navigation = ({ menuVisible, hideMenu }: NavigationProps) => {
   const { data: session, status } = useSession();
 
   const pathname = usePathname();
@@ -44,6 +45,7 @@ const Navigation = ({ menuVisible }: NavigationProps) => {
               key={page.id}
               href={page.location}
               className="text-white hover:text-white"
+              onClick={() => hideMenu()}
             >
               <b>{page.label}</b>
             </Link>
@@ -54,6 +56,7 @@ const Navigation = ({ menuVisible }: NavigationProps) => {
               key={page.id}
               href={page.location}
               className="text-white hover:text-white"
+              onClick={() => hideMenu()}
             >
               {page.label}
             </Link>
