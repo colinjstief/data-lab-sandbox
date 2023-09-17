@@ -11,7 +11,7 @@ import { SignInData } from "@/lib/types";
 
 import { Button, Icon, Form, Message, Divider } from "semantic-ui-react";
 
-const Signin = () => {
+const SigninForm = () => {
   const [currentUrl, setCurrentUrl] = useState<string | null>(null);
 
   const router = useRouter();
@@ -169,4 +169,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default SigninForm;

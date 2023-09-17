@@ -1,7 +1,7 @@
 import React from "react";
-import Signin from "../components/form/Signin";
+import Signin from "../components/form/SigninForm";
 
-const SignInPage = () => {
+const SignIn = () => {
   return (
     <div className="text-center">
       <div className="inline-block mx-auto">
@@ -11,4 +11,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default SignIn;
