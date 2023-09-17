@@ -1,8 +1,15 @@
 import { z } from "zod";
 
-import { signinSchema } from "@/lib/schema";
+/////////////////
+//// CUSTOM /////
+/////////////////
 
+import { signinSchema } from "@/lib/schema";
 export type SignInData = z.infer<typeof signinSchema>;
+
+////////////////////
+//// NEXT AUTH /////
+////////////////////
 
 import { DefaultSession, DefaultUser } from "next-auth";
 import { JWT, DefaultJWT } from "next-auth/jwt";
@@ -35,4 +42,67 @@ declare module "next-auth/jwt" {
     role: string;
     createdAt: Date;
   }
+}
+
+///////////////////////
+//// GFW DATA API /////
+///////////////////////
+
+interface RWAPIGFWProfile {
+  sector: string;
+  state: string;
+  city: string;
+  howDoYouUse: string[];
+  primaryResponsibilities: string[];
+  signUpForTesting: boolean;
+  language: string;
+  profileComplete: boolean;
+  interests: string[];
+  signUpToNewsletter: boolean;
+  topics: string[];
+}
+
+export interface RWAPIUser {
+  data: {
+    type: string;
+    id: string;
+    attributes: {
+      fullName: string;
+      email: string;
+      createdAt: string;
+      applicationData: {
+        gfw: RWAPIGFWProfile;
+      };
+    };
+  };
+}
+
+///////////////////////
+//// GFW DATA API /////
+///////////////////////
+
+export interface GFWAPIDataset {
+  created_on: string;
+  updated_on: string;
+  dataset: string;
+  is_downloadable: boolean;
+  metadata: any;
+  versions: string[] | null;
+}
+
+export interface GFWAPIDatasets {
+  data: GFWAPIDataset[];
+  status: string;
+  links: {
+    self: string;
+    first: string;
+    last: string;
+    prev: string;
+    next: string;
+  };
+  meta: {
+    size: number;
+    total_items: number;
+    total_pages: number;
+  };
 }

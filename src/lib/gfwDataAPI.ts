@@ -1,3 +1,5 @@
+import { GFWAPIDatasets } from "@/lib/types";
+
 const apiURL = process.env.GFW_DATA_API_URL;
 const apiKey = process.env.GFW_DATA_API_KEY;
 
@@ -9,8 +11,13 @@ export const getDatasets = async ({
   link?: string;
   pageSize?: number;
   pageNumber?: number;
-}) => {
-  const res = await fetch(`${apiURL}/datasets`);
+}): Promise<GFWAPIDatasets> => {
+  const params = new URLSearchParams({
+    "page[size]": String(pageSize),
+    "page[number]": String(pageNumber),
+  });
+
+  const res = await fetch(`${apiURL}/datasets?${params}`);
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
@@ -18,11 +25,4 @@ export const getDatasets = async ({
   }
 
   return res.json();
-
-  // const response = await axios.get(dataUrl, {
-  //     params: {
-  //     "page[size]": pageSize,
-  //     "page[number]": destination?.page || activePage,
-  //     },
-  // });
 };
