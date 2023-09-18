@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
+
 import { getDatasets } from "@/lib/gfwDataAPI";
 
-import DatasetTable from "@/app/components/collections/DatasetTable";
-import { wait } from "@/lib/utils";
+import Datasets from "@/app/components/collections/Datasets";
 
-const Datasets = async ({
+const DatasetsPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -22,21 +22,19 @@ const Datasets = async ({
       ? Number(searchParams.pageNumber)
       : 1;
 
-  await wait(2000);
-
   const data = await getDatasets({
     pageSize,
     pageNumber,
   });
 
-  console.log("data =>", data);
-
   return (
     <div>
       <h1>GFW Data API Datasets</h1>
-      <DatasetTable />
+      <div className="my-5">
+        <Datasets data={data} />
+      </div>
     </div>
   );
 };
 
-export default Datasets;
+export default DatasetsPage;
