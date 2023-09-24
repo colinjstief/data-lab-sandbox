@@ -90,19 +90,23 @@ export interface GFWAPIDataset {
   versions: string[] | null;
 }
 
+export interface GFWAPILinks {
+  self: string;
+  first: string;
+  last: string;
+  prev: string;
+  next: string;
+}
+
+export interface GFWAPIMeta {
+  size: number;
+  total_items: number;
+  total_pages: number;
+}
+
 export interface GFWAPIDatasets {
   data: GFWAPIDataset[];
   status: string;
-  links: {
-    self: string;
-    first: string;
-    last: string;
-    prev: string;
-    next: string;
-  };
-  meta: {
-    size: number;
-    total_items: number;
-    total_pages: number;
-  };
+  links: GFWAPILinks;
+  meta: GFWAPIMeta;
 }

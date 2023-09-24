@@ -25,7 +25,6 @@ const DatasetsPage = async ({
 
   return (
     <div key={Math.random()}>
-      <h1>GFW Data API Datasets</h1>
       <Suspense fallback={<LoadingScreen stack={1} />}>
         <Datasets pageSize={pageSize} pageNumber={pageNumber} />
       </Suspense>

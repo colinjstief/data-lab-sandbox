@@ -7,19 +7,22 @@ interface HeaderProps {}
 const pages = {
   signin: {
     title: "Sign in",
+    category: "",
     description: "Acces your stuff",
   },
   profile: {
     title: "Profile",
+    category: "",
     description: "Your information",
   },
   datasets: {
     title: "Datasets",
+    category: "",
     description: "All the GFW Data API has to offer",
   },
 };
 
-const Header = (props: HeaderProps) => {
+const Header = ({}: HeaderProps) => {
   const pathname = usePathname();
   const section = pathname.split("/")[1];
 
@@ -30,13 +33,14 @@ const Header = (props: HeaderProps) => {
 
   if (section in pages) {
     title = pages[section as keyof typeof pages].title;
+    category = pages[section as keyof typeof pages].category;
     description = pages[section as keyof typeof pages].description;
   }
 
   return (
     <div className="bg-gray-100 border-b border-gray-300 p-5">
       {category && <h2 className="uppercase text-sm mb-5">{category}</h2>}
-      <h1 className="mb-1 text-lg font-semibold">{title}</h1>
+      <h1 className="mb-1 text-3xl font-semibold">{title}</h1>
       <p>{description}</p>
     </div>
   );
