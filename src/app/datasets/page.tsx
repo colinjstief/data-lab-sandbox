@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 
-import { getDatasets } from "@/lib/gfwDataAPI";
+import { Suspense } from "react";
 
 import Datasets from "@/app/components/collections/Datasets";
+import LoadingScreen from "@/app/components/other/LoadingScreen";
 
 const DatasetsPage = async ({
   searchParams,
@@ -22,17 +23,12 @@ const DatasetsPage = async ({
       ? Number(searchParams.pageNumber)
       : 1;
 
-  const data = await getDatasets({
-    pageSize,
-    pageNumber,
-  });
-
   return (
-    <div>
+    <div key={Math.random()}>
       <h1>GFW Data API Datasets</h1>
-      <div className="my-5">
-        <Datasets data={data} />
-      </div>
+      <Suspense fallback={<LoadingScreen stack={1} />}>
+        <Datasets pageSize={pageSize} pageNumber={pageNumber} />
+      </Suspense>
     </div>
   );
 };
