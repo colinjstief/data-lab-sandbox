@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { getDatasets } from "@/lib/gfwDataAPI";
 
 import PageSizePicker from "@/app/components/other/PageSizePicker";
@@ -20,21 +22,31 @@ const Datasets = async ({
   const meta = data?.meta;
 
   return (
-    <>
-      <div className="mb-5">
+    <table className="w-full">
+      <thead className="mb-5 flex justify-between">
+        <Pagination links={links} meta={meta} />
+        <PageSizePicker pageSize={pageSize} />
+      </thead>
+      <tbody className="">
         {datasets?.map((dataset) => {
-          return <li key={dataset.dataset}>{dataset.dataset}</li>;
+          return (
+            <tr key={dataset.dataset} className="border-b py-2">
+              <td>{dataset.dataset}</td>
+              <td>{dataset.created_on.split("T")[0]}</td>
+              <td>{dataset.metadata?.title}</td>
+              <td>
+                <Link
+                  href={`/datasets/${dataset.dataset}`}
+                  className="rounded border bg-gray-200 py-2 px-4 mr-2 text-sm text-gray-800"
+                >
+                  Details
+                </Link>
+              </td>
+            </tr>
+          );
         })}
-      </div>
-      <div className="flex justify-between">
-        <div>
-          <PageSizePicker pageSize={pageSize} />
-        </div>
-        <div>
-          <Pagination links={links} meta={meta} />
-        </div>
-      </div>
-    </>
+      </tbody>
+    </table>
   );
 };
 

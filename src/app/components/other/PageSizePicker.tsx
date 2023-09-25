@@ -20,12 +20,12 @@ const PageSizePicker = ({ pageSize }: PageSizePickerProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [pageSize_, setPageSize] = useState<number>(pageSize);
+  const [pageSizeState, setPageSizeState] = useState<number>(pageSize);
 
   const handleChange = (e: SyntheticEvent) => {
     const newPageSize = (e.target as HTMLInputElement).textContent as string;
 
-    setPageSize(parseInt(newPageSize));
+    setPageSizeState(parseInt(newPageSize));
 
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     current.set("pageNumber", "1");
@@ -40,7 +40,8 @@ const PageSizePicker = ({ pageSize }: PageSizePickerProps) => {
     <Select
       options={pageSizeOptions}
       onChange={(e) => handleChange(e)}
-      value={pageSize_}
+      value={pageSizeState}
+      className="self-start min-w-fit"
     />
   );
 };

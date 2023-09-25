@@ -81,12 +81,34 @@ export interface RWAPIUser {
 //// GFW DATA API /////
 ///////////////////////
 
+export interface GFWAPIMetadata {
+  created_on: string;
+  updated_on: string;
+  resolution: string;
+  geographic_coverage: string;
+  update_frequency: string;
+  scale: string;
+  citation: string;
+  title: string;
+  source: string;
+  license: string;
+  data_language: string;
+  overview: string;
+  function: string;
+  cautions: string;
+  key_restrictions: string;
+  tags: string;
+  why_added: string;
+  learn_more: string;
+  id: string;
+}
+
 export interface GFWAPIDataset {
   created_on: string;
   updated_on: string;
   dataset: string;
   is_downloadable: boolean;
-  metadata: any;
+  metadata: GFWAPIMetadata;
   versions: string[] | null;
 }
 
