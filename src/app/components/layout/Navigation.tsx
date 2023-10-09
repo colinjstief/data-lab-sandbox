@@ -87,7 +87,7 @@ const pages = [
   {
     id: 2,
     label: "Datasets",
-    location: "/datasets?pageSize=5&pageNumber=1",
+    location: "/datasets?pageSize=10&pageNumber=1",
     hide: "no",
   },
   {

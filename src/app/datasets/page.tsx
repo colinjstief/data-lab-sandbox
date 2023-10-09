@@ -11,13 +11,13 @@ const DatasetsPage = async ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   if (!searchParams?.pageSize || !searchParams?.pageNumber) {
-    redirect("/datasets?pageSize=5&pageNumber=1");
+    redirect("/datasets?pageSize=10&pageNumber=1");
   }
 
   const pageSize =
     typeof searchParams.pageSize === "string"
       ? Number(searchParams.pageSize)
-      : 5;
+      : 10;
   const pageNumber =
     typeof searchParams.pageNumber === "string"
       ? Number(searchParams.pageNumber)

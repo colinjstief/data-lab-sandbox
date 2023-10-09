@@ -3,7 +3,7 @@ import { GFWAPIDatasets } from "@/lib/types";
 const apiURL = process.env.GFW_DATA_API_URL;
 
 export const getDatasets = async ({
-  pageSize = 5,
+  pageSize = 10,
   pageNumber = 1,
 }: {
   pageSize?: number;
