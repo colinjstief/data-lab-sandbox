@@ -35,6 +35,7 @@ const Datasets = async ({
       </thead>
       <tbody className="">
         {datasets?.map((dataset) => {
+          console.log("dataset =>", dataset);
           return (
             <tr key={dataset.dataset} className="border-b py-2">
               <td className="p-3 max-w-[300px] break-all">{dataset.dataset}</td>
