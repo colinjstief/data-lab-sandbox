@@ -1,7 +1,8 @@
-interface DatasetProps {}
+import { GFWAPIDataset } from "@/lib/types";
 
-const Dataset = (props: DatasetProps) => {
-  return <p>Dataset</p>;
+const Dataset = ({ params }: { params: { dataset: string } }) => {
+  console.log("params =>", params);
+  return <p>{params.dataset}</p>;
 };
 
 export default Dataset;
