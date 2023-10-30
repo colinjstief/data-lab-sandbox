@@ -5,7 +5,7 @@ import { getDatasets } from "@/lib/gfwDataAPI";
 import PageSizePicker from "@/app/components/other/PageSizePicker";
 import Pagination from "@/app/components/other/Pagination";
 
-const Datasets = async ({
+const DatasetTable = async ({
   pageSize,
   pageNumber,
 }: {
@@ -22,29 +22,32 @@ const Datasets = async ({
   const meta = data?.meta;
 
   return (
-    <table className="w-full">
+    <table className="w-full shadow-md border border-gray-300 rounded">
       <thead>
-        <tr>
-          <th colSpan={3} className="pb-6">
+        <tr className="text-center">
+          <th colSpan={3} className="px-5 py-4">
             <Pagination links={links} meta={meta} />
           </th>
-          <th colSpan={1} className="pb-6">
+          <th colSpan={1} className="px-5 py-4">
             <PageSizePicker pageSize={pageSize} />
           </th>
         </tr>
       </thead>
       <tbody className="">
         {datasets?.map((dataset) => {
-          console.log("dataset =>", dataset);
           return (
             <tr key={dataset.dataset} className="border-b py-2">
-              <td className="p-3 max-w-[300px] break-all">{dataset.dataset}</td>
-              <td className="p-3">{dataset.created_on.split("T")[0]}</td>
-              <td className="p-3 max-w-[300px]">{dataset.metadata?.title}</td>
-              <td className="p-3">
+              <td className="px-5 py-2 max-w-[300px] break-all">
+                {dataset.dataset}
+              </td>
+              <td className="px-5 py-2">{dataset.created_on.split("T")[0]}</td>
+              <td className="px-5 py-2 max-w-[300px]">
+                {dataset.metadata?.title}
+              </td>
+              <td className="px-5 py-2">
                 <Link
                   href={`/datasets/${dataset.dataset}`}
-                  className="rounded border bg-gray-200 py-2 px-4 mr-2 text-sm text-gray-800"
+                  className="rounded border bg-gray-200 py-1 px-4 mr-2 text-sm text-gray-800"
                 >
                   Details
                 </Link>
@@ -57,4 +60,4 @@ const Datasets = async ({
   );
 };
 
-export default Datasets;
+export default DatasetTable;

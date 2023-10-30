@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { Suspense } from "react";
 
-import Datasets from "@/app/components/collections/Datasets";
+import DatasetTable from "@/app/components/collections/DatasetTable";
 import LoadingScreen from "@/app/components/other/LoadingScreen";
 
 const DatasetsPage = async ({
@@ -26,7 +26,7 @@ const DatasetsPage = async ({
   return (
     <div key={Math.random()}>
       <Suspense fallback={<LoadingScreen stack={1} />}>
-        <Datasets pageSize={pageSize} pageNumber={pageNumber} />
+        <DatasetTable pageSize={pageSize} pageNumber={pageNumber} />
       </Suspense>
     </div>
   );

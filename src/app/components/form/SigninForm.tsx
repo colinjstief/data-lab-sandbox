@@ -6,8 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 
-import { signinSchema } from "@/lib/schema";
-import { SignInData } from "@/lib/types";
+import { signinSchema, SignInData } from "@/lib/types";
 
 import { Button, Icon, Form, Message, Divider } from "semantic-ui-react";
 

@@ -15,6 +15,11 @@ const pages = {
     category: "",
     description: "Your information",
   },
+  keys: {
+    title: "API Keys",
+    category: "",
+    description: "Manage your API keys",
+  },
   datasets: {
     title: "Datasets",
     category: "",

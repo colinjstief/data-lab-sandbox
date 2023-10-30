@@ -4,7 +4,13 @@ import { z } from "zod";
 //// CUSTOM /////
 /////////////////
 
-import { signinSchema } from "@/lib/schema";
+export const signinSchema = z.object({
+  email: z
+    .string()
+    .nonempty("Email required")
+    .email("Please enter a valid email"),
+  password: z.string().nonempty("Password required"),
+});
 export type SignInData = z.infer<typeof signinSchema>;
 
 ////////////////////
@@ -131,4 +137,50 @@ export interface GFWAPIDatasets {
   status: string;
   links: GFWAPILinks;
   meta: GFWAPIMeta;
+}
+
+export interface GFWAPIKey {
+  created_on: string;
+  updated_on: string;
+  alias: string;
+  user_id: string;
+  api_key: string;
+  organization: string;
+  email: string;
+  domains: string[];
+  expires_on: string;
+}
+
+export interface GFWAPIKeys {
+  data: GFWAPIKey[];
+  status: string;
+}
+
+// const domainPattern: RegExp = /^(\*\.)?([\w-]+\.)+[\w-]+$|^(localhost)$/;
+// const domainSchema = z.string().refine((value) => domainPattern.test(value), {
+//   message: "Invalid domain format",
+// });
+export const GFWAPICreateKeyFormSchema = z.object({
+  alias: z.string().nonempty("Name required"),
+  organization: z.string().nonempty("Organization required"),
+  email: z
+    .string()
+    .nonempty("Email required")
+    .email("Please enter a valid email"),
+  domains: z.string().optional().default("[]"),
+  neverExpires: z.boolean().optional(),
+});
+export type GFWAPICreateKeyForm = z.infer<typeof GFWAPICreateKeyFormSchema>;
+
+export interface GFWAPICreateKey {
+  alias: string;
+  organization: string;
+  email: string;
+  domains?: string[] | [];
+  neverExpires?: boolean;
+}
+
+export interface GFWAPINewKey {
+  data: GFWAPIKey;
+  status: string;
 }

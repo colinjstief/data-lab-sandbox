@@ -86,20 +86,26 @@ const pages = [
   },
   {
     id: 2,
-    label: "Datasets",
-    location: "/datasets?pageSize=10&pageNumber=1",
-    hide: "no",
-  },
-  {
-    id: 3,
     label: "Sign in",
     location: "/signin",
     hide: "when-auth",
   },
   {
-    id: 4,
+    id: 3,
     label: "Profile",
     location: "/profile",
     hide: "when-unauth",
+  },
+  {
+    id: 4,
+    label: "API Keys",
+    location: "/keys",
+    hide: "when-unauth",
+  },
+  {
+    id: 5,
+    label: "Datasets",
+    location: "/datasets?pageSize=10&pageNumber=1",
+    hide: "no",
   },
 ];
