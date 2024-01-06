@@ -12,7 +12,6 @@ const Dataset = async ({
   const { dataset } = params;
 
   const data = await getDataset({ dataset });
-  console.log("data =>", data);
 
   return (
     <div className="flex flex-col shadow-md border border-gray-300 rounded">
@@ -26,7 +25,10 @@ const Dataset = async ({
         </div>
         {Object.entries(data.metadata).map(([key, value]) => {
           return (
-            <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
+            <div
+              key={key}
+              className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between"
+            >
               <h3 className="italic mb-2 pr-5">{key}</h3>
               <div className="flex flex-wrap">{value}</div>
             </div>
@@ -36,6 +38,14 @@ const Dataset = async ({
           <h3 className="italic mb-2 pr-5">Is downloadable?</h3>
           <div className="flex flex-wrap justify-end">
             {data.is_downloadable ? "Yes" : "No"}
+          </div>
+        </div>
+        <div className="py-2 mr-10 mb-2 flex border-b border-gray-200 justify-between">
+          <h3 className="italic mb-2 pr-5">Versions</h3>
+          <div className="justify-end">
+            {data.versions?.map((version) => {
+              return <div key={version}>{version}</div>;
+            })}
           </div>
         </div>
       </div>

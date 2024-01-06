@@ -87,13 +87,14 @@ export const createKey = async (
     throw new Error("Not authenticated");
   }
 
-  // console.log("session.user.rwToken =>", session.user.rwToken);
-  // console.log("keyDetails =>", keyDetails);
+  console.log("session.user.rwToken =>", session.user.rwToken);
+  console.log("keyDetails =>", keyDetails);
 
   const res = await fetch(`${apiURL}/auth/apikey`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${session.user.rwToken}`,
+      "Content-type": "application/json",
     },
     body: JSON.stringify({
       alias: keyDetails.alias,
@@ -105,7 +106,8 @@ export const createKey = async (
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    const errorMessage = await res.text();
+    throw new Error(`Failed to create key. Error: ${errorMessage}`);
   }
 
   return res.json();
