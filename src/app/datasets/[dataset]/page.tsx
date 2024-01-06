@@ -1,14 +1,10 @@
 import { getDataset } from "@/lib/gfwDataAPI";
 
-interface DatasetProps {}
-
-const Dataset = async ({
-  props,
-  params,
-}: {
-  props: DatasetProps;
+interface DatasetProps {
   params: { dataset: string };
-}) => {
+}
+
+const Dataset = async ({ params }: DatasetProps) => {
   const { dataset } = params;
 
   const data = await getDataset({ dataset });
