@@ -6,11 +6,16 @@ import { getServerSession } from "next-auth/next";
 import {
   GFWAPICreateKey,
   GFWAPIDatasets,
+  GFWAPIDataset,
   GFWAPIKeys,
   GFWAPINewKey,
 } from "@/lib/types";
 
 const apiURL = process.env.GFW_DATA_API_URL;
+
+//////////////////
+//// DATASET /////
+//////////////////
 
 export const getDatasets = async ({
   pageSize = 10,
@@ -27,12 +32,31 @@ export const getDatasets = async ({
   const res = await fetch(`${apiURL}/datasets?${params}`);
 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
   }
 
   return res.json();
 };
+
+export const getDataset = async ({
+  dataset,
+}: {
+  dataset: string;
+}): Promise<GFWAPIDataset> => {
+  const res = await fetch(`${apiURL}/dataset/${dataset}`);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  const data = await res.json();
+
+  return data.data;
+};
+
+///////////////////
+//// API KEYS /////
+///////////////////
 
 export const getKeys = async (): Promise<GFWAPIKeys> => {
   const session = await getServerSession(options);
@@ -63,8 +87,8 @@ export const createKey = async (
     throw new Error("Not authenticated");
   }
 
-  console.log("session.user.rwToken =>", session.user.rwToken);
-  console.log("keyDetails =>", keyDetails);
+  // console.log("session.user.rwToken =>", session.user.rwToken);
+  // console.log("keyDetails =>", keyDetails);
 
   const res = await fetch(`${apiURL}/auth/apikey`, {
     method: "POST",
@@ -81,7 +105,6 @@ export const createKey = async (
   });
 
   if (!res.ok) {
-    console.log("res =>", res);
     throw new Error("Failed to fetch data");
   }
 

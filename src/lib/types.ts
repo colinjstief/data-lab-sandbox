@@ -73,7 +73,8 @@ export interface RWAPIUser {
     type: string;
     id: string;
     attributes: {
-      fullName: string;
+      firstName: string;
+      lastName: string;
       email: string;
       createdAt: string;
       applicationData: {

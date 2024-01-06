@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Data Lab Sandbox",
   description: "A place for trying things out",
   icons: {
-    icon: "favicon.png",
+    icon: "/favicon.png",
   },
 };
 

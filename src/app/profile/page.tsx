@@ -1,8 +1,4 @@
-import { RWAPIUser } from "@/lib/types";
-const apiURL = process.env.RW_API_URL;
-
-import { options } from "@/app/api/auth/[...nextauth]/options";
-import { getServerSession } from "next-auth/next";
+import { getUserData } from "@/lib/rwDataAPI";
 
 interface ProfileProps {}
 
@@ -12,28 +8,8 @@ const colors = {
   "primary-salmon": "bg-primary-salmon",
 };
 
-const getData = async (token: string): Promise<RWAPIUser> => {
-  const res = await fetch(`${apiURL}/v2/user`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-};
-
 const Profile = async ({}: ProfileProps) => {
-  const session = await getServerSession(options);
-
-  let data;
-  if (session?.user?.rwToken) {
-    data = await getData(session?.user?.rwToken);
-    console.log("data =>", data);
-  }
+  const data = await getUserData();
 
   let rwData;
   if (data?.data) {
