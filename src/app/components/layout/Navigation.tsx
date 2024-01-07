@@ -25,7 +25,7 @@ const Navigation = ({ menuVisible, hideMenu }: NavigationProps) => {
   }
 
   styles = styles.concat(
-    " bg-primary-blue py-6 px-6 flex-col sm:static flex sm:flex absolute inset-x-0 top-16"
+    " bg-primary-blue py-6 px-6 flex-col sm:static flex sm:flex absolute inset-x-0 top-16 z-10"
   );
 
   return (
@@ -39,29 +39,24 @@ const Navigation = ({ menuVisible, hideMenu }: NavigationProps) => {
           return null;
         }
 
-        if (page.label.toLowerCase().replaceAll(" ", "") === section) {
-          return (
+        return (
+          <div
+            key={page.id}
+            className="text-xl py-4 justify-center flex sm:text-base sm:py-0 sm:justify-start sm:block"
+          >
             <Link
-              key={page.id}
               href={page.location}
               className="text-white hover:text-white"
               onClick={() => hideMenu()}
             >
-              <b>{page.label}</b>
+              {page.label.toLowerCase().replaceAll(" ", "") === section ? (
+                <b>{page.label}</b>
+              ) : (
+                <span>{page.label}</span>
+              )}
             </Link>
-          );
-        } else {
-          return (
-            <Link
-              key={page.id}
-              href={page.location}
-              className="text-white hover:text-white"
-              onClick={() => hideMenu()}
-            >
-              {page.label}
-            </Link>
-          );
-        }
+          </div>
+        );
       })}
       {status === "authenticated" && (
         <button
@@ -106,6 +101,12 @@ const pages = [
     id: 5,
     label: "Datasets",
     location: "/datasets?pageSize=10&pageNumber=1",
+    hide: "no",
+  },
+  {
+    id: 6,
+    label: "Query Wizard",
+    location: "/query-wizard",
     hide: "no",
   },
 ];

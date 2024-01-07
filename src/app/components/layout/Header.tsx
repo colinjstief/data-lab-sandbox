@@ -25,6 +25,11 @@ const pages = {
     category: "",
     description: "All the GFW Data API has to offer",
   },
+  "query-wizard": {
+    title: "Query Wizard",
+    category: "",
+    description: "Let's make a query together",
+  },
 };
 
 const Header = ({}: HeaderProps) => {
@@ -37,8 +42,8 @@ const Header = ({}: HeaderProps) => {
     "This is a place to try out the cool things the Data Lab APIs offer";
 
   if (section in pages) {
-    title = pages[section as keyof typeof pages].title;
     category = pages[section as keyof typeof pages].category;
+    title = pages[section as keyof typeof pages].title;
     description = pages[section as keyof typeof pages].description;
   }
 

@@ -1,6 +1,6 @@
 import { getKeys } from "@/lib/gfwDataAPI";
 
-import DeleteButton from "@/app/keys/DeleteButton";
+import DeleteButton from "@/app/components/api-keys/DeleteButton";
 
 const Keys = async () => {
   const data = await getKeys();

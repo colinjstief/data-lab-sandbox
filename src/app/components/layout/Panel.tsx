@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import TopBar from "@/app/components/layout/TopBar";
-import Banner from "@/app/components/other/Banner";
+import Banner from "@/app/components/layout/Banner";
 import Navigation from "@/app/components/layout/Navigation";
 
 interface PanelProps {}

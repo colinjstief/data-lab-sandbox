@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import { getDatasets } from "@/lib/gfwDataAPI";
 
-import PageSizePicker from "@/app/components/other/PageSizePicker";
-import Pagination from "@/app/components/other/Pagination";
+import PageSizePicker from "@/app/components/datasets/PageSizePicker";
+import Pagination from "@/app/components/datasets/Pagination";
 
 const DatasetTable = async ({
   pageSize,

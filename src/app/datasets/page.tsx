@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { Suspense } from "react";
 
-import DatasetTable from "@/app/components/collections/DatasetTable";
+import DatasetTable from "@/app/components/datasets/DatasetTable";
 import LoadingScreen from "@/app/components/other/LoadingScreen";
 
 const DatasetsPage = async ({

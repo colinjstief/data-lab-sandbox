@@ -1,6 +1,5 @@
-import React from "react";
-import KeyTable from "../components/collections/KeyTable";
-import KeyForm from "../components/form/KeyForm";
+import KeyTable from "@/app/components/api-keys/KeyTable";
+import KeyForm from "@/app/components/api-keys/KeyForm";
 
 const Keys = () => {
   return (

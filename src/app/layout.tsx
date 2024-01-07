@@ -31,7 +31,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           <Panel />
           <main className="flex flex-col flex-1 overflow-auto">
             <Header />
-            <div className="p-5">{children}</div>
+            <div className="flex-1 flex-auto p-5">{children}</div>
           </main>
         </AuthProvider>
       </body>
