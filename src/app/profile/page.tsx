@@ -107,7 +107,7 @@ const Profile = async ({}: ProfileProps) => {
   }
 
   return (
-    <div className="flex flex-col max-w-xl shadow-md border border-gray-300 rounded">
+    <div className="flex flex-col max-w-4xl shadow-md border border-gray-300 rounded">
       {rwData}
       {gfwData}
     </div>

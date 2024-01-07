@@ -1,5 +1,7 @@
 import { getKeys } from "@/lib/gfwDataAPI";
 
+import DeleteButton from "@/app/keys/DeleteButton";
+
 const Keys = async () => {
   const data = await getKeys();
   const keys = data?.data;
@@ -27,7 +29,7 @@ const Keys = async () => {
           </tr>
         </thead>
         <tbody className="">
-          {keys?.map((key) => {
+          {keys?.reverse().map((key) => {
             return (
               <tr key={key.alias} className="border-b py-2">
                 <td className="px-5 py-2">{key.alias}</td>
@@ -38,9 +40,7 @@ const Keys = async () => {
                 <td className="px-5 py-2">{key.domains.join(", ")}</td>
                 <td className="px-5 py-2">{key.expires_on.split("T")[0]}</td>
                 <td className="px-5 py-2">
-                  <div className="rounded border bg-gray-200 py-2 px-4 mr-2 text-sm text-gray-800">
-                    Delete
-                  </div>
+                  <DeleteButton api_key={key} />
                 </td>
               </tr>
             );

@@ -5,15 +5,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { createKey } from "@/lib/gfwDataAPI";
+import { wait } from "@/lib/utils";
 import { GFWAPICreateKeyFormSchema, GFWAPICreateKeyForm } from "@/lib/types";
 
-import { Button, Checkbox, Form, Message } from "semantic-ui-react";
+import { Button, Form, Message } from "semantic-ui-react";
 
 const KeyForm = () => {
   const [async, setAsync] = useState({
     status: "",
     message: "",
-    loading: false,
+    color: "blue",
   });
 
   const {
@@ -38,41 +39,39 @@ const KeyForm = () => {
 
   const onSubmit = async (data: GFWAPICreateKeyForm) => {
     setAsync({
-      status: "loading",
+      status: "Loading",
       message: "Reticulating splines...",
-      loading: true,
+      color: "blue",
     });
-    try {
-      const domainsArray = data.domains ? JSON.parse(data.domains) : [];
-      const newKey = await createKey({
-        alias: data.alias,
-        organization: data.organization,
-        email: data.email,
-        domains: domainsArray,
-        neverExpires: data.neverExpires,
-      });
+    const domainsArray = data.domains ? JSON.parse(data.domains) : [];
+    const newKey = await createKey({
+      alias: data.alias,
+      organization: data.organization,
+      email: data.email,
+      domains: domainsArray,
+      neverExpires: data.neverExpires,
+    });
 
-      if (newKey && newKey.status == "success") {
-        setAsync({
-          status: "Success",
-          message: "",
-          loading: false,
-        });
-      } else {
-        setAsync({
-          status: "Error",
-          message: "Could not create your key",
-          loading: false,
-        });
-      }
-    } catch (error) {
-      console.log("error =>", error);
+    if (newKey.status === "success") {
       setAsync({
-        status: "Error",
-        message: "Could not create your key",
-        loading: false,
+        status: "Success",
+        message: "Succesfully created new API key",
+        color: "green",
+      });
+      reset();
+    } else {
+      setAsync({
+        status: "Failed",
+        message: newKey.message ? newKey.message : "Unknown error",
+        color: "red",
       });
     }
+    await wait(3500);
+    setAsync({
+      status: "",
+      message: "",
+      color: "blue",
+    });
   };
 
   return (
@@ -121,7 +120,7 @@ const KeyForm = () => {
             </div>
           </Form.Field>
         </Form.Group>
-        <Form.Field className="mb-6">
+        {/* <Form.Field className="mb-6">
           <label>Domains</label>
           <p className="pb-2">
             Array of domains which can be used this API key. If no domain is
@@ -138,24 +137,18 @@ const KeyForm = () => {
             {...register("domains")}
             placeholder='["www.yourdomain.com", "*.yourdomain.com", "yourdomain.com", "localhost"]'
           />
-        </Form.Field>
+        </Form.Field> */}
         <Button
-          disabled={!!async?.loading}
-          loading={!!async?.loading}
+          disabled={async.status === "Loading"}
+          loading={async.status === "Loading"}
           type="submit"
         >
           Create New Key
         </Button>
       </Form>
       {(!!Object.values(errors).length || async.message) && (
-        <Message
-          {...(async.status === "Success"
-            ? { positive: true }
-            : { negative: true })}
-        >
-          <Message.Header>
-            {async.status ? async.status : "Error"}
-          </Message.Header>
+        <Message color={async.color as any}>
+          <Message.Header>{async.status}</Message.Header>
           {!!Object.values(errors).length &&
             Object.entries(errors).map(([key, error]) => {
               return <p key={key}>{error.message}</p>;

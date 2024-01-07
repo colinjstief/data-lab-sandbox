@@ -2,6 +2,7 @@
 
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth/next";
+import { revalidatePath } from "next/cache";
 
 import {
   GFWAPICreateKey,
@@ -81,34 +82,52 @@ export const getKeys = async (): Promise<GFWAPIKeys> => {
 export const createKey = async (
   keyDetails: GFWAPICreateKey
 ): Promise<GFWAPINewKey> => {
-  const session = await getServerSession(options);
+  try {
+    const session = await getServerSession(options);
 
-  if (!session?.user?.rwToken) {
-    throw new Error("Not authenticated");
+    if (!session?.user?.rwToken) {
+      throw new Error("Not authenticated");
+    }
+
+    const res = await fetch(`${apiURL}/auth/apikey`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.user.rwToken}`,
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        alias: keyDetails.alias,
+        organization: keyDetails.organization,
+        email: keyDetails.email,
+        domains: keyDetails.domains || [],
+        never_expires: keyDetails.neverExpires,
+      }),
+    });
+    revalidatePath("/keys");
+    return res.json();
+  } catch (error) {
+    return { status: "error", message: "A network error occurred" };
   }
+};
 
-  console.log("session.user.rwToken =>", session.user.rwToken);
-  console.log("keyDetails =>", keyDetails);
+export const deleteKey = async (api_key: string): Promise<any> => {
+  try {
+    const session = await getServerSession(options);
 
-  const res = await fetch(`${apiURL}/auth/apikey`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${session.user.rwToken}`,
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      alias: keyDetails.alias,
-      organization: keyDetails.organization,
-      email: keyDetails.email,
-      domains: keyDetails.domains || [],
-      never_expires: keyDetails.neverExpires,
-    }),
-  });
+    if (!session?.user?.rwToken) {
+      throw new Error("Not authenticated");
+    }
 
-  if (!res.ok) {
-    const errorMessage = await res.text();
-    throw new Error(`Failed to create key. Error: ${errorMessage}`);
+    const res = await fetch(`${apiURL}/auth/apikey/${api_key}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session.user.rwToken}`,
+      },
+    });
+
+    revalidatePath("/keys");
+    return res.json();
+  } catch (error) {
+    return { status: "error", message: "A network error occurred" };
   }
-
-  return res.json();
 };

@@ -182,6 +182,7 @@ export interface GFWAPICreateKey {
 }
 
 export interface GFWAPINewKey {
-  data: GFWAPIKey;
+  data?: GFWAPIKey;
+  message?: string;
   status: string;
 }

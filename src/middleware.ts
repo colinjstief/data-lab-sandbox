@@ -29,7 +29,11 @@ export default async function middleware(
   }
 
   // Restrict access to logged in users
-  if (req.nextUrl.pathname.startsWith("/profile") && !isAuthenticated) {
+  if (
+    (req.nextUrl.pathname.startsWith("/profile") ||
+      req.nextUrl.pathname.startsWith("/keys")) &&
+    !isAuthenticated
+  ) {
     return NextResponse.redirect(new URL("/signin", req.url));
   }
 }
