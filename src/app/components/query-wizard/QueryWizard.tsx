@@ -11,8 +11,6 @@ import Results from "@/app/components/query-wizard/Results";
 
 import { datasets } from "@/lib/datasets";
 
-console.log("datasets => ", datasets);
-
 interface QueryWizardProps {}
 
 const QueryWizard = ({}: QueryWizardProps) => {
@@ -57,6 +55,19 @@ const QueryWizard = ({}: QueryWizardProps) => {
           </Step.Content>
         </Step>
         <Step
+          onClick={() => setVisibleTab("area")}
+          active={visibleTab === "area"}
+          disabled={!query.sql}
+        >
+          <Icon name="map marker alternate" />
+          <Step.Content>
+            <Step.Title>Area of interest</Step.Title>
+            <Step.Description>
+              {!!query?.area ? query.area : "Select an area of interest"}
+            </Step.Description>
+          </Step.Content>
+        </Step>
+        <Step
           onClick={() => setVisibleTab("field")}
           active={visibleTab === "field"}
           disabled={!query.version}
@@ -66,19 +77,6 @@ const QueryWizard = ({}: QueryWizardProps) => {
             <Step.Title>Fields</Step.Title>
             <Step.Description>
               {query.sql ? "Fields selected" : "Select your fields"}
-            </Step.Description>
-          </Step.Content>
-        </Step>
-        <Step
-          onClick={() => setVisibleTab("area")}
-          active={visibleTab === "area"}
-          disabled={!query.sql}
-        >
-          <Icon name="map marker alternate" />
-          <Step.Content>
-            <Step.Title>Dataset</Step.Title>
-            <Step.Description>
-              {!!query?.area ? query.area : "Select an area of interest"}
             </Step.Description>
           </Step.Content>
         </Step>
@@ -94,8 +92,8 @@ const QueryWizard = ({}: QueryWizardProps) => {
           </Step.Content>
         </Step>
       </Step.Group>
-      <div className="flex-1 h-full">
-        <DataSelect visible={visibleTab === "dataset"} />
+      <div className="flex-1 h-full pl-3">
+        <DataSelect query={query} visible={visibleTab === "dataset"} />
         <VersionSelect visible={visibleTab === "version"} />
         <FieldSelect visible={visibleTab === "field"} />
         <AreaSelect visible={visibleTab === "area"} />
