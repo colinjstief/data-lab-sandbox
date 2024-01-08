@@ -28,6 +28,7 @@ export interface Dataset {
   name: string;
   icon: string;
   coverage: string;
+  versions: string[];
 }
 
 export interface Datasets {

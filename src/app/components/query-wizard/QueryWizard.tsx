@@ -101,10 +101,30 @@ const QueryWizard = ({}: QueryWizardProps) => {
           visible={visibleTab === "dataset"}
           setVisibleTab={setVisibleTab}
         />
-        <VersionSelect visible={visibleTab === "version"} />
-        <FieldSelect visible={visibleTab === "field"} />
-        <AreaSelect visible={visibleTab === "area"} />
-        <Results visible={visibleTab === "results"} />
+        <VersionSelect
+          query={query}
+          setQuery={setQuery}
+          visible={visibleTab === "version"}
+          setVisibleTab={setVisibleTab}
+        />
+        <FieldSelect
+          query={query}
+          setQuery={setQuery}
+          visible={visibleTab === "field"}
+          setVisibleTab={setVisibleTab}
+        />
+        <AreaSelect
+          query={query}
+          setQuery={setQuery}
+          visible={visibleTab === "area"}
+          setVisibleTab={setVisibleTab}
+        />
+        <Results
+          query={query}
+          setQuery={setQuery}
+          visible={visibleTab === "results"}
+          setVisibleTab={setVisibleTab}
+        />
       </div>
     </div>
   );

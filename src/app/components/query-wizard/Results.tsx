@@ -1,7 +1,13 @@
 import { Dropdown, Button, Segment } from "semantic-ui-react";
 
+import { datasets } from "@/lib/datasets";
+import { WizardQuery } from "@/lib/types";
+
 interface ResultsProps {
+  query: WizardQuery;
+  setQuery: (query: WizardQuery) => void;
   visible: boolean;
+  setVisibleTab: (tab: string) => void;
 }
 
 const Results = ({ visible }: ResultsProps) => {
