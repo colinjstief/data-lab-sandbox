@@ -13,6 +13,27 @@ export const signinSchema = z.object({
 });
 export type SignInData = z.infer<typeof signinSchema>;
 
+export interface WizardQuery {
+  dataset: string;
+  asset: string;
+  version: string;
+  sql: string;
+  area: string;
+  params: string;
+  results: string;
+}
+
+export interface Dataset {
+  dataset: string;
+  name: string;
+  icon: string;
+  coverage: string;
+}
+
+export interface Datasets {
+  [key: string]: Dataset;
+}
+
 ////////////////////
 //// NEXT AUTH /////
 ////////////////////

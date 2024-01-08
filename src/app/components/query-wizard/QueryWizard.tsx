@@ -9,18 +9,20 @@ import FieldSelect from "@/app/components/query-wizard/FieldSelect";
 import AreaSelect from "@/app/components/query-wizard/AreaSelect";
 import Results from "@/app/components/query-wizard/Results";
 
+import { Datasets } from "@/lib/types";
 import { datasets } from "@/lib/datasets";
 
 interface QueryWizardProps {}
 
 const QueryWizard = ({}: QueryWizardProps) => {
   const initQuery = {
-    dataset: null,
-    version: null,
-    sql: null,
-    area: null,
-    params: null,
-    results: null,
+    dataset: "tcl",
+    asset: "",
+    version: "",
+    sql: "",
+    area: "",
+    params: "",
+    results: "",
   };
 
   const [visibleTab, setVisibleTab] = useState("dataset");
@@ -37,7 +39,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
           <Step.Content>
             <Step.Title>Dataset</Step.Title>
             <Step.Description>
-              {query?.dataset || "Select your dataset"}
+              {datasets[query.dataset as keyof Datasets].name}
             </Step.Description>
           </Step.Content>
         </Step>
@@ -93,7 +95,12 @@ const QueryWizard = ({}: QueryWizardProps) => {
         </Step>
       </Step.Group>
       <div className="flex-1 h-full pl-3">
-        <DataSelect query={query} visible={visibleTab === "dataset"} />
+        <DataSelect
+          query={query}
+          setQuery={setQuery}
+          visible={visibleTab === "dataset"}
+          setVisibleTab={setVisibleTab}
+        />
         <VersionSelect visible={visibleTab === "version"} />
         <FieldSelect visible={visibleTab === "field"} />
         <AreaSelect visible={visibleTab === "area"} />
