@@ -16,7 +16,7 @@ interface QueryWizardProps {}
 
 const QueryWizard = ({}: QueryWizardProps) => {
   const initQuery = {
-    area: "",
+    area: { type: "", value: "" },
     dataset: "tcl",
     asset: "",
     version: "",
@@ -30,7 +30,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   return (
     <div className="flex items-start h-full">
-      <Step.Group vertical size="mini">
+      <Step.Group vertical size="mini" className="w-[200px]">
         <Step
           onClick={() => setVisibleTab("area")}
           active={visibleTab === "area"}
@@ -39,7 +39,9 @@ const QueryWizard = ({}: QueryWizardProps) => {
           <Step.Content>
             <Step.Title>Area of interest</Step.Title>
             <Step.Description>
-              {!!query?.area ? query.area : "Select an area of interest"}
+              {!!query?.area.value
+                ? query.area.value
+                : "Select area of interest"}
             </Step.Description>
           </Step.Content>
         </Step>

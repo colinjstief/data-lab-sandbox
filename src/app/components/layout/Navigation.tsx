@@ -94,7 +94,7 @@ const pages = [
   {
     id: 4,
     label: "API Keys",
-    location: "/keys",
+    location: "/api-keys",
     hide: "when-unauth",
   },
   {

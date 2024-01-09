@@ -18,7 +18,10 @@ export interface WizardQuery {
   asset: string;
   version: string;
   sql: string;
-  area: string;
+  area: {
+    type: string;
+    value: string;
+  };
   params: string;
   results: string;
 }
@@ -33,6 +36,12 @@ export interface Dataset {
 
 export interface Datasets {
   [key: string]: Dataset;
+}
+
+export interface Boundary {
+  key: string;
+  value: string;
+  text: string;
 }
 
 ////////////////////

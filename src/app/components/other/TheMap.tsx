@@ -1,8 +1,10 @@
 import { useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
+import { MB_KEY } from "@/lib/keys";
 
-mapboxgl.accessToken =
-  "pk.eyJ1IjoiZHVuY2FucmFnZXIiLCJhIjoiY2xhd3RieXpkMDFjdDN1cWxhbnNwbG1vMiJ9.yh3R3aZ4Zk0o_hM2Fjm3cg";
+import { Segment } from "semantic-ui-react";
+
+mapboxgl.accessToken = MB_KEY;
 
 interface TheMapProps {
   setTheMap: (map: any) => void;
@@ -35,9 +37,9 @@ const TheMap = ({ setTheMap, visible, textPanel }: TheMapProps) => {
   return (
     <div className="h-full">
       {textPanel && (
-        <span className="absolute top-25 right-25 p-10 bg-white z-10">
+        <Segment className="absolute z-10 p-3 top-5 right-5">
           {textPanel}
-        </span>
+        </Segment>
       )}
       <div ref={mapContainer} className="h-full" />
     </div>

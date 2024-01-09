@@ -1,11 +1,12 @@
 import { useState } from "react";
+import mapboxgl from "mapbox-gl";
 
 import { Dropdown, DropdownProps, Button, Segment } from "semantic-ui-react";
 
-import { datasets } from "@/lib/datasets";
 import { WizardQuery } from "@/lib/types";
 
-import TheMap from "@/app/components/query-wizard/TheMap";
+import TheMap from "@/app/components/other/TheMap";
+import GADM from "@/app/components/query-wizard/GADM";
 
 interface AreaSelectProps {
   query: WizardQuery;
@@ -28,7 +29,7 @@ const AreaSelect = ({
   }
 
   const [areaType, setAreaType] = useState("gadm");
-  const [theMap, setTheMap] = useState(null);
+  const [theMap, setTheMap] = useState<mapboxgl.Map | null>(null);
   const [textPanel, setTextPanel] = useState("");
   const [layer, setLayer] = useState(null);
 
@@ -53,7 +54,27 @@ const AreaSelect = ({
             className="mb-3"
           />
           <div className="flex flex-1">
-            <Segment className="w-[250px] border mb-0">Options</Segment>
+            <Segment className="w-[250px] border mb-0">
+              {areaType === "gadm" && (
+                <GADM
+                  visible={visible}
+                  query={query}
+                  setQuery={setQuery}
+                  theMap={theMap}
+                  setTextPanel={setTextPanel}
+                />
+              )}
+              {/* {areaType === "wdpa" && <WDPA setTextPanel={setTextPanel} />}
+              {areaType === "user_saved" && (
+                <UserAreaSaved setTextPanel={setTextPanel} />
+              )}
+              {areaType === "user_drawn" && (
+                <UserAreaDraw setTextPanel={setTextPanel} />
+              )}
+              {areaType === "user_upload" && (
+                <UserAreaUpload setTextPanel={setTextPanel} />
+              )} */}
+            </Segment>
             <Segment className="flex-1 border mt-0 ml-3">
               <TheMap
                 visible={visible}
