@@ -16,24 +16,37 @@ interface QueryWizardProps {}
 
 const QueryWizard = ({}: QueryWizardProps) => {
   const initQuery = {
+    area: "",
     dataset: "tcl",
     asset: "",
     version: "",
     sql: "",
-    area: "",
     params: "",
     results: "",
   };
 
-  const [visibleTab, setVisibleTab] = useState("dataset");
+  const [visibleTab, setVisibleTab] = useState("area");
   const [query, setQuery] = useState(initQuery);
 
   return (
     <div className="flex items-start h-full">
       <Step.Group vertical size="mini">
         <Step
+          onClick={() => setVisibleTab("area")}
+          active={visibleTab === "area"}
+        >
+          <Icon name="map marker alternate" />
+          <Step.Content>
+            <Step.Title>Area of interest</Step.Title>
+            <Step.Description>
+              {!!query?.area ? query.area : "Select an area of interest"}
+            </Step.Description>
+          </Step.Content>
+        </Step>
+        <Step
           onClick={() => setVisibleTab("dataset")}
           active={visibleTab === "dataset"}
+          disabled={!query.area}
         >
           <Icon name="globe" />
           <Step.Content>
@@ -46,26 +59,13 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("version")}
           active={visibleTab === "version"}
-          disabled={!query.dataset}
+          disabled={!query.area}
         >
           <Icon name="barcode" />
           <Step.Content>
             <Step.Title>Version</Step.Title>
             <Step.Description>
               {query?.version || "Select your version"}
-            </Step.Description>
-          </Step.Content>
-        </Step>
-        <Step
-          onClick={() => setVisibleTab("area")}
-          active={visibleTab === "area"}
-          disabled={!query.sql}
-        >
-          <Icon name="map marker alternate" />
-          <Step.Content>
-            <Step.Title>Area of interest</Step.Title>
-            <Step.Description>
-              {!!query?.area ? query.area : "Select an area of interest"}
             </Step.Description>
           </Step.Content>
         </Step>
@@ -89,7 +89,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
         >
           <Icon name="chart pie" />
           <Step.Content>
-            <Step.Title>Dataset</Step.Title>
+            <Step.Title>Results</Step.Title>
             <Step.Description>See the results</Step.Description>
           </Step.Content>
         </Step>

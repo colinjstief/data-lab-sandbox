@@ -1,5 +1,6 @@
-import "./globals.css";
 import "semantic-ui-css/semantic.min.css";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "./globals.css";
 
 import type { Metadata } from "next";
 // import { Roboto } from "next/font/google";

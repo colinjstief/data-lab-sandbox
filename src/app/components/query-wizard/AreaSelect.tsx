@@ -1,7 +1,11 @@
-import { Dropdown, Button, Segment } from "semantic-ui-react";
+import { useState } from "react";
+
+import { Dropdown, DropdownProps, Button, Segment } from "semantic-ui-react";
 
 import { datasets } from "@/lib/datasets";
 import { WizardQuery } from "@/lib/types";
+
+import TheMap from "@/app/components/query-wizard/TheMap";
 
 interface AreaSelectProps {
   query: WizardQuery;
@@ -10,7 +14,12 @@ interface AreaSelectProps {
   setVisibleTab: (tab: string) => void;
 }
 
-const AreaSelect = ({ visible }: AreaSelectProps) => {
+const AreaSelect = ({
+  query,
+  setQuery,
+  visible,
+  setVisibleTab,
+}: AreaSelectProps) => {
   let containerStyle = "h-full mt-0 border-l-0";
   if (visible) {
     containerStyle = containerStyle.concat(" flex");
@@ -18,12 +27,58 @@ const AreaSelect = ({ visible }: AreaSelectProps) => {
     containerStyle = containerStyle.concat(" hidden");
   }
 
+  const [areaType, setAreaType] = useState("gadm");
+  const [theMap, setTheMap] = useState(null);
+  const [textPanel, setTextPanel] = useState("");
+  const [layer, setLayer] = useState(null);
+
+  const handleChange = (
+    e: React.SyntheticEvent<HTMLElement>,
+    data: DropdownProps
+  ) => {
+    setAreaType(data.value as string);
+  };
+
   return (
     <Segment.Group className={containerStyle}>
-      <Segment className="flex-1">Select area</Segment>
-      <Segment className="flex justify-end">Bar</Segment>
+      <Segment className="flex flex-col flex-1">
+        <h3 className="text-xl font-bold mb-5">Select an area</h3>
+        <div className="flex flex-col h-full">
+          <Dropdown
+            fluid
+            selection
+            options={areaOptions}
+            value={areaType}
+            onChange={handleChange}
+            className="mb-3"
+          />
+          <div className="flex flex-1">
+            <Segment className="w-[250px] border mb-0">Options</Segment>
+            <Segment className="flex-1 border mt-0 ml-3">
+              <TheMap
+                visible={visible}
+                setTheMap={setTheMap}
+                textPanel={textPanel}
+              />
+            </Segment>
+          </div>
+        </div>
+      </Segment>
+      <Segment className="flex justify-end">
+        <Button disabled={!query.area} onClick={() => setVisibleTab("dataset")}>
+          Next
+        </Button>
+      </Segment>
     </Segment.Group>
   );
 };
 
 export default AreaSelect;
+
+const areaOptions = [
+  { key: "gadm", value: "gadm", text: "GADM" },
+  { key: "wdpa", value: "wdpa", text: "WDPA" },
+  { key: "user_saved", value: "user_saved", text: "Saved" },
+  { key: "user_drawn", value: "user_drawn", text: "Draw" },
+  { key: "user_upload", value: "user_upload", text: "Upload" },
+];
