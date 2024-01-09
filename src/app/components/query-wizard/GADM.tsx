@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import mapboxgl from "mapbox-gl";
+import mapboxgl, { LngLatBounds } from "mapbox-gl";
 import bbox from "@turf/bbox";
-import { Geometry } from "geojson";
+import { BBox, Geometry } from "geojson";
 
 import { Dropdown } from "semantic-ui-react";
 
@@ -184,7 +184,7 @@ const GADM = ({
     try {
       console.log(`type: ${type}, iso: ${iso}, adm1: ${adm1}`);
       const boundaries = await getBoundaries({ type, iso, adm1 });
-      console.log("boundaries =>", boundaries);
+
       switch (type) {
         case "iso":
           setIsoOptions(boundaries);
@@ -336,8 +336,14 @@ const GADM = ({
 
   const zoomToGeometry = (geometry: Geometry) => {
     if (!theMap) return;
-    const bounds = bbox(geometry);
-    theMap.fitBounds(bounds);
+    const bounds: BBox = bbox(geometry);
+    const lngLatBounds: mapboxgl.LngLatBoundsLike = [
+      bounds[0],
+      bounds[1],
+      bounds[2],
+      bounds[3],
+    ];
+    theMap.fitBounds(lngLatBounds);
   };
 
   const addHighlight = (type: string, geometry: Geometry) => {

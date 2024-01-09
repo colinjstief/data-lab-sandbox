@@ -11,7 +11,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.0",
     "@mapbox/mapbox-sdk": "^0.15.3",
-    "@turf/bbox": "^6.5.0",
+    "@turf/bbox": "^7.0.0-alpha.110",
     "@types/geojson": "^7946.0.13",
     "@types/mapbox__mapbox-sdk": "^0.14.0",
     "@types/node": "20.4.6",
