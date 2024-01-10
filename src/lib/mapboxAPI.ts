@@ -1,6 +1,7 @@
 "use server";
 
 import { datasetsClient } from "@/lib/mapboxSDK";
+import { Feature, Polygon, MultiPolygon } from "geojson";
 
 export const getBoundaries = async ({
   type,
@@ -28,8 +29,6 @@ export const getBoundaries = async ({
       break;
   }
 
-  console.log(query);
-
   if (query) {
     const res = await fetch(query);
     if (!res.ok) {
@@ -53,13 +52,15 @@ export const getFeature = async ({
 }: {
   datasetId: string;
   featureId: string;
-}) => {
+}): Promise<GeoJSON.Feature> => {
   const res = await datasetsClient
     .getFeature({
       datasetId,
       featureId,
     })
     .send();
+
+  console.log(res.body);
 
   return res.body;
 };

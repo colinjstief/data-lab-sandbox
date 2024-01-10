@@ -11,7 +11,7 @@ interface ResultsProps {
 }
 
 const Results = ({ visible }: ResultsProps) => {
-  let containerStyle = "h-full mt-0 border-l-0";
+  let containerStyle = "h-full mt-0";
   if (visible) {
     containerStyle = containerStyle.concat(" flex");
   } else {

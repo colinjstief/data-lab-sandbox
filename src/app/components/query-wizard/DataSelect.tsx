@@ -1,4 +1,4 @@
-import { Dropdown, Button, Segment, Icon } from "semantic-ui-react";
+import { Button, Segment, Icon } from "semantic-ui-react";
 
 import { datasets } from "@/lib/datasets";
 import { WizardQuery } from "@/lib/types";
@@ -20,7 +20,7 @@ const DataSelect = ({
     setQuery({ ...query, dataset: e.currentTarget.dataset.dataset! });
   };
 
-  let containerStyle = "h-full";
+  let containerStyle = "mt-0 h-full";
   if (visible) {
     containerStyle = containerStyle.concat(" flex");
   } else {

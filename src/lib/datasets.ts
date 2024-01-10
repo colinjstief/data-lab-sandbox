@@ -6,7 +6,7 @@ export const datasets: Datasets = {
     name: "Tree cover loss",
     icon: "tree",
     coverage: "Global",
-    versions: [],
+    versions: ["v2012", "v2013"],
   },
   viirs: {
     dataset: "viirs",

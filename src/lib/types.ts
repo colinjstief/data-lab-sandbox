@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { number, z } from "zod";
 
 /////////////////
 //// CUSTOM /////
@@ -14,14 +14,15 @@ export const signinSchema = z.object({
 export type SignInData = z.infer<typeof signinSchema>;
 
 export interface WizardQuery {
+  area: {
+    type: string;
+    value: string;
+    geometry: GeoJSON.Geometry | null;
+  };
   dataset: string;
   asset: string;
   version: string;
   sql: string;
-  area: {
-    type: string;
-    value: string;
-  };
   params: string;
   results: string;
 }

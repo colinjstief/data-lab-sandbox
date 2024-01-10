@@ -1,4 +1,4 @@
-import { Dropdown, Button, Segment } from "semantic-ui-react";
+import { Button, Segment } from "semantic-ui-react";
 
 import { datasets } from "@/lib/datasets";
 import { WizardQuery } from "@/lib/types";
@@ -10,8 +10,13 @@ interface VersionSelectProps {
   setVisibleTab: (tab: string) => void;
 }
 
-const VersionSelect = ({ visible }: VersionSelectProps) => {
-  let containerStyle = "h-full mt-0 border-l-0";
+const VersionSelect = ({
+  query,
+  setQuery,
+  visible,
+  setVisibleTab,
+}: VersionSelectProps) => {
+  let containerStyle = "h-full mt-0";
   if (visible) {
     containerStyle = containerStyle.concat(" flex");
   } else {
@@ -20,8 +25,24 @@ const VersionSelect = ({ visible }: VersionSelectProps) => {
 
   return (
     <Segment.Group className={containerStyle}>
-      <Segment className="flex-1">Select Version</Segment>
-      <Segment className="flex justify-end">Bar</Segment>
+      <Segment className="flex-1">
+        <h3 className="text-xl font-bold mb-5">Select a Version</h3>
+        <div className="flex flex-wrap">
+          {Object.entries(datasets).map(([key, value]) => {
+            return value.versions.map((version) => {
+              return <p>{version}</p>;
+            });
+          })}
+        </div>
+      </Segment>
+      <Segment className="flex justify-end">
+        <Button
+          disabled={!query.dataset}
+          onClick={() => setVisibleTab("field")}
+        >
+          Next
+        </Button>
+      </Segment>
     </Segment.Group>
   );
 };

@@ -24,14 +24,17 @@ const GADM = ({
   theMap,
   setTextPanel,
 }: GADMProps) => {
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState<boolean>(false);
   const [isoOptions, setIsoOptions] = useState<Boundary[]>([]);
   const [adm1Options, setAdm1Options] = useState<Boundary[]>([]);
   const [adm2Options, setAdm2Options] = useState<Boundary[]>([]);
-  const [iso, setIso] = useState("");
-  const [adm1, setAdm1] = useState("");
-  const [adm2, setAdm2] = useState("");
-  const [async, setAsync] = useState({
+  const [iso, setIso] = useState<string>("");
+  const [adm1, setAdm1] = useState<string>("");
+  const [adm2, setAdm2] = useState<string>("");
+  const [async, setAsync] = useState<{
+    status: string;
+    message: string;
+  }>({
     status: "",
     message: "",
   });
@@ -407,6 +410,7 @@ const GADM = ({
     const tasks = async () => {
       if (adm2) {
         const feature = await fetchFeature("adm2", adm2);
+        if (!feature) return;
         addHighlight("adm2", feature.geometry);
         zoomToGeometry(feature.geometry);
         setQuery({
@@ -414,11 +418,13 @@ const GADM = ({
           area: {
             type: "gadm_adm2",
             value: adm2,
+            geometry: feature.geometry,
           },
         });
       } else if (adm1) {
         removeHighlight("adm2");
         const feature = await fetchFeature("adm1", adm1);
+        if (!feature) return;
         addHighlight("adm1", feature.geometry);
         zoomToGeometry(feature.geometry);
         fetchBoundaries("adm2", iso, adm1);
@@ -431,12 +437,14 @@ const GADM = ({
           area: {
             type: "gadm_adm1",
             value: adm1,
+            geometry: feature.geometry,
           },
         });
       } else if (iso) {
         removeHighlight("adm2");
         removeHighlight("adm1");
         const feature = await fetchFeature("iso", iso);
+        if (!feature) return;
         addHighlight("iso", feature.geometry);
         zoomToGeometry(feature.geometry);
         fetchBoundaries("adm1", iso);
@@ -450,6 +458,7 @@ const GADM = ({
           area: {
             type: "gadm_iso",
             value: iso,
+            geometry: feature.geometry,
           },
         });
       } else {
@@ -466,6 +475,7 @@ const GADM = ({
           area: {
             type: "",
             value: "",
+            geometry: null,
           },
         });
       }

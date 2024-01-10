@@ -9,14 +9,14 @@ import FieldSelect from "@/app/components/query-wizard/FieldSelect";
 import AreaSelect from "@/app/components/query-wizard/AreaSelect";
 import Results from "@/app/components/query-wizard/Results";
 
-import { Datasets } from "@/lib/types";
+import { Datasets, WizardQuery } from "@/lib/types";
 import { datasets } from "@/lib/datasets";
 
 interface QueryWizardProps {}
 
 const QueryWizard = ({}: QueryWizardProps) => {
   const initQuery = {
-    area: { type: "", value: "" },
+    area: { type: "", value: "", geometry: null },
     dataset: "tcl",
     asset: "",
     version: "",
@@ -25,8 +25,9 @@ const QueryWizard = ({}: QueryWizardProps) => {
     results: "",
   };
 
-  const [visibleTab, setVisibleTab] = useState("area");
-  const [query, setQuery] = useState(initQuery);
+  const [visibleTab, setVisibleTab] = useState<string>("area");
+  const [query, setQuery] = useState<WizardQuery>(initQuery);
+  console.log("query =>", query);
 
   return (
     <div className="flex items-start h-full">
@@ -48,7 +49,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("dataset")}
           active={visibleTab === "dataset"}
-          disabled={!query.area}
+          disabled={!query.area.geometry}
         >
           <Icon name="globe" />
           <Step.Content>
@@ -61,7 +62,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("version")}
           active={visibleTab === "version"}
-          disabled={!query.area}
+          disabled={!query.area.geometry}
         >
           <Icon name="barcode" />
           <Step.Content>
@@ -87,7 +88,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("results")}
           active={visibleTab === "results"}
-          disabled={!query.area}
+          disabled={!query.area.geometry || !query.sql}
         >
           <Icon name="chart pie" />
           <Step.Content>
@@ -97,6 +98,12 @@ const QueryWizard = ({}: QueryWizardProps) => {
         </Step>
       </Step.Group>
       <div className="flex-1 h-full pl-3">
+        <AreaSelect
+          query={query}
+          setQuery={setQuery}
+          visible={visibleTab === "area"}
+          setVisibleTab={setVisibleTab}
+        />
         <DataSelect
           query={query}
           setQuery={setQuery}
@@ -113,12 +120,6 @@ const QueryWizard = ({}: QueryWizardProps) => {
           query={query}
           setQuery={setQuery}
           visible={visibleTab === "field"}
-          setVisibleTab={setVisibleTab}
-        />
-        <AreaSelect
-          query={query}
-          setQuery={setQuery}
-          visible={visibleTab === "area"}
           setVisibleTab={setVisibleTab}
         />
         <Results

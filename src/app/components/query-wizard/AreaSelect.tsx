@@ -21,17 +21,17 @@ const AreaSelect = ({
   visible,
   setVisibleTab,
 }: AreaSelectProps) => {
-  let containerStyle = "h-full mt-0 border-l-0";
+  let containerStyle = "h-full mt-0";
   if (visible) {
     containerStyle = containerStyle.concat(" flex");
   } else {
     containerStyle = containerStyle.concat(" hidden");
   }
 
-  const [areaType, setAreaType] = useState("gadm");
+  const [areaType, setAreaType] = useState<string>("gadm");
   const [theMap, setTheMap] = useState<mapboxgl.Map | null>(null);
-  const [textPanel, setTextPanel] = useState("");
-  const [layer, setLayer] = useState(null);
+  const [textPanel, setTextPanel] = useState<string>("");
+  //const [layer, setLayer] = useState(null);
 
   const handleChange = (
     e: React.SyntheticEvent<HTMLElement>,
