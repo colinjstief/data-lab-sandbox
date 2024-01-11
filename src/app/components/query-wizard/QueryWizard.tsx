@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Step, Icon } from "semantic-ui-react";
 import DataSelect from "@/app/components/query-wizard/DataSelect";
-import BreakDownSelect from "@/app/components/query-wizard/BreakDownSelect";
+import SegmentSelect from "@/app/components/query-wizard/SegmentSelect";
 import VersionSelect from "@/app/components/query-wizard/VersionSelect";
 import FieldSelect from "@/app/components/query-wizard/FieldSelect";
 import AreaSelect from "@/app/components/query-wizard/AreaSelect";
@@ -19,7 +19,8 @@ const QueryWizard = ({}: QueryWizardProps) => {
   const initQuery = {
     area: { type: "", value: "", geometry: null },
     dataset: "tcl",
-    segmentation: [],
+    timeSegment: "",
+    areaSegment: "",
     asset: "",
     version: "",
     sql: "",
@@ -62,8 +63,8 @@ const QueryWizard = ({}: QueryWizardProps) => {
           </Step.Content>
         </Step>
         <Step
-          onClick={() => setVisibleTab("break-down")}
-          active={visibleTab === "break-down"}
+          onClick={() => setVisibleTab("segment")}
+          active={visibleTab === "segment"}
           disabled={!query.area.geometry}
         >
           <Icon name="table" />
@@ -123,10 +124,10 @@ const QueryWizard = ({}: QueryWizardProps) => {
           visible={visibleTab === "dataset"}
           setVisibleTab={setVisibleTab}
         />
-        <BreakDownSelect
+        <SegmentSelect
           query={query}
           setQuery={setQuery}
-          visible={visibleTab === "break-down"}
+          visible={visibleTab === "segment"}
           setVisibleTab={setVisibleTab}
         />
         <VersionSelect

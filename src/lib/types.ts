@@ -20,12 +20,17 @@ export interface WizardQuery {
     geometry: GeoJSON.Geometry | null;
   };
   dataset: string;
-  segmentation: string[];
+  timeSegment: string;
+  areaSegment: string;
   asset: string;
   version: string;
   sql: string;
   params: string;
   results: string;
+}
+
+export interface Segmentations {
+  [key: string]: string[];
 }
 
 export interface Dataset {
@@ -34,14 +39,7 @@ export interface Dataset {
   icon: string;
   coverage: string;
   versions: string[];
-  segmentations: {
-    gadm_iso: string[];
-    gadm_adm1: string[];
-    gadm_adm2: string[];
-    wdpa: string[];
-    custom_saved: string[];
-    custom_pending: string[];
-  };
+  segmentations: Segmentations;
 }
 
 export interface Datasets {
