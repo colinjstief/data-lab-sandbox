@@ -20,6 +20,7 @@ export interface WizardQuery {
     geometry: GeoJSON.Geometry | null;
   };
   dataset: string;
+  segmentation: string[];
   asset: string;
   version: string;
   sql: string;
@@ -33,6 +34,14 @@ export interface Dataset {
   icon: string;
   coverage: string;
   versions: string[];
+  segmentations: {
+    gadm_iso: string[];
+    gadm_adm1: string[];
+    gadm_adm2: string[];
+    wdpa: string[];
+    custom_saved: string[];
+    custom_pending: string[];
+  };
 }
 
 export interface Datasets {

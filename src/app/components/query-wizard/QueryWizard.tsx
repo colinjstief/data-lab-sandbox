@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Step, Icon } from "semantic-ui-react";
 import DataSelect from "@/app/components/query-wizard/DataSelect";
+import BreakDownSelect from "@/app/components/query-wizard/BreakDownSelect";
 import VersionSelect from "@/app/components/query-wizard/VersionSelect";
 import FieldSelect from "@/app/components/query-wizard/FieldSelect";
 import AreaSelect from "@/app/components/query-wizard/AreaSelect";
@@ -18,6 +19,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
   const initQuery = {
     area: { type: "", value: "", geometry: null },
     dataset: "tcl",
+    segmentation: [],
     asset: "",
     version: "",
     sql: "",
@@ -31,7 +33,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   return (
     <div className="flex items-start h-full">
-      <Step.Group vertical size="mini" className="w-[200px]">
+      <Step.Group vertical size="mini" className="w-[220px]">
         <Step
           onClick={() => setVisibleTab("area")}
           active={visibleTab === "area"}
@@ -57,6 +59,17 @@ const QueryWizard = ({}: QueryWizardProps) => {
             <Step.Description>
               {datasets[query.dataset as keyof Datasets].name}
             </Step.Description>
+          </Step.Content>
+        </Step>
+        <Step
+          onClick={() => setVisibleTab("break-down")}
+          active={visibleTab === "break-down"}
+          disabled={!query.area.geometry}
+        >
+          <Icon name="table" />
+          <Step.Content>
+            <Step.Title>Break down</Step.Title>
+            <Step.Description>Segment results</Step.Description>
           </Step.Content>
         </Step>
         <Step
@@ -108,6 +121,12 @@ const QueryWizard = ({}: QueryWizardProps) => {
           query={query}
           setQuery={setQuery}
           visible={visibleTab === "dataset"}
+          setVisibleTab={setVisibleTab}
+        />
+        <BreakDownSelect
+          query={query}
+          setQuery={setQuery}
+          visible={visibleTab === "break-down"}
           setVisibleTab={setVisibleTab}
         />
         <VersionSelect

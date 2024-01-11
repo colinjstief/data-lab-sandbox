@@ -30,7 +30,7 @@ const VersionSelect = ({
         <div className="flex flex-wrap">
           {Object.entries(datasets).map(([key, value]) => {
             return value.versions.map((version) => {
-              return <p>{version}</p>;
+              return <p key={version}>{version}</p>;
             });
           })}
         </div>

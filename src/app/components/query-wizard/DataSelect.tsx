@@ -17,10 +17,19 @@ const DataSelect = ({
   setVisibleTab,
 }: DataSelectProps) => {
   const handleChange = (e: React.MouseEvent<HTMLDivElement>) => {
-    setQuery({ ...query, dataset: e.currentTarget.dataset.dataset! });
+    setQuery({
+      ...query,
+      dataset: e.currentTarget.dataset.dataset!,
+      segmentation: [],
+      asset: "",
+      version: "",
+      sql: "",
+      params: "",
+      results: "",
+    });
   };
 
-  let containerStyle = "mt-0 h-full";
+  let containerStyle = "h-full mt-0";
   if (visible) {
     containerStyle = containerStyle.concat(" flex");
   } else {
@@ -37,7 +46,7 @@ const DataSelect = ({
             let radioButton;
             if (query.dataset === value.dataset) {
               cardStyle =
-                "h-[175px] w-[175px] border-2 border-gray-500 flex flex-col justify-center items-center p-[5px] mr-5 mb-5 hover:cursor-pointer";
+                "h-[200px] w-[175px] border-2 border-gray-500 flex flex-col justify-center items-center p-[5px] mr-5 mb-5 hover:cursor-pointer";
               radioButton = (
                 <div className="border border-gray-400 h-[20px] w-[20px] mt-5 rounded-full flex justify-center items-center">
                   <div className="bg-gray-600 h-[12px] w-[12px] rounded-full"></div>
@@ -45,7 +54,7 @@ const DataSelect = ({
               );
             } else {
               cardStyle =
-                "h-[175px] w-[175px] border border-gray-300 flex flex-col justify-center items-center p-[5px] mr-5 mb-5 hover:cursor-pointer";
+                "h-[200px] w-[175px] border border-gray-300 flex flex-col justify-center items-center p-[5px] mr-5 mb-5 hover:cursor-pointer";
               radioButton = (
                 <div className="border border-gray-400 h-[20px] w-[20px] mt-5 rounded-full"></div>
               );
@@ -59,7 +68,9 @@ const DataSelect = ({
                 onClick={(e) => handleChange(e)}
               >
                 <Icon name={value.icon as any} size="big" />
-                <p className="font-bold text-[18px] my-1">{value.name}</p>
+                <p className="font-bold text-[18px] my-1 text-center">
+                  {value.name}
+                </p>
                 <p>{value.coverage}</p>
                 {radioButton}
               </div>

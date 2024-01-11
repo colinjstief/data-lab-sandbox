@@ -6,7 +6,15 @@ export const datasets: Datasets = {
     name: "Tree cover loss",
     icon: "tree",
     coverage: "Global",
-    versions: ["v2012", "v2013"],
+    versions: [],
+    segmentations: {
+      gadm_iso: ["year", "adm1_adm2"],
+      gadm_adm1: ["year", "adm2"],
+      gadm_adm2: ["year"],
+      wdpa: ["year"],
+      custom_saved: ["year"],
+      custom_pending: [],
+    },
   },
   viirs: {
     dataset: "viirs",
@@ -14,6 +22,14 @@ export const datasets: Datasets = {
     icon: "fire",
     coverage: "Global",
     versions: [],
+    segmentations: {
+      gadm_iso: ["weekly", "adm1_adm2"],
+      gadm_adm1: ["daily_weekly", "adm2"],
+      gadm_adm2: ["daily_weekly"],
+      wdpa: ["daily_weekly"],
+      custom_saved: ["daily_weekly"],
+      custom_pending: [],
+    },
   },
   integrated: {
     dataset: "integrated",
@@ -21,6 +37,14 @@ export const datasets: Datasets = {
     icon: "chess board",
     coverage: "Tropics",
     versions: [],
+    segmentations: {
+      gadm_iso: ["daily", "adm1_adm2"],
+      gadm_adm1: ["daily", "adm2"],
+      gadm_adm2: ["daily"],
+      wdpa: ["daily"],
+      custom_saved: ["daily"],
+      custom_pending: [],
+    },
   },
   radd: {
     dataset: "radd",
@@ -28,6 +52,14 @@ export const datasets: Datasets = {
     icon: "bullhorn",
     coverage: "Humid tropics",
     versions: [],
+    segmentations: {
+      gadm_iso: ["daily", "adm1_adm2"],
+      gadm_adm1: ["daily", "adm2"],
+      gadm_adm2: ["daily"],
+      wdpa: ["daily"],
+      custom_saved: ["daily"],
+      custom_pending: [],
+    },
   },
   "glad-s2": {
     dataset: "glad-s2",
@@ -35,6 +67,14 @@ export const datasets: Datasets = {
     icon: "exclamation triangle",
     coverage: "Amazon",
     versions: [],
+    segmentations: {
+      gadm_iso: ["daily", "adm1_adm2"],
+      gadm_adm1: ["daily", "adm2"],
+      gadm_adm2: ["daily"],
+      wdpa: ["daily"],
+      custom_saved: ["daily"],
+      custom_pending: [],
+    },
   },
   "glad-l": {
     dataset: "glad-l",
@@ -42,5 +82,13 @@ export const datasets: Datasets = {
     icon: "bell",
     coverage: "Tropics",
     versions: [],
+    segmentations: {
+      gadm_iso: ["daily_weekly", "adm1_adm2"],
+      gadm_adm1: ["daily_weekly", "adm2"],
+      gadm_adm2: ["daily_weekly"],
+      wdpa: ["daily_weekly"],
+      custom_saved: ["daily_weekly"],
+      custom_pending: [],
+    },
   },
 };
