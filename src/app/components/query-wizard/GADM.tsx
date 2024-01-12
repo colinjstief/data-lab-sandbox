@@ -10,20 +10,13 @@ import { wait } from "@/lib/utils";
 import { getBoundaries, getFeature } from "@/lib/mapboxAPI";
 
 interface GADMProps {
-  visible: boolean;
   query: WizardQuery;
   setQuery: (query: WizardQuery) => void;
   theMap: mapboxgl.Map | null;
   setTextPanel: (text: string) => void;
 }
 
-const GADM = ({
-  visible,
-  query,
-  setQuery,
-  theMap,
-  setTextPanel,
-}: GADMProps) => {
+const GADM = ({ query, setQuery, theMap, setTextPanel }: GADMProps) => {
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
   const [isoOptions, setIsoOptions] = useState<Boundary[]>([]);
   const [adm1Options, setAdm1Options] = useState<Boundary[]>([]);
@@ -185,7 +178,6 @@ const GADM = ({
       message: "Reticulating splines...",
     });
     try {
-      console.log(`type: ${type}, iso: ${iso}, adm1: ${adm1}`);
       const boundaries = await getBoundaries({ type, iso, adm1 });
 
       switch (type) {
@@ -473,8 +465,8 @@ const GADM = ({
         setQuery({
           ...query,
           area: {
-            type: "",
-            value: "",
+            type: "gadm_global",
+            value: "Global",
             geometry: null,
           },
         });
@@ -490,7 +482,7 @@ const GADM = ({
         search
         selection
         clearable
-        placeholder="ISO"
+        placeholder="Global"
         options={isoOptions}
         value={iso}
         onChange={(e, newIso) => {

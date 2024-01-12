@@ -38,7 +38,6 @@ export interface Dataset {
   name: string;
   icon: string;
   coverage: string;
-  versions: string[];
   segmentations: Segmentations;
 }
 

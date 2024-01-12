@@ -57,7 +57,6 @@ const AreaSelect = ({
             <Segment className="w-[250px] border mb-0">
               {areaType === "gadm" && (
                 <GADM
-                  visible={visible}
                   query={query}
                   setQuery={setQuery}
                   theMap={theMap}

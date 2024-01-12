@@ -20,7 +20,8 @@ const DataSelect = ({
     setQuery({
       ...query,
       dataset: e.currentTarget.dataset.dataset!,
-      segmentation: [],
+      timeSegment: "",
+      areaSegment: "",
       asset: "",
       version: "",
       sql: "",
@@ -80,8 +81,8 @@ const DataSelect = ({
       </Segment>
       <Segment className="flex justify-end">
         <Button
-          disabled={!query.dataset}
-          onClick={() => setVisibleTab("version")}
+          disabled={!query.area.geometry}
+          onClick={() => setVisibleTab("segment")}
         >
           Next
         </Button>

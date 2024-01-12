@@ -1,6 +1,5 @@
 import { Button, Segment } from "semantic-ui-react";
 
-import { datasets } from "@/lib/datasets";
 import { WizardQuery } from "@/lib/types";
 
 interface VersionSelectProps {
@@ -27,13 +26,7 @@ const VersionSelect = ({
     <Segment.Group className={containerStyle}>
       <Segment className="flex-1">
         <h3 className="text-xl font-bold mb-5">Select a Version</h3>
-        <div className="flex flex-wrap">
-          {Object.entries(datasets).map(([key, value]) => {
-            return value.versions.map((version) => {
-              return <p key={version}>{version}</p>;
-            });
-          })}
-        </div>
+        <div className="flex flex-wrap">Versions</div>
       </Segment>
       <Segment className="flex justify-end">
         <Button

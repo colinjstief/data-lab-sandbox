@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Step, Icon } from "semantic-ui-react";
 import DataSelect from "@/app/components/query-wizard/DataSelect";
@@ -12,16 +12,17 @@ import Results from "@/app/components/query-wizard/Results";
 
 import { Datasets, WizardQuery } from "@/lib/types";
 import { datasets } from "@/lib/datasets";
+import { selectAsset } from "@/lib/selectAsset";
 
 interface QueryWizardProps {}
 
 const QueryWizard = ({}: QueryWizardProps) => {
   const initQuery = {
-    area: { type: "", value: "", geometry: null },
+    area: { type: "gadm_global", value: "Global", geometry: null },
     dataset: "tcl",
     timeSegment: "",
     areaSegment: "",
-    asset: "",
+    asset: "gadm__tcl__iso_summary",
     version: "",
     sql: "",
     params: "",
@@ -30,7 +31,18 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   const [visibleTab, setVisibleTab] = useState<string>("area");
   const [query, setQuery] = useState<WizardQuery>(initQuery);
-  console.log("query =>", query);
+
+  // Reset segments when area or dataset changes
+  useEffect(() => {
+    const asset = selectAsset(query);
+    setQuery({ ...query, timeSegment: "", areaSegment: "" });
+  }, [query.area, query.dataset]);
+
+  // Re-select asset when area, dataset, or segments changes
+  useEffect(() => {
+    const asset = selectAsset(query);
+    setQuery({ ...query, asset: asset });
+  }, [query.area, query.dataset, query.timeSegment, query.areaSegment]);
 
   return (
     <div className="flex items-start h-full">
@@ -52,7 +64,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("dataset")}
           active={visibleTab === "dataset"}
-          disabled={!query.area.geometry}
+          disabled={!query.area.value}
         >
           <Icon name="globe" />
           <Step.Content>
@@ -65,7 +77,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("segment")}
           active={visibleTab === "segment"}
-          disabled={!query.area.geometry}
+          disabled={!query.area.value}
         >
           <Icon name="table" />
           <Step.Content>
@@ -76,7 +88,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("version")}
           active={visibleTab === "version"}
-          disabled={!query.area.geometry}
+          disabled={!query.area.value}
         >
           <Icon name="barcode" />
           <Step.Content>

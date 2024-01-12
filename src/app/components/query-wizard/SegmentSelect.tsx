@@ -2,7 +2,6 @@ import {
   Button,
   ButtonOr,
   ButtonGroup,
-  CheckboxProps,
   Segment,
   ButtonProps,
 } from "semantic-ui-react";
@@ -172,7 +171,14 @@ const SegmentSelect = ({
           </div>
         </div>
       </Segment>
-      <Segment className="flex justify-end">Bar</Segment>
+      <Segment className="flex justify-end">
+        <Button
+          disabled={!query.dataset}
+          onClick={() => setVisibleTab("version")}
+        >
+          Next
+        </Button>
+      </Segment>
     </Segment.Group>
   );
 };
