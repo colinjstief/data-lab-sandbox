@@ -8,7 +8,7 @@ import {
   GFWAPICreateKey,
   GFWAPIDatasets,
   GFWAPIDataset,
-  GFWAPIVersion,
+  GFWAPIField,
   GFWAPIKeys,
   GFWAPINewKey,
 } from "@/lib/types";
@@ -63,7 +63,7 @@ export const getFields = async ({
 }: {
   dataset: string;
   version: string;
-}): Promise<GFWAPIVersion[]> => {
+}): Promise<GFWAPIField[]> => {
   console.log(`${apiURL}/dataset/${dataset}/${version}/fields`);
   const res = await fetch(`${apiURL}/dataset/${dataset}/${version}/fields`);
 

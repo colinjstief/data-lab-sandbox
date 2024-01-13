@@ -56,7 +56,7 @@ export interface GFWAPITableValue {
   meaning: string | number;
 }
 
-export interface GFWAPIVersion {
+export interface GFWAPIField {
   alias: string;
   data_type: string;
   description: string;
