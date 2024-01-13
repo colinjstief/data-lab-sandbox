@@ -8,6 +8,7 @@ import {
   GFWAPICreateKey,
   GFWAPIDatasets,
   GFWAPIDataset,
+  GFWAPIVersion,
   GFWAPIKeys,
   GFWAPINewKey,
 } from "@/lib/types";
@@ -44,7 +45,27 @@ export const getDataset = async ({
 }: {
   dataset: string;
 }): Promise<GFWAPIDataset> => {
+  console.log(`${apiURL}/dataset/${dataset}`);
   const res = await fetch(`${apiURL}/dataset/${dataset}`);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  const data = await res.json();
+
+  return data.data;
+};
+
+export const getFields = async ({
+  dataset,
+  version,
+}: {
+  dataset: string;
+  version: string;
+}): Promise<GFWAPIVersion[]> => {
+  console.log(`${apiURL}/dataset/${dataset}/${version}/fields`);
+  const res = await fetch(`${apiURL}/dataset/${dataset}/${version}/fields`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 
 import { Dropdown, DropdownProps, Button, Segment } from "semantic-ui-react";

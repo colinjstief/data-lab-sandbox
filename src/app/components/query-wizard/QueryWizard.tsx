@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { Step, Icon } from "semantic-ui-react";
 import DataSelect from "@/app/components/query-wizard/DataSelect";
@@ -32,17 +32,44 @@ const QueryWizard = ({}: QueryWizardProps) => {
   const [visibleTab, setVisibleTab] = useState<string>("area");
   const [query, setQuery] = useState<WizardQuery>(initQuery);
 
-  // Reset segments when area or dataset changes
-  useEffect(() => {
-    const asset = selectAsset(query);
-    setQuery({ ...query, timeSegment: "", areaSegment: "" });
-  }, [query.area, query.dataset]);
+  const prevQueryRef = useRef(query);
 
   // Re-select asset when area, dataset, or segments changes
   useEffect(() => {
-    const asset = selectAsset(query);
-    setQuery({ ...query, asset: asset });
-  }, [query.area, query.dataset, query.timeSegment, query.areaSegment]);
+    console.log("query =>", query);
+  }, [query]);
+
+  // Reset segments when dataset changes
+  useEffect(() => {
+    const prevQuery = prevQueryRef.current;
+    prevQueryRef.current = query;
+
+    if (
+      prevQuery.area.type !== query.area.type ||
+      prevQuery.dataset !== query.dataset
+    ) {
+      const asset = selectAsset(query);
+      setQuery({
+        ...query,
+        asset: asset,
+        timeSegment: "",
+        areaSegment: "",
+        version: "",
+        sql: "",
+      });
+    }
+  }, [query]);
+
+  let breakdownLabel;
+  if (query.timeSegment && query.areaSegment) {
+    breakdownLabel = `By ${query.timeSegment} by ${query.areaSegment}`;
+  } else if (query.timeSegment && !query.areaSegment) {
+    breakdownLabel = `By ${query.timeSegment}`;
+  } else if (!query.timeSegment && query.areaSegment) {
+    breakdownLabel = `By ${query.areaSegment}`;
+  } else {
+    breakdownLabel = "No breakdown";
+  }
 
   return (
     <div className="flex items-start h-full">
@@ -82,7 +109,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
           <Icon name="table" />
           <Step.Content>
             <Step.Title>Break down</Step.Title>
-            <Step.Description>Segment results</Step.Description>
+            <Step.Description>{breakdownLabel}</Step.Description>
           </Step.Content>
         </Step>
         <Step

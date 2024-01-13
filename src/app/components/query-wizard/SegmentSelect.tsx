@@ -26,26 +26,20 @@ const SegmentSelect = ({
     e: React.SyntheticEvent<HTMLElement>,
     data: ButtonProps
   ) => {
-    console.log("data =>", data);
-    if (data.toggle) {
-      setQuery({
-        ...query,
-        timeSegment: data.value as string,
-      });
-    }
+    setQuery({
+      ...query,
+      timeSegment: data.value as string,
+    });
   };
 
   const handleAreaClick = (
     e: React.SyntheticEvent<HTMLElement>,
     data: ButtonProps
   ) => {
-    console.log("data =>", data);
-    if (data.toggle) {
-      setQuery({
-        ...query,
-        areaSegment: data.value as string,
-      });
-    }
+    setQuery({
+      ...query,
+      areaSegment: data.value as string,
+    });
   };
 
   let segmentOptions = datasets[query.dataset].segmentations[query.area.type];
@@ -69,7 +63,6 @@ const SegmentSelect = ({
             <h4 className="mb-2">Time</h4>
             <ButtonGroup fluid>
               <Button
-                toggle
                 active={query.timeSegment === ""}
                 onClick={handleTimeClick}
                 value=""
@@ -80,7 +73,6 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    toggle
                     active={query.timeSegment === "year"}
                     onClick={handleTimeClick}
                     value="year"
@@ -93,7 +85,6 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    toggle
                     active={query.timeSegment === "week"}
                     onClick={handleTimeClick}
                     value="week"
@@ -106,7 +97,6 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    toggle
                     active={query.timeSegment === "day"}
                     onClick={handleTimeClick}
                     value="day"
@@ -121,7 +111,6 @@ const SegmentSelect = ({
             <h4 className="mb-2">Area</h4>
             <ButtonGroup fluid>
               <Button
-                toggle
                 active={query.areaSegment === ""}
                 onClick={handleAreaClick}
                 value=""
@@ -132,7 +121,6 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    toggle
                     active={query.areaSegment === "iso"}
                     onClick={handleAreaClick}
                     value="iso"
@@ -145,7 +133,6 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    toggle
                     active={query.areaSegment === "adm1"}
                     onClick={handleAreaClick}
                     value="adm1"
@@ -158,7 +145,6 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    toggle
                     active={query.areaSegment === "adm2"}
                     onClick={handleAreaClick}
                     value="adm2"

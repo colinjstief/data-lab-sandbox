@@ -1,7 +1,9 @@
-import { Dropdown, Button, Segment } from "semantic-ui-react";
+import { useState, useEffect } from "react";
+import { Button, Radio, RadioProps, Segment } from "semantic-ui-react";
 
-import { datasets } from "@/lib/datasets";
-import { WizardQuery } from "@/lib/types";
+import { WizardQuery, GFWAPIVersion } from "@/lib/types";
+import { wait } from "@/lib/utils";
+import { getFields } from "@/lib/gfwDataAPI";
 
 interface FieldSelectProps {
   query: WizardQuery;
@@ -10,7 +12,22 @@ interface FieldSelectProps {
   setVisibleTab: (tab: string) => void;
 }
 
-const FieldSelect = ({ visible }: FieldSelectProps) => {
+const FeildSelect = ({
+  query,
+  setQuery,
+  visible,
+  setVisibleTab,
+}: FieldSelectProps) => {
+  const [async, setAsync] = useState<{
+    status: string;
+    message: string;
+  }>({
+    status: "",
+    message: "",
+  });
+
+  const [fields, setFields] = useState<GFWAPIVersion[]>([]);
+
   let containerStyle = "h-full mt-0";
   if (visible) {
     containerStyle = containerStyle.concat(" flex");
@@ -18,12 +35,60 @@ const FieldSelect = ({ visible }: FieldSelectProps) => {
     containerStyle = containerStyle.concat(" hidden");
   }
 
+  useEffect(() => {
+    const startGetFields = async () => {
+      setAsync({
+        status: "Loading",
+        message: "Reticulating splines...",
+      });
+      try {
+        const fields = await getFields({
+          dataset: query.asset,
+          version: query.version,
+        });
+        if (!fields) throw new Error("No fields found");
+
+        console.log("fields =>", fields);
+        setFields(fields);
+
+        setAsync({
+          status: "",
+          message: "",
+        });
+      } catch (error) {
+        setAsync({
+          status: "Failed",
+          message: "Failed to load boundaries",
+        });
+        await wait(3000);
+        setAsync({
+          status: "",
+          message: "",
+        });
+      }
+    };
+
+    if (query.asset && query.version) {
+      startGetFields();
+    }
+  }, [query.asset, query.version]);
+
   return (
     <Segment.Group className={containerStyle}>
-      <Segment className="flex-1">Select field</Segment>
-      <Segment className="flex justify-end">Bar</Segment>
+      <Segment className="flex-1">
+        <h3 className="text-xl font-bold mb-5">Select your fields</h3>
+        <div className="flex flex-col"></div>
+      </Segment>
+      <Segment className="flex justify-end">
+        <Button
+          disabled={!query.dataset}
+          onClick={() => setVisibleTab("results")}
+        >
+          Next
+        </Button>
+      </Segment>
     </Segment.Group>
   );
 };
 
-export default FieldSelect;
+export default FeildSelect;

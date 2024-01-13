@@ -20,13 +20,6 @@ const DataSelect = ({
     setQuery({
       ...query,
       dataset: e.currentTarget.dataset.dataset!,
-      timeSegment: "",
-      areaSegment: "",
-      asset: "",
-      version: "",
-      sql: "",
-      params: "",
-      results: "",
     });
   };
 
@@ -80,12 +73,7 @@ const DataSelect = ({
         </div>
       </Segment>
       <Segment className="flex justify-end">
-        <Button
-          disabled={!query.area.geometry}
-          onClick={() => setVisibleTab("segment")}
-        >
-          Next
-        </Button>
+        <Button onClick={() => setVisibleTab("segment")}>Next</Button>
       </Segment>
     </Segment.Group>
   );

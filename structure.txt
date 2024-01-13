@@ -1,0 +1,79 @@
+.
+├── README.md
+├── _route-template
+│   ├── error.tsx
+│   ├── layout.tsx
+│   ├── loading.tsx
+│   ├── not-found.tsx
+│   └── page.tsx
+├── next-env.d.ts
+├── next.config.js
+├── package.json
+├── postcss.config.js
+├── public
+│   ├── cat.svg
+│   ├── doughnuts.svg
+│   ├── favicon.png
+│   ├── gfw-data-api-illustration.svg
+│   └── rw-data-api-illustration.svg
+├── src
+│   ├── app
+│   │   ├── api
+│   │   │   └── auth
+│   │   │       └── [...nextauth]
+│   │   │           ├── options.ts
+│   │   │           └── route.ts
+│   │   ├── api-keys
+│   │   │   ├── error.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── components
+│   │   │   ├── collections
+│   │   │   │   ├── DatasetTable.tsx
+│   │   │   │   └── KeyTable.tsx
+│   │   │   ├── form
+│   │   │   │   ├── KeyForm.tsx
+│   │   │   │   └── SigninForm.tsx
+│   │   │   ├── layout
+│   │   │   │   ├── Header.tsx
+│   │   │   │   ├── Navigation.tsx
+│   │   │   │   ├── Panel.tsx
+│   │   │   │   └── TopBar.tsx
+│   │   │   └── other
+│   │   │       ├── Banner.tsx
+│   │   │       ├── LoadingScreen.tsx
+│   │   │       ├── PageSizePicker.tsx
+│   │   │       └── Pagination.tsx
+│   │   ├── context
+│   │   │   └── AuthProvider.tsx
+│   │   ├── datasets
+│   │   │   ├── [dataset]
+│   │   │   │   └── page.tsx
+│   │   │   ├── error.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── profile
+│   │   │   ├── error.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx
+│   │   └── signin
+│   │       ├── loading.tsx
+│   │       └── page.tsx
+│   ├── constants
+│   │   ├── colors.js
+│   │   └── keys.js
+│   ├── lib
+│   │   ├── gfwDataAPI.ts
+│   │   ├── serverActions.ts
+│   │   ├── types.ts
+│   │   └── utils.ts
+│   └── middleware.ts
+├── structure.txt
+├── tailwind.config.js
+├── tsconfig.json
+└── yarn.lock
+
+21 directories, 56 files

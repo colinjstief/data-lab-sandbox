@@ -33,6 +33,12 @@ export interface Segmentations {
   [key: string]: string[];
 }
 
+export interface Field {
+  key: string;
+  value: string;
+  text: string;
+}
+
 export interface Dataset {
   dataset: string;
   name: string;
@@ -43,6 +49,28 @@ export interface Dataset {
 
 export interface Datasets {
   [key: string]: Dataset;
+}
+
+export interface GFWAPITableValue {
+  value: number;
+  meaning: string | number;
+}
+
+export interface GFWAPIVersion {
+  alias: string;
+  data_type: string;
+  description: string;
+  is_feature_info: boolean;
+  is_filter: boolean;
+  name: string;
+  unit: string;
+  pixel_meaning: string;
+  statistics: null;
+  values_table: {
+    [key: string]: GFWAPITableValue;
+  };
+  compression: null;
+  no_data_value: number;
 }
 
 export interface Boundary {
