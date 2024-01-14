@@ -6,15 +6,15 @@ import { wait } from "@/lib/utils";
 import { getDataset } from "@/lib/gfwDataAPI";
 
 interface VersionSelectProps {
-  query: WizardQuery;
-  setQuery: (query: WizardQuery) => void;
+  options: WizardQuery;
+  setOptions: (options: WizardQuery) => void;
   visible: boolean;
   setVisibleTab: (tab: string) => void;
 }
 
 const VersionSelect = ({
-  query,
-  setQuery,
+  options,
+  setOptions,
   visible,
   setVisibleTab,
 }: VersionSelectProps) => {
@@ -42,7 +42,7 @@ const VersionSelect = ({
         message: "Reticulating splines...",
       });
       try {
-        const dataset = await getDataset({ dataset: query.asset });
+        const dataset = await getDataset({ dataset: options.asset });
         if (!dataset) throw new Error("No dataset found");
 
         const newestFirst = dataset.versions?.reverse();
@@ -65,16 +65,16 @@ const VersionSelect = ({
       }
     };
 
-    if (query.asset) {
+    if (options.asset) {
       startGetVersion();
     }
-  }, [query.asset]);
+  }, [options.asset]);
 
   const handleChange = (
     e: React.SyntheticEvent<HTMLElement>,
     data: RadioProps
   ) => {
-    setQuery({ ...query, version: data.value as string });
+    setOptions({ ...options, version: data.value as string });
   };
 
   return (
@@ -90,7 +90,7 @@ const VersionSelect = ({
                   label={index === 0 ? `${version} (most recent)` : version}
                   name="versions"
                   value={version}
-                  checked={query.version === version}
+                  checked={options.version === version}
                   onChange={handleChange}
                   className="mb-2"
                 />
@@ -100,7 +100,7 @@ const VersionSelect = ({
       </Segment>
       <Segment className="flex justify-end">
         <Button
-          disabled={!query.dataset}
+          disabled={!options.dataset}
           onClick={() => setVisibleTab("field")}
         >
           Next

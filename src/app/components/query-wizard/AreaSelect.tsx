@@ -9,15 +9,15 @@ import TheMap from "@/app/components/other/TheMap";
 import GADM from "@/app/components/query-wizard/GADM";
 
 interface AreaSelectProps {
-  query: WizardQuery;
-  setQuery: (query: WizardQuery) => void;
+  options: WizardQuery;
+  setOptions: (options: WizardQuery) => void;
   visible: boolean;
   setVisibleTab: (tab: string) => void;
 }
 
 const AreaSelect = ({
-  query,
-  setQuery,
+  options,
+  setOptions,
   visible,
   setVisibleTab,
 }: AreaSelectProps) => {
@@ -57,8 +57,8 @@ const AreaSelect = ({
             <Segment className="w-[250px] border mb-0">
               {areaType === "gadm" && (
                 <GADM
-                  query={query}
-                  setQuery={setQuery}
+                  options={options}
+                  setOptions={setOptions}
                   theMap={theMap}
                   setTextPanel={setTextPanel}
                 />
@@ -85,7 +85,10 @@ const AreaSelect = ({
         </div>
       </Segment>
       <Segment className="flex justify-end">
-        <Button disabled={!query.area} onClick={() => setVisibleTab("dataset")}>
+        <Button
+          disabled={!options.area}
+          onClick={() => setVisibleTab("dataset")}
+        >
           Next
         </Button>
       </Segment>

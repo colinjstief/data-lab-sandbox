@@ -17,56 +17,56 @@ import { selectAsset } from "@/lib/selectAsset";
 interface QueryWizardProps {}
 
 const QueryWizard = ({}: QueryWizardProps) => {
-  const initQuery = {
+  const initOptions = {
     area: { type: "gadm_global", value: "Global", geometry: null },
     dataset: "tcl",
     timeSegment: "",
     areaSegment: "",
     asset: "gadm__tcl__iso_summary",
     version: "",
-    sql: "",
+    query: "",
     params: "",
     results: "",
   };
 
   const [visibleTab, setVisibleTab] = useState<string>("area");
-  const [query, setQuery] = useState<WizardQuery>(initQuery);
+  const [options, setOptions] = useState<WizardQuery>(initOptions);
 
-  const prevQueryRef = useRef(query);
+  const prevOptionsRef = useRef(options);
 
   // Re-select asset when area, dataset, or segments changes
   useEffect(() => {
-    console.log("query =>", query);
-  }, [query]);
+    //console.log("options.query =>", options.query);
+  }, [options]);
 
   // Reset segments when dataset changes
   useEffect(() => {
-    const prevQuery = prevQueryRef.current;
-    prevQueryRef.current = query;
+    const prevOptions = prevOptionsRef.current;
+    prevOptionsRef.current = options;
 
     if (
-      prevQuery.area.type !== query.area.type ||
-      prevQuery.dataset !== query.dataset
+      prevOptions.area.type !== options.area.type ||
+      prevOptions.dataset !== options.dataset
     ) {
-      const asset = selectAsset(query);
-      setQuery({
-        ...query,
+      const asset = selectAsset(options);
+      setOptions({
+        ...options,
         asset: asset,
         timeSegment: "",
         areaSegment: "",
         version: "",
-        sql: "",
+        query: "",
       });
     }
-  }, [query]);
+  }, [options]);
 
   let breakdownLabel;
-  if (query.timeSegment && query.areaSegment) {
-    breakdownLabel = `By ${query.timeSegment} by ${query.areaSegment}`;
-  } else if (query.timeSegment && !query.areaSegment) {
-    breakdownLabel = `By ${query.timeSegment}`;
-  } else if (!query.timeSegment && query.areaSegment) {
-    breakdownLabel = `By ${query.areaSegment}`;
+  if (options.timeSegment && options.areaSegment) {
+    breakdownLabel = `By ${options.timeSegment} by ${options.areaSegment}`;
+  } else if (options.timeSegment && !options.areaSegment) {
+    breakdownLabel = `By ${options.timeSegment}`;
+  } else if (!options.timeSegment && options.areaSegment) {
+    breakdownLabel = `By ${options.areaSegment}`;
   } else {
     breakdownLabel = "No breakdown";
   }
@@ -82,8 +82,8 @@ const QueryWizard = ({}: QueryWizardProps) => {
           <Step.Content>
             <Step.Title>Area of interest</Step.Title>
             <Step.Description>
-              {!!query?.area.value
-                ? query.area.value
+              {!!options?.area.value
+                ? options.area.value
                 : "Select area of interest"}
             </Step.Description>
           </Step.Content>
@@ -91,20 +91,20 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("dataset")}
           active={visibleTab === "dataset"}
-          disabled={!query.area.value}
+          disabled={!options.area.value}
         >
           <Icon name="globe" />
           <Step.Content>
             <Step.Title>Dataset</Step.Title>
             <Step.Description>
-              {datasets[query.dataset as keyof Datasets].name}
+              {datasets[options.dataset as keyof Datasets].name}
             </Step.Description>
           </Step.Content>
         </Step>
         <Step
           onClick={() => setVisibleTab("segment")}
           active={visibleTab === "segment"}
-          disabled={!query.area.value}
+          disabled={!options.area.value}
         >
           <Icon name="table" />
           <Step.Content>
@@ -115,33 +115,33 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("version")}
           active={visibleTab === "version"}
-          disabled={!query.area.value}
+          disabled={!options.area.value}
         >
           <Icon name="barcode" />
           <Step.Content>
             <Step.Title>Version</Step.Title>
             <Step.Description>
-              {query?.version || "Select your version"}
+              {options?.version || "Select your version"}
             </Step.Description>
           </Step.Content>
         </Step>
         <Step
           onClick={() => setVisibleTab("field")}
           active={visibleTab === "field"}
-          disabled={!query.version}
+          disabled={!options.version}
         >
           <Icon name="columns" />
           <Step.Content>
             <Step.Title>Fields</Step.Title>
             <Step.Description>
-              {query.sql ? "Fields selected" : "Select your fields"}
+              {options.query ? "Fields selected" : "Select your fields"}
             </Step.Description>
           </Step.Content>
         </Step>
         <Step
-          onClick={() => setVisibleTab("results")}
-          active={visibleTab === "results"}
-          disabled={!query.area.geometry || !query.sql}
+          onClick={() => setVisibleTab("result")}
+          active={visibleTab === "result"}
+          disabled={!options.query || !options.version}
         >
           <Icon name="chart pie" />
           <Step.Content>
@@ -152,39 +152,39 @@ const QueryWizard = ({}: QueryWizardProps) => {
       </Step.Group>
       <div className="flex-1 h-full pl-3">
         <AreaSelect
-          query={query}
-          setQuery={setQuery}
+          options={options}
+          setOptions={setOptions}
           visible={visibleTab === "area"}
           setVisibleTab={setVisibleTab}
         />
         <DataSelect
-          query={query}
-          setQuery={setQuery}
+          options={options}
+          setOptions={setOptions}
           visible={visibleTab === "dataset"}
           setVisibleTab={setVisibleTab}
         />
         <SegmentSelect
-          query={query}
-          setQuery={setQuery}
+          options={options}
+          setOptions={setOptions}
           visible={visibleTab === "segment"}
           setVisibleTab={setVisibleTab}
         />
         <VersionSelect
-          query={query}
-          setQuery={setQuery}
+          options={options}
+          setOptions={setOptions}
           visible={visibleTab === "version"}
           setVisibleTab={setVisibleTab}
         />
         <FieldSelect
-          query={query}
-          setQuery={setQuery}
+          options={options}
+          setOptions={setOptions}
           visible={visibleTab === "field"}
           setVisibleTab={setVisibleTab}
         />
         <Results
-          query={query}
-          setQuery={setQuery}
-          visible={visibleTab === "results"}
+          options={options}
+          setOptions={setOptions}
+          visible={visibleTab === "result"}
           setVisibleTab={setVisibleTab}
         />
       </div>

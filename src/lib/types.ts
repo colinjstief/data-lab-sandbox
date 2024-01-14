@@ -20,13 +20,17 @@ export interface WizardQuery {
     geometry: GeoJSON.Geometry | null;
   };
   dataset: string;
-  timeSegment: string;
-  areaSegment: string;
   asset: string;
   version: string;
-  sql: string;
-  params: string;
-  results: string;
+  query: string;
+  timeSegment: string;
+  areaSegment: string;
+}
+
+export interface Boundary {
+  key: string;
+  value: string;
+  text: string;
 }
 
 export interface Segmentations {
@@ -49,34 +53,6 @@ export interface Dataset {
 
 export interface Datasets {
   [key: string]: Dataset;
-}
-
-export interface GFWAPITableValue {
-  value: number;
-  meaning: string | number;
-}
-
-export interface GFWAPIField {
-  alias: string;
-  data_type: string;
-  description: string;
-  is_feature_info: boolean;
-  is_filter: boolean;
-  name: string;
-  unit: string;
-  pixel_meaning: string;
-  statistics: null;
-  values_table: {
-    [key: string]: GFWAPITableValue;
-  };
-  compression: null;
-  no_data_value: number;
-}
-
-export interface Boundary {
-  key: string;
-  value: string;
-  text: string;
 }
 
 ////////////////////
@@ -117,7 +93,7 @@ declare module "next-auth/jwt" {
 }
 
 ///////////////////////
-//// GFW DATA API /////
+//// RW DATA API /////
 ///////////////////////
 
 interface RWAPIGFWProfile {
@@ -223,10 +199,28 @@ export interface GFWAPIKeys {
   status: string;
 }
 
-// const domainPattern: RegExp = /^(\*\.)?([\w-]+\.)+[\w-]+$|^(localhost)$/;
-// const domainSchema = z.string().refine((value) => domainPattern.test(value), {
-//   message: "Invalid domain format",
-// });
+export interface GFWAPITableValue {
+  value: number;
+  meaning: string | number;
+}
+
+export interface GFWAPIField {
+  alias: string;
+  data_type: string;
+  description: string;
+  is_feature_info: boolean;
+  is_filter: boolean;
+  name: string;
+  unit: string;
+  pixel_meaning: string;
+  statistics: null;
+  values_table: {
+    [key: string]: GFWAPITableValue;
+  };
+  compression: null;
+  no_data_value: number;
+}
+
 export const GFWAPICreateKeyFormSchema = z.object({
   alias: z.string().nonempty("Name required"),
   organization: z.string().nonempty("Organization required"),

@@ -10,15 +10,15 @@ import { datasets } from "@/lib/datasets";
 import { WizardQuery } from "@/lib/types";
 
 interface SegmentationProps {
-  query: WizardQuery;
-  setQuery: (query: WizardQuery) => void;
+  options: WizardQuery;
+  setOptions: (options: WizardQuery) => void;
   visible: boolean;
   setVisibleTab: (tab: string) => void;
 }
 
 const SegmentSelect = ({
-  query,
-  setQuery,
+  options,
+  setOptions,
   visible,
   setVisibleTab,
 }: SegmentationProps) => {
@@ -26,8 +26,8 @@ const SegmentSelect = ({
     e: React.SyntheticEvent<HTMLElement>,
     data: ButtonProps
   ) => {
-    setQuery({
-      ...query,
+    setOptions({
+      ...options,
       timeSegment: data.value as string,
     });
   };
@@ -36,13 +36,14 @@ const SegmentSelect = ({
     e: React.SyntheticEvent<HTMLElement>,
     data: ButtonProps
   ) => {
-    setQuery({
-      ...query,
+    setOptions({
+      ...options,
       areaSegment: data.value as string,
     });
   };
 
-  let segmentOptions = datasets[query.dataset].segmentations[query.area.type];
+  let segmentOptions =
+    datasets[options.dataset].segmentations[options.area.type];
   if (!segmentOptions) {
     segmentOptions = [];
   }
@@ -63,7 +64,7 @@ const SegmentSelect = ({
             <h4 className="mb-2">Time</h4>
             <ButtonGroup fluid>
               <Button
-                active={query.timeSegment === ""}
+                active={options.timeSegment === ""}
                 onClick={handleTimeClick}
                 value=""
               >
@@ -73,7 +74,7 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    active={query.timeSegment === "year"}
+                    active={options.timeSegment === "year"}
                     onClick={handleTimeClick}
                     value="year"
                   >
@@ -85,7 +86,7 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    active={query.timeSegment === "week"}
+                    active={options.timeSegment === "week"}
                     onClick={handleTimeClick}
                     value="week"
                   >
@@ -97,7 +98,7 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    active={query.timeSegment === "day"}
+                    active={options.timeSegment === "day"}
                     onClick={handleTimeClick}
                     value="day"
                   >
@@ -111,7 +112,7 @@ const SegmentSelect = ({
             <h4 className="mb-2">Area</h4>
             <ButtonGroup fluid>
               <Button
-                active={query.areaSegment === ""}
+                active={options.areaSegment === ""}
                 onClick={handleAreaClick}
                 value=""
               >
@@ -121,7 +122,7 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    active={query.areaSegment === "iso"}
+                    active={options.areaSegment === "iso"}
                     onClick={handleAreaClick}
                     value="iso"
                   >
@@ -133,7 +134,7 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    active={query.areaSegment === "adm1"}
+                    active={options.areaSegment === "adm1"}
                     onClick={handleAreaClick}
                     value="adm1"
                   >
@@ -145,7 +146,7 @@ const SegmentSelect = ({
                 <>
                   <ButtonOr />
                   <Button
-                    active={query.areaSegment === "adm2"}
+                    active={options.areaSegment === "adm2"}
                     onClick={handleAreaClick}
                     value="adm2"
                   >
@@ -159,7 +160,7 @@ const SegmentSelect = ({
       </Segment>
       <Segment className="flex justify-end">
         <Button
-          disabled={!query.dataset}
+          disabled={!options.dataset}
           onClick={() => setVisibleTab("version")}
         >
           Next

@@ -10,13 +10,13 @@ import { wait } from "@/lib/utils";
 import { getBoundaries, getFeature } from "@/lib/mapboxAPI";
 
 interface GADMProps {
-  query: WizardQuery;
-  setQuery: (query: WizardQuery) => void;
+  options: WizardQuery;
+  setOptions: (options: WizardQuery) => void;
   theMap: mapboxgl.Map | null;
   setTextPanel: (text: string) => void;
 }
 
-const GADM = ({ query, setQuery, theMap, setTextPanel }: GADMProps) => {
+const GADM = ({ options, setOptions, theMap, setTextPanel }: GADMProps) => {
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
   const [isoOptions, setIsoOptions] = useState<Boundary[]>([]);
   const [adm1Options, setAdm1Options] = useState<Boundary[]>([]);
@@ -405,8 +405,8 @@ const GADM = ({ query, setQuery, theMap, setTextPanel }: GADMProps) => {
         if (!feature) return;
         addHighlight("adm2", feature.geometry);
         zoomToGeometry(feature.geometry);
-        setQuery({
-          ...query,
+        setOptions({
+          ...options,
           area: {
             type: "gadm_adm2",
             value: adm2,
@@ -424,8 +424,8 @@ const GADM = ({ query, setQuery, theMap, setTextPanel }: GADMProps) => {
           "wri-gadm-36-adm2-layer-fill",
           "wri-gadm-36-adm2-layer-line",
         ]);
-        setQuery({
-          ...query,
+        setOptions({
+          ...options,
           area: {
             type: "gadm_adm1",
             value: adm1,
@@ -445,8 +445,8 @@ const GADM = ({ query, setQuery, theMap, setTextPanel }: GADMProps) => {
           "wri-gadm-36-adm1-layer-fill",
           "wri-gadm-36-adm1-layer-line",
         ]);
-        setQuery({
-          ...query,
+        setOptions({
+          ...options,
           area: {
             type: "gadm_iso",
             value: iso,
@@ -462,8 +462,8 @@ const GADM = ({ query, setQuery, theMap, setTextPanel }: GADMProps) => {
           "wri-gadm-36-iso-layer-fill",
           "wri-gadm-36-iso-layer-line",
         ]);
-        setQuery({
-          ...query,
+        setOptions({
+          ...options,
           area: {
             type: "gadm_global",
             value: "Global",

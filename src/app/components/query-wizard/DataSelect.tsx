@@ -4,21 +4,21 @@ import { datasets } from "@/lib/datasets";
 import { WizardQuery } from "@/lib/types";
 
 interface DataSelectProps {
-  query: WizardQuery;
-  setQuery: (query: WizardQuery) => void;
+  options: WizardQuery;
+  setOptions: (options: WizardQuery) => void;
   visible: boolean;
   setVisibleTab: (tab: string) => void;
 }
 
 const DataSelect = ({
-  query,
-  setQuery,
+  options,
+  setOptions,
   visible,
   setVisibleTab,
 }: DataSelectProps) => {
   const handleChange = (e: React.MouseEvent<HTMLDivElement>) => {
-    setQuery({
-      ...query,
+    setOptions({
+      ...options,
       dataset: e.currentTarget.dataset.dataset!,
     });
   };
@@ -38,7 +38,7 @@ const DataSelect = ({
           {Object.entries(datasets).map(([key, value]) => {
             let cardStyle;
             let radioButton;
-            if (query.dataset === value.dataset) {
+            if (options.dataset === value.dataset) {
               cardStyle =
                 "h-[200px] w-[175px] border-2 border-gray-500 flex flex-col justify-center items-center p-[5px] mr-5 mb-5 hover:cursor-pointer";
               radioButton = (

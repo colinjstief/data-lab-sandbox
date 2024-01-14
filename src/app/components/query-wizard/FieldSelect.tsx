@@ -1,29 +1,22 @@
 import { useState, useEffect } from "react";
-import {
-  Icon,
-  Button,
-  Dropdown,
-  Radio,
-  RadioProps,
-  Segment,
-} from "semantic-ui-react";
+import { Icon, Button, Dropdown, Segment } from "semantic-ui-react";
 
 import { WizardQuery, GFWAPIField, Field } from "@/lib/types";
 import { wait, sortByProperty } from "@/lib/utils";
 import { getFields } from "@/lib/gfwDataAPI";
-import { constructSQL } from "@/lib/constructSQL";
-import { start } from "repl";
+import { constructQuery } from "@/lib/constructQuery";
+import { stat } from "fs";
 
 interface FieldSelectProps {
-  query: WizardQuery;
-  setQuery: (query: WizardQuery) => void;
+  options: WizardQuery;
+  setOptions: (options: WizardQuery) => void;
   visible: boolean;
   setVisibleTab: (tab: string) => void;
 }
 
-const FeildSelect = ({
-  query,
-  setQuery,
+const FieldSelect = ({
+  options,
+  setOptions,
   visible,
   setVisibleTab,
 }: FieldSelectProps) => {
@@ -55,8 +48,8 @@ const FeildSelect = ({
       });
       try {
         const apiFields: GFWAPIField[] = await getFields({
-          dataset: query.asset,
-          version: query.version,
+          dataset: options.asset,
+          version: options.version,
         });
         if (!apiFields) throw new Error("No fields found");
 
@@ -97,40 +90,42 @@ const FeildSelect = ({
       }
     };
 
-    if (query.asset && query.version) {
+    if (options.asset && options.version) {
       startGetFields();
     }
-  }, [query.asset, query.version]);
+  }, [options.asset, options.version]);
 
   // RESET
   useEffect(() => {
     setStats([]);
     setFilters([]);
     setGroups([]);
-  }, [query.asset, query.version]);
+  }, [options.asset, options.version]);
 
   // CONSTRUCT SQL
   useEffect(() => {
-    const startConstructSQL = async () => {
-      const theSQL = await constructSQL({ stats });
-      setQuery({
-        ...query,
-        sql: theSQL,
+    const startConstructQueryRequest = async () => {
+      const theQuery = await constructQuery({ options, stats });
+      setOptions({
+        ...options,
+        query: theQuery,
       });
     };
-    startConstructSQL();
-  }, [stats, filters, groups]);
+    if (stats.length > 0) {
+      startConstructQueryRequest();
+    }
+  }, [options.version, stats, filters, groups]);
 
   // STATISTICS - SET OPTIONS
   useEffect(() => {
     const options = [{ key: "sum", value: "sum", text: "sum" }];
 
-    if (!!query.asset && query.asset.includes("alert")) {
-      options.push({ key: "count", value: "count", text: "count" });
-    }
+    // if (!!options.asset && options.asset.includes("alert")) {
+    //   options.push({ key: "count", value: "count", text: "count" });
+    // }
 
     setStatOptions(options);
-  }, [query.asset, query.version]);
+  }, [options.asset, options.version]);
 
   // STATISTICS - ADD NEW STAT
   const addStat = () => {
@@ -235,17 +230,19 @@ const FeildSelect = ({
               Add
             </Button>
           </div>
+          <div className="mb-5">Filters</div>
+          <div className="mb-5">Groups</div>
         </div>
       </Segment>
       <Segment>
         <div className="p-4 bg-slate-200">
-          <span className="font-mono">{query.sql}</span>
+          <span className="font-mono">{options.query}</span>
         </div>
       </Segment>
       <Segment className="flex justify-end">
         <Button
-          disabled={!query.dataset}
-          onClick={() => setVisibleTab("results")}
+          disabled={!options.query}
+          onClick={() => setVisibleTab("result")}
         >
           Next
         </Button>
@@ -254,7 +251,7 @@ const FeildSelect = ({
   );
 };
 
-export default FeildSelect;
+export default FieldSelect;
 
 const booleanFields = [
   { key: "true", value: "= 'true'", text: "true" },

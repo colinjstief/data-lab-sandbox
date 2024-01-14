@@ -11,6 +11,7 @@ import {
   GFWAPIField,
   GFWAPIKeys,
   GFWAPINewKey,
+  WizardQuery,
 } from "@/lib/types";
 
 const apiURL = process.env.GFW_DATA_API_URL;
@@ -74,6 +75,42 @@ export const getFields = async ({
   const data = await res.json();
 
   return data.data;
+};
+
+////////////////
+//// QUERY /////
+////////////////
+export const queryData = async ({
+  options,
+}: {
+  options: WizardQuery;
+}): Promise<{ [key: string]: any }[] | []> => {
+  const { area, asset, version, query } = options;
+
+  // Global              gadm_global   GET /query?sql= SELECT sum(ha) FROM my_table
+  // GADM ISO            gadm_iso      GET /query?sql= SELECT sum(ha) FROM my_table WHERE iso = "BRA"
+  // GADM ADM1           gadm_adm1     GET /query?sql= SELECT sum(ha) FROM my_table WHERE iso = "BRA" AND adm1 = 3
+  // GADM ADM2           gadm_adm2     GET /query?sql= SELECT sum(ha) FROM my_table WHERE iso = "BRA" AND adm1 = 3 AND adm2 = 1
+  // WDPA                wdpa          GET /query?sql= SELECT sum(ha) FROM my_table WHERE wdpa_protected_area__id = "2345234"
+  // Geostore (Saved)    geostore      GET /query?sql= SELECT sum(ha) FROM my_table WHERE geostore__id = "4j194c214" AND geostore_origin = "rw"
+  // GeoJSON             geojson       POST { "sql": 'SELECT sum(ha) FROM my_table', "geometry": {"type": "string", "coordinates": []} }
+
+  let res;
+  if (area.type === "gadm_global") {
+    const request = `${apiURL}/dataset/${asset}/${version}/query?sql=${query}`;
+    console.log("request", request);
+    res = await fetch(request);
+  }
+  if (res) {
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const data = await res.json();
+    return data.data;
+  }
+
+  return [];
 };
 
 ///////////////////
