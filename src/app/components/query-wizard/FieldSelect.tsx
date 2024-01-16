@@ -26,7 +26,7 @@ const FieldSelect = ({
   });
 
   const [sumFields, setSumFields] = useState<Field[]>([]);
-  const [statOptions, setStatOptions] = useState<Field[]>([]);
+  const [statChoices, setStatChoices] = useState<Field[]>([]);
   const [stats, setStats] = useState<{ stat: Field; field: Field }[]>([]);
   const [filterGroupFields, setFilterGroupFields] = useState([]);
   const [filters, setFilters] = useState([]);
@@ -118,47 +118,68 @@ const FieldSelect = ({
 
   // STATISTICS - SET OPTIONS
   useEffect(() => {
-    const options = [{ key: "sum", value: "sum", text: "sum" }];
+    console.log("SET OPTIONS");
+    const choices = [{ key: "sum", value: "sum", text: "sum" }];
 
-    // if (!!options.asset && options.asset.includes("alert")) {
-    //   options.push({ key: "count", value: "count", text: "count" });
-    // }
+    if (!!options.asset && options.asset.includes("alert")) {
+      choices.push({ key: "count", value: "count", text: "count" });
+      choices.push({
+        key: "coordinates",
+        value: "coordinates",
+        text: "coordinates",
+      });
+    }
 
-    setStatOptions(options);
+    setStatChoices(choices);
   }, [options.asset, options.version]);
 
   // STATISTICS - ADD NEW STAT
   const addStat = () => {
-    setStats([
-      ...stats,
-      { stat: statOptions[0], field: sumFields[stats.length] },
-    ]);
+    // console.log("statChoices =>", statChoices);
+    // console.log("sumFields =>", sumFields);
+    // if (["count", "coordinates"].some(alertStat => alertStat === statChoices[0].value) || ) {
+    //   setStats([
+    //     ...stats,
+    //     {
+    //       stat: statChoices[0],
+    //       field: { key: "alerts", value: "alerts", text: "alerts" },
+    //     },
+    //   ]);
+    // } else {
+    //   setStats([
+    //     ...stats,
+    //     { stat: statChoices[0], field: sumFields[stats.length] },
+    //   ]);
+    // }
   };
 
   // STATISTICS - REMOVE STAT
-  const removeStat = (i: number) => {
+  const removeStat = ({ i }: { i: number }) => {
     setStats(stats.filter((stat, index) => i !== index));
   };
 
   // STATISTICS - HANDLE STAT CHANGE
-  const handleStatChange = (
-    i: number,
-    statValue: string,
-    fieldValue: string
-  ) => {
+  const handleStatChange = ({
+    i,
+    statValue,
+    fieldValue,
+  }: {
+    i: number;
+    statValue: string;
+    fieldValue: string;
+  }) => {
     const newStats = stats.map((existingStat, index) => {
       if (index === i) {
         if (statValue !== "sum") {
-          console.log("statValue", statValue);
           return {
             stat: { key: statValue, value: statValue, text: statValue },
-            field: alertFields[0],
+            field: { key: "alerts", value: "alerts", text: "alerts" },
           };
         } else {
           if (fieldValue === "alerts") {
             return {
               stat: { key: statValue, value: statValue, text: statValue },
-              field: sumFields[0],
+              field: { key: "alerts", value: "alerts", text: "alerts" },
             };
           } else {
             return {
@@ -185,21 +206,31 @@ const FieldSelect = ({
             </h4>
             <div>
               {stats.map((stat, i) => {
-                console.log("stat", stat);
+                let inputFields;
+                console.log("stat.stat.value", stat.stat.value);
+                if (stat.stat.value === "sum") {
+                  inputFields = sumFields;
+                } else {
+                  inputFields = [
+                    { key: "alerts", value: "alerts", text: "alerts" },
+                  ];
+                }
                 return (
                   <div key={i} className="flex items-center mb-3">
                     <p className="m-0">The</p>
                     <Dropdown
                       search
                       selection
-                      options={statOptions}
+                      options={statChoices}
                       value={stat.stat.value}
                       onChange={(e, newStat) => {
-                        handleStatChange(
+                        console.log("newStat", newStat);
+                        console.log("stat", stat);
+                        handleStatChange({
                           i,
-                          newStat.value as string,
-                          stat.field.value as string
-                        );
+                          statValue: newStat.value as string,
+                          fieldValue: stat.field.value as string,
+                        });
                       }}
                       className="min-w-[120px] mx-3"
                     />
@@ -207,19 +238,19 @@ const FieldSelect = ({
                     <Dropdown
                       search
                       selection
-                      options={sumFields}
+                      options={inputFields}
                       value={stat.field?.value}
                       onChange={(e, newField) => {
-                        handleStatChange(
+                        handleStatChange({
                           i,
-                          stat.stat.value as string,
-                          newField.value as string
-                        );
+                          statValue: stat.stat.value as string,
+                          fieldValue: newField.value as string,
+                        });
                       }}
                       className="min-w-[330px] mx-3"
                     />
 
-                    <Button icon size="tiny" onClick={() => removeStat(i)}>
+                    <Button icon size="tiny" onClick={() => removeStat({ i })}>
                       <Icon name="delete" />
                     </Button>
                   </div>
@@ -253,21 +284,20 @@ const FieldSelect = ({
 
 export default FieldSelect;
 
-const booleanFields = [
+const booleanParams = [
   { key: "true", value: "= 'true'", text: "true" },
   { key: "false", value: "= 'false'", text: "false" },
 ];
-const equalityFields = [
+const equalityParams = [
   { key: "equals", value: "=", text: "equals" },
   { key: "not_equal", value: "!=", text: "does not equal" },
 ];
-const existenceFields = [
+const existenceParams = [
   { key: "not_null", value: "IS NOT NULL", text: "IS NOT NULL" },
   { key: "null", value: "IS NULL", text: "IS NULL" },
 ];
-const dateFields = [
+const dateParams = [
   { key: "before", value: "<", text: "before" },
   { key: "after", value: ">", text: "after" },
   { key: "between", value: "between", text: "between" },
 ];
-const alertFields = [{ key: "alerts", value: "alerts", text: "alerts" }];

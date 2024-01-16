@@ -61,10 +61,10 @@ const Results = ({
       }
     };
 
-    if (options.version && options.query) {
+    if (visible && options.version && options.query) {
       startSendRequest();
     }
-  }, [options.version, options.query]);
+  }, [visible, options.version, options.query]);
 
   return (
     <Segment.Group className={containerStyle}>

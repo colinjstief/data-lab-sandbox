@@ -22,7 +22,7 @@ const TheMap = ({ setTheMap, visible, textPanel }: TheMapProps) => {
       container: mapContainer.current as any,
       style: "mapbox://styles/mapbox/satellite-v9",
       center: [20, 10],
-      zoom: 3.25,
+      zoom: 1,
     });
     map.current.on("load", () => {
       setTheMap(map.current);
