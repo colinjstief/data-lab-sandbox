@@ -1,4 +1,4 @@
-[Visit the application](http://www.datalab-sandbox.org/)
+[Visit the application](http://www.data-lab-sandbox.org/)
 
 ## Built With
 
