@@ -1,5 +1,7 @@
 "use server";
 
+import { NextResponse } from "next/server";
+
 const apiURL = process.env.BITLY_API_URL;
 const accessToken = process.env.BITLY_API_ACCESS_TOKEN;
 
@@ -20,5 +22,5 @@ export async function POST(request: Request) {
 
   const bitlyData = await bitlyResponse.json();
 
-  return Response.json({ shortLink: bitlyData.link });
+  return NextResponse.json({ shortLink: bitlyData.link });
 }
