@@ -5,7 +5,6 @@ import { WizardQuery, GFWAPIField, Field } from "@/lib/types";
 import { wait, sortByProperty } from "@/lib/utils";
 import { getFields } from "@/lib/gfwDataAPI";
 import { constructQuery } from "@/lib/constructQuery";
-import { stat } from "fs";
 
 interface FieldSelectProps {
   options: WizardQuery;
@@ -53,6 +52,8 @@ const FieldSelect = ({
         });
         if (!apiFields) throw new Error("No fields found");
 
+        // console.log("apiFields =>", apiFields);
+
         const initialFields: Field[] = apiFields.map((apiField) => {
           return {
             key: apiField.name,
@@ -62,12 +63,20 @@ const FieldSelect = ({
         });
 
         const initialSumFields = initialFields.filter((field) => {
-          return ["__ha", "__Mg"].some((item) => {
-            return field.value.includes(item);
+          // return ["__ha", "__Mg"].some((item) => {
+          //   return field.value.includes(item)
+          // });
+          return [
+            "umd_tree_cover_loss__ha",
+            "umd_tree_cover_loss_from_fires__ha",
+            "whrc_aboveground_co2_stock_2000__Mg",
+          ].some((item) => {
+            return field.value === item;
           });
         });
         const sortedInitialSumFields = sortByProperty(initialSumFields, "key");
         setSumFields(sortedInitialSumFields);
+        // console.log("sumFields =>", sumFields);
 
         const initialFilterGroupFields = initialFields.filter((field) => {});
 
@@ -106,19 +115,18 @@ const FieldSelect = ({
   useEffect(() => {
     const startConstructQueryRequest = async () => {
       const theQuery = await constructQuery({ options, stats });
+      // console.log("theQuery =>", theQuery);
       setOptions({
         ...options,
         query: theQuery,
       });
     };
-    if (stats.length > 0) {
-      startConstructQueryRequest();
-    }
+    startConstructQueryRequest();
   }, [options.version, stats, filters, groups]);
 
   // STATISTICS - SET OPTIONS
   useEffect(() => {
-    console.log("SET OPTIONS");
+    // console.log("SET OPTIONS");
     const choices = [{ key: "sum", value: "sum", text: "sum" }];
 
     if (!!options.asset && options.asset.includes("alert")) {
@@ -135,22 +143,29 @@ const FieldSelect = ({
 
   // STATISTICS - ADD NEW STAT
   const addStat = () => {
+    // console.log("stats =>", stats);
     // console.log("statChoices =>", statChoices);
     // console.log("sumFields =>", sumFields);
-    // if (["count", "coordinates"].some(alertStat => alertStat === statChoices[0].value) || ) {
-    //   setStats([
-    //     ...stats,
-    //     {
-    //       stat: statChoices[0],
-    //       field: { key: "alerts", value: "alerts", text: "alerts" },
-    //     },
-    //   ]);
-    // } else {
-    //   setStats([
-    //     ...stats,
-    //     { stat: statChoices[0], field: sumFields[stats.length] },
-    //   ]);
-    // }
+
+    setStats([
+      ...stats,
+      { stat: statChoices[0], field: sumFields[stats.length] },
+    ]);
+
+    //   if (["count", "coordinates"].some(alertStat => alertStat === statChoices[0].value) || ) {
+    //     setStats([
+    //       ...stats,
+    //       {
+    //         stat: statChoices[0],
+    //         field: { key: "alerts", value: "alerts", text: "alerts" },
+    //       },
+    //     ]);
+    //   } else {
+    //     setStats([
+    //       ...stats,
+    //       { stat: statChoices[0], field: sumFields[stats.length] },
+    //     ]);
+    //   }
   };
 
   // STATISTICS - REMOVE STAT
@@ -207,7 +222,7 @@ const FieldSelect = ({
             <div>
               {stats.map((stat, i) => {
                 let inputFields;
-                console.log("stat.stat.value", stat.stat.value);
+                //console.log("stat.stat.value", stat.stat.value);
                 if (stat.stat.value === "sum") {
                   inputFields = sumFields;
                 } else {
@@ -224,8 +239,8 @@ const FieldSelect = ({
                       options={statChoices}
                       value={stat.stat.value}
                       onChange={(e, newStat) => {
-                        console.log("newStat", newStat);
-                        console.log("stat", stat);
+                        //console.log("newStat", newStat);
+                        //console.log("stat", stat);
                         handleStatChange({
                           i,
                           statValue: newStat.value as string,

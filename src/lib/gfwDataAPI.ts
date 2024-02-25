@@ -85,6 +85,7 @@ export const queryData = async ({
 }: {
   options: WizardQuery;
 }): Promise<{ [key: string]: any }[] | []> => {
+  console.log("options =>", options);
   const { area, asset, version, query } = options;
 
   // Global              gadm_global   GET /query?sql= SELECT sum(ha) FROM my_table
@@ -97,10 +98,11 @@ export const queryData = async ({
 
   let res;
   if (area.type === "gadm_global") {
-    const request = `${apiURL}/dataset/${asset}/${version}/query?sql=${query}`;
+    const request = `${apiURL}/dataset/${asset}/${version}/query/json?sql=${query}`;
     console.log("request", request);
     res = await fetch(request);
   }
+
   if (res) {
     if (!res.ok) {
       throw new Error("Failed to fetch data");

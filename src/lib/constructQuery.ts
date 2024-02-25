@@ -37,10 +37,10 @@ export const constructQuery = async ({
   return sql.toString();
 };
 
-// Global              gadm_global   GET /query?sql= SELECT sum(ha) FROM my_table
-// GADM ISO            gadm_iso      GET /query?sql= SELECT sum(ha) FROM my_table WHERE iso = "BRA"
-// GADM ADM1           gadm_adm1     GET /query?sql= SELECT sum(ha) FROM my_table WHERE iso = "BRA" AND adm1 = 3
-// GADM ADM2           gadm_adm2     GET /query?sql= SELECT sum(ha) FROM my_table WHERE iso = "BRA" AND adm1 = 3 AND adm2 = 1
-// WDPA                wdpa          GET /query?sql= SELECT sum(ha) FROM my_table WHERE wdpa_protected_area__id = "2345234"
-// Geostore (Saved)    geostore      GET /query?sql= SELECT sum(ha) FROM my_table WHERE geostore__id = "4j194c214" AND geostore_origin = "rw"
-// GeoJSON             geojson       POST { "sql": 'SELECT sum(ha) FROM my_table', "geometry": {"type": "string", "coordinates": []} }
+// Global              gadm_global   GET https://data-api.globalforestwatch.org/dataset/gadm__tcl__iso_summary/latest/query?sql= SELECT sum(ha) FROM my_table
+// GADM ISO            gadm_iso      GET https://data-api.globalforestwatch.org/dataset/gadm__tcl__iso_summary/latest/query?sql= SELECT sum(ha) FROM my_table WHERE iso = "BRA"
+// GADM ADM1           gadm_adm1     GET https://data-api.globalforestwatch.org/dataset/gadm__tcl__adm1_summary/latest/query?sql= SELECT sum(ha) FROM my_table WHERE iso = "BRA" AND adm1 = 3
+// GADM ADM2           gadm_adm2     GET https://data-api.globalforestwatch.org/dataset/gadm__tcl__adm2_summary/latest/query?sql= SELECT sum(ha) FROM my_table WHERE iso = "BRA" AND adm1 = 3 AND adm2 = 1
+// WDPA                wdpa          GET https://data-api.globalforestwatch.org/dataset/wdpa_protected_areas__tcl__summary/latest/query?sql= SELECT sum(ha) FROM my_table WHERE wdpa_protected_area__id = "2345234"
+// Geostore (Saved)    geostore      GET https://data-api.globalforestwatch.org/dataset/gadm__tcl__iso_summary/latest/query?sql= SELECT sum(ha) FROM my_table WHERE geostore__id = "4j194c214" AND geostore_origin = "rw"
+// GeoJSON             geojson       POST https://data-api.globalforestwatch.org/dataset/umd_tree_cover_loss/latest/query with the body { "sql": 'SELECT sum(ha) FROM my_table', "geometry": {"type": "string", "coordinates":[[[-62.2159,-3.4653],[-62.2159,-3.4700],[-62.2100,-3.4653],[-62.2159,-3.4653]]]} }

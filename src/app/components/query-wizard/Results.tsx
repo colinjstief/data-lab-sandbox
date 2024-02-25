@@ -42,6 +42,7 @@ const Results = ({
       });
       try {
         const results = await queryData({ options });
+        console.log("results =>", results);
         setResults(results);
 
         setAsync({
@@ -62,6 +63,7 @@ const Results = ({
     };
 
     if (visible && options.version && options.query) {
+      console.log("here we go");
       startSendRequest();
     }
   }, [visible, options.version, options.query]);

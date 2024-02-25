@@ -36,7 +36,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   // Re-select asset when area, dataset, or segments changes
   useEffect(() => {
-    //console.log("options.query =>", options.query);
+    console.log("options =>", options);
   }, [options]);
 
   // Reset segments when dataset changes
