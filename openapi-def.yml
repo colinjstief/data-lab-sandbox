@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: URL Shortener API
+  description: A simple API for shortening URLs using Bitly, accessible via a single route.
+  version: 1.0.0
+servers:
+  - url: https://data-lab-sandbox.org/api/link
+paths:
+  /:
+    post:
+      summary: Shorten a URL
+      description: Takes a long URL and returns a shortened version using Bitly.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                longURL:
+                  type: string
+                  description: The long URL to be shortened.
+                  example: "https://example.com/very/long/url"
+      responses:
+        "200":
+          description: Successfully shortened the URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  shortLink:
+                    type: string
+                    description: The shortened URL.
+                    example: "https://bit.ly/shortenedExample"
+        "400":
+          description: Bad request. Possible issue with the input.
+        "401":
+          description: Unauthorized. API access token is missing or invalid.
+        "500":
+          description: Server error. Something went wrong on the server side.
