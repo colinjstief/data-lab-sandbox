@@ -36,10 +36,11 @@ export const getBoundaries = async ({
     }
     const data = await res.json();
     const shapedData = data.rows.map((item: { id: string; name: string }) => {
+      const newItemID = item.id.replace(/_1$/, "");
       return {
-        key: item.id,
+        key: newItemID,
         value: item.id,
-        text: `(${item.id}) ${item.name}`,
+        text: `(${newItemID}) ${item.name}`,
       };
     });
     return shapedData;

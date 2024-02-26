@@ -46,7 +46,7 @@ export const getDataset = async ({
 }: {
   dataset: string;
 }): Promise<GFWAPIDataset> => {
-  console.log(`${apiURL}/dataset/${dataset}`);
+  //console.log(`${apiURL}/dataset/${dataset}`);
   const res = await fetch(`${apiURL}/dataset/${dataset}`);
 
   if (!res.ok) {
@@ -65,7 +65,7 @@ export const getFields = async ({
   dataset: string;
   version: string;
 }): Promise<GFWAPIField[]> => {
-  console.log(`${apiURL}/dataset/${dataset}/${version}/fields`);
+  //console.log(`${apiURL}/dataset/${dataset}/${version}/fields`);
   const res = await fetch(`${apiURL}/dataset/${dataset}/${version}/fields`);
 
   if (!res.ok) {
@@ -85,7 +85,7 @@ export const queryData = async ({
 }: {
   options: WizardQuery;
 }): Promise<{ [key: string]: any }[] | []> => {
-  console.log("options =>", options);
+  //console.log("options =>", options);
   const { area, asset, version, query } = options;
 
   // Global              gadm_global   GET /query?sql= SELECT sum(ha) FROM my_table
@@ -97,11 +97,23 @@ export const queryData = async ({
   // GeoJSON             geojson       POST { "sql": 'SELECT sum(ha) FROM my_table', "geometry": {"type": "string", "coordinates": []} }
 
   let res;
-  if (area.type === "gadm_global") {
-    const request = `${apiURL}/dataset/${asset}/${version}/query/json?sql=${query}`;
-    console.log("request", request);
-    res = await fetch(request);
+  let request;
+
+  switch (area.type) {
+    case "gadm_global":
+    case "gadm_iso":
+    case "gadm_adm1":
+    case "gadm_adm2":
+      request = `${apiURL}/dataset/${asset}/${version}/query/json?sql=${query}`;
+      console.log("request", request);
+      res = await fetch(request);
+      break;
+
+    default:
+      return [];
   }
+
+  console.log("request =>", request);
 
   if (res) {
     if (!res.ok) {

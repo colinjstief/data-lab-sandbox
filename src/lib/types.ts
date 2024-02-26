@@ -20,11 +20,13 @@ export interface WizardQuery {
     geometry: GeoJSON.Geometry | null;
   };
   dataset: string;
+  range: [Date, Date] | [];
+  timeSegment: string;
+  areaSegment: string;
   asset: string;
   version: string;
   query: string;
-  timeSegment: string;
-  areaSegment: string;
+  results: string;
 }
 
 export interface Boundary {

@@ -27,7 +27,7 @@ const FieldSelect = ({
   const [sumFields, setSumFields] = useState<Field[]>([]);
   const [statChoices, setStatChoices] = useState<Field[]>([]);
   const [stats, setStats] = useState<{ stat: Field; field: Field }[]>([]);
-  const [filterGroupFields, setFilterGroupFields] = useState([]);
+  const [filterGroupFields, setFilterGroupFields] = useState<Field[]>([]);
   const [filters, setFilters] = useState([]);
   const [groups, setGroups] = useState([]);
 
@@ -78,9 +78,20 @@ const FieldSelect = ({
         setSumFields(sortedInitialSumFields);
         // console.log("sumFields =>", sumFields);
 
-        const initialFilterGroupFields = initialFields.filter((field) => {});
-
-        //setFields(fields);
+        const initialFilterGroupFields = initialFields.filter((field) => {
+          // return ["is__", "__type", "__threshold"].some((item) => {
+          //   return field.value.includes(item)
+          // });
+          return ["umd_tree_cover_density__threshold"].some((item) => {
+            return field.value === item;
+          });
+        });
+        const sortedFilterGroupFields = sortByProperty(
+          initialFilterGroupFields,
+          "key"
+        );
+        setFilterGroupFields(sortedFilterGroupFields);
+        // console.log("sortedFilterGroupFields =>", sortedFilterGroupFields);
 
         setAsync({
           status: "",
@@ -216,9 +227,7 @@ const FieldSelect = ({
         <h3 className="text-xl font-bold mb-5">Select your fields</h3>
         <div className="flex flex-col">
           <div className="mb-5">
-            <h4 className="text-m mb-3">
-              What statistics are you interested in?
-            </h4>
+            <h4 className="text-m mb-3">Statistics</h4>
             <div>
               {stats.map((stat, i) => {
                 let inputFields;
@@ -276,8 +285,67 @@ const FieldSelect = ({
               Add
             </Button>
           </div>
-          <div className="mb-5">Filters</div>
-          <div className="mb-5">Groups</div>
+          <div className="mb-5">
+            {" "}
+            <h4 className="text-m mb-3">Filters</h4>
+            <div>
+              {stats.map((stat, i) => {
+                let inputFields;
+                //console.log("stat.stat.value", stat.stat.value);
+                if (stat.stat.value === "sum") {
+                  inputFields = sumFields;
+                } else {
+                  inputFields = [
+                    { key: "alerts", value: "alerts", text: "alerts" },
+                  ];
+                }
+                return (
+                  <div key={i} className="flex items-center mb-3">
+                    <p className="m-0">The</p>
+                    <Dropdown
+                      search
+                      selection
+                      options={statChoices}
+                      value={stat.stat.value}
+                      onChange={(e, newStat) => {
+                        //console.log("newStat", newStat);
+                        //console.log("stat", stat);
+                        handleStatChange({
+                          i,
+                          statValue: newStat.value as string,
+                          fieldValue: stat.field.value as string,
+                        });
+                      }}
+                      className="min-w-[120px] mx-3"
+                    />
+                    <p className="m-0">of</p>
+                    <Dropdown
+                      search
+                      selection
+                      options={inputFields}
+                      value={stat.field?.value}
+                      onChange={(e, newField) => {
+                        handleStatChange({
+                          i,
+                          statValue: stat.stat.value as string,
+                          fieldValue: newField.value as string,
+                        });
+                      }}
+                      className="min-w-[330px] mx-3"
+                    />
+
+                    <Button icon size="tiny" onClick={() => removeStat({ i })}>
+                      <Icon name="delete" />
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+            <Button onClick={addStat} className="mt-2 ml-2">
+              Add
+            </Button>
+          </div>
+          <div className="mb-5">Group by</div>
         </div>
       </Segment>
       <Segment>

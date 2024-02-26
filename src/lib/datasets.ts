@@ -24,7 +24,7 @@ export const datasets: Datasets = {
     segmentations: {
       gadm_global: ["week", "iso"],
       gadm_iso: ["week", "adm1", "adm2"],
-      gadm_adm1: ["day", "week", "adm2"],
+      gadm_adm1: ["week", "adm2"],
       gadm_adm2: ["day", "week"],
       wdpa: ["day", "week"],
       custom_saved: ["day", "week"],

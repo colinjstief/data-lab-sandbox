@@ -3,6 +3,7 @@ import { WizardQuery } from "@/lib/types";
 export const selectAsset = ({
   area,
   dataset,
+  range,
   timeSegment,
   areaSegment,
 }: WizardQuery): string => {
@@ -17,7 +18,9 @@ export const selectAsset = ({
               asset = "gadm__tcl__iso_change";
               break;
             default:
-              asset = "gadm__tcl__iso_summary";
+              asset = !!range.length
+                ? "gadm__tcl__iso_change"
+                : "gadm__tcl__iso_summary";
               break;
           }
           break;
@@ -39,13 +42,19 @@ export const selectAsset = ({
             default:
               switch (areaSegment) {
                 case "adm1":
-                  asset = "gadm__tcl__adm1_summary";
+                  asset = !!range.length
+                    ? "gadm__tcl__adm1_change"
+                    : "gadm__tcl__adm1_summary";
                   break;
                 case "adm2":
-                  asset = "gadm__tcl__adm2_summary";
+                  asset = !!range.length
+                    ? "gadm__tcl__adm2_change"
+                    : "gadm__tcl__adm2_summary";
                   break;
                 default:
-                  asset = "gadm__tcl__iso_summary";
+                  asset = !!range.length
+                    ? "gadm__tcl__iso_change"
+                    : "gadm__tcl__iso_summary";
                   break;
               }
               break;
@@ -66,10 +75,14 @@ export const selectAsset = ({
             default:
               switch (areaSegment) {
                 case "adm2":
-                  asset = "gadm__tcl__adm2_summary";
+                  asset = !!range.length
+                    ? "gadm__tcl__adm2_change"
+                    : "gadm__tcl__adm2_summary";
                   break;
                 default:
-                  asset = "gadm__tcl__adm1_summary";
+                  asset = !!range.length
+                    ? "gadm__tcl__adm1_change"
+                    : "gadm__tcl__adm1_summary";
                   break;
               }
               break;
@@ -81,7 +94,9 @@ export const selectAsset = ({
               asset = "gadm__tcl__adm2_change";
               break;
             default:
-              asset = "gadm__tcl__adm2_summary";
+              asset = !!range.length
+                ? "gadm__tcl__adm2_change"
+                : "gadm__tcl__adm2_summary";
               break;
           }
           break;
@@ -91,7 +106,9 @@ export const selectAsset = ({
               asset = "wdpa_protected_areas__tcl__change";
               break;
             default:
-              asset = "wdpa_protected_areas__tcl__summary";
+              asset = !!range.length
+                ? "wdpa_protected_areas__tcl__change"
+                : "wdpa_protected_areas__tcl__summary";
               break;
           }
           break;
@@ -101,7 +118,9 @@ export const selectAsset = ({
               asset = "geostore__tcl__change";
               break;
             default:
-              asset = "geostore__tcl__summary";
+              asset = !!range.length
+                ? "geostore__tcl__change"
+                : "geostore__tcl__summary";
               break;
           }
           break;

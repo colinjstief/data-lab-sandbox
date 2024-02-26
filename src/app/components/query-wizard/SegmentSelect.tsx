@@ -61,7 +61,7 @@ const SegmentSelect = ({
         <h3 className="text-xl font-bold mb-5">Select break downs</h3>
         <div className="flex flex-col">
           <div className="mb-10">
-            <h4 className="mb-2">Time</h4>
+            <h4 className="mb-2">Do you want a breakdown by year?</h4>
             <ButtonGroup fluid>
               <Button
                 active={options.timeSegment === ""}

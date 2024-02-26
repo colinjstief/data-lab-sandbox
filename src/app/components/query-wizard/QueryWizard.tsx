@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 
 import { Step, Icon } from "semantic-ui-react";
 import DataSelect from "@/app/components/query-wizard/DataSelect";
+import RangeSelect from "@/app/components/query-wizard/RangeSelect";
 import SegmentSelect from "@/app/components/query-wizard/SegmentSelect";
 import VersionSelect from "@/app/components/query-wizard/VersionSelect";
 import FieldSelect from "@/app/components/query-wizard/FieldSelect";
@@ -17,15 +18,15 @@ import { selectAsset } from "@/lib/selectAsset";
 interface QueryWizardProps {}
 
 const QueryWizard = ({}: QueryWizardProps) => {
-  const initOptions = {
+  const initOptions: WizardQuery = {
     area: { type: "gadm_global", value: "Global", geometry: null },
     dataset: "tcl",
+    range: [],
     timeSegment: "",
     areaSegment: "",
     asset: "gadm__tcl__iso_summary",
     version: "",
     query: "",
-    params: "",
     results: "",
   };
 
@@ -34,12 +35,18 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   const prevOptionsRef = useRef(options);
 
-  // Re-select asset when area, dataset, or segments changes
+  // Re-select asset and reset version and query when range or segments change
   useEffect(() => {
-    console.log("options =>", options);
-  }, [options]);
+    const asset = selectAsset(options);
+    setOptions({
+      ...options,
+      asset: asset,
+      version: "",
+      query: "",
+    });
+  }, [options.range, options.timeSegment, options.areaSegment]);
 
-  // Reset segments when dataset changes
+  // Reset segments, version, and query when dataset or area type changes
   useEffect(() => {
     const prevOptions = prevOptionsRef.current;
     prevOptionsRef.current = options;
@@ -58,7 +65,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
         query: "",
       });
     }
-  }, [options]);
+  }, [options.dataset, options.area.type]);
 
   let breakdownLabel;
   if (options.timeSegment && options.areaSegment) {
@@ -99,6 +106,17 @@ const QueryWizard = ({}: QueryWizardProps) => {
             <Step.Description>
               {datasets[options.dataset as keyof Datasets].name}
             </Step.Description>
+          </Step.Content>
+        </Step>
+        <Step
+          onClick={() => setVisibleTab("range")}
+          active={visibleTab === "range"}
+          disabled={!options.area.value}
+        >
+          <Icon name="calendar" />
+          <Step.Content>
+            <Step.Title>Range</Step.Title>
+            <Step.Description>Year(s) or month(s)</Step.Description>
           </Step.Content>
         </Step>
         <Step
@@ -161,6 +179,12 @@ const QueryWizard = ({}: QueryWizardProps) => {
           options={options}
           setOptions={setOptions}
           visible={visibleTab === "dataset"}
+          setVisibleTab={setVisibleTab}
+        />
+        <RangeSelect
+          options={options}
+          setOptions={setOptions}
+          visible={visibleTab === "range"}
           setVisibleTab={setVisibleTab}
         />
         <SegmentSelect

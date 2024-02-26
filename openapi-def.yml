@@ -4,12 +4,13 @@ info:
   description: A simple API for shortening URLs using Bitly, accessible via a single route.
   version: 1.0.0
 servers:
-  - url: https://data-lab-sandbox.org/api/link
+  - url: https://data-lab-sandbox.org/api
 paths:
-  /:
+  /link:
     post:
       summary: Shorten a URL
       description: Takes a long URL and returns a shortened version using Bitly.
+      operationId: link
       requestBody:
         required: true
         content:
