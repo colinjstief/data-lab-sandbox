@@ -25,6 +25,11 @@ const pages = {
     category: "",
     description: "All the GFW Data API has to offer",
   },
+  map: {
+    title: "Map",
+    category: "",
+    description: "Sandbox for geospatial layers on a map",
+  },
   "query-wizard": {
     title: "Query Wizard",
     category: "",

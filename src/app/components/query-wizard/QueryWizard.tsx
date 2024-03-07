@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { Step, Icon } from "semantic-ui-react";
 import DataSelect from "@/app/components/query-wizard/DataSelect";
 import RangeSelect from "@/app/components/query-wizard/RangeSelect";
-import SegmentSelect from "@/app/components/query-wizard/SegmentSelect";
+import GroupSelect from "@/app/components/query-wizard/GroupSelect";
 import VersionSelect from "@/app/components/query-wizard/VersionSelect";
 import FieldSelect from "@/app/components/query-wizard/FieldSelect";
 import AreaSelect from "@/app/components/query-wizard/AreaSelect";
@@ -37,6 +37,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   // Re-select asset and reset version and query when range or segments change
   useEffect(() => {
+    console.log("relect asset =>", new Date().toISOString());
     const asset = selectAsset(options);
     setOptions({
       ...options,
@@ -116,17 +117,17 @@ const QueryWizard = ({}: QueryWizardProps) => {
           <Icon name="calendar" />
           <Step.Content>
             <Step.Title>Range</Step.Title>
-            <Step.Description>Year(s) or month(s)</Step.Description>
+            <Step.Description>Years or days</Step.Description>
           </Step.Content>
         </Step>
         <Step
-          onClick={() => setVisibleTab("segment")}
-          active={visibleTab === "segment"}
+          onClick={() => setVisibleTab("group")}
+          active={visibleTab === "group"}
           disabled={!options.area.value}
         >
           <Icon name="table" />
           <Step.Content>
-            <Step.Title>Break down</Step.Title>
+            <Step.Title>Group by</Step.Title>
             <Step.Description>{breakdownLabel}</Step.Description>
           </Step.Content>
         </Step>
@@ -187,10 +188,10 @@ const QueryWizard = ({}: QueryWizardProps) => {
           visible={visibleTab === "range"}
           setVisibleTab={setVisibleTab}
         />
-        <SegmentSelect
+        <GroupSelect
           options={options}
           setOptions={setOptions}
-          visible={visibleTab === "segment"}
+          visible={visibleTab === "group"}
           setVisibleTab={setVisibleTab}
         />
         <VersionSelect

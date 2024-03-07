@@ -71,15 +71,27 @@ export const constructQuery = async ({
   if (options.range.length === 2) {
     const rangeField = selectRangeField(options);
     if (rangeField.includes("__year")) {
-      sql = sql.whereBetween(rangeField, [
-        options.range[0].getFullYear().toString(),
-        options.range[1].getFullYear().toString(),
-      ]);
+      sql = sql.where(
+        rangeField,
+        ">=",
+        options.range[0].getFullYear().toString()
+      );
+      sql = sql.andWhere(
+        rangeField,
+        "<=",
+        options.range[1].getFullYear().toString()
+      );
     } else {
-      sql = sql.whereBetween(rangeField, [
-        options.range[0].toISOString().slice(0, 10),
-        options.range[1].toISOString().slice(0, 10),
-      ]);
+      sql = sql.where(
+        rangeField,
+        ">=",
+        options.range[0].toISOString().slice(0, 10)
+      );
+      sql = sql.andWhere(
+        rangeField,
+        "<=",
+        options.range[1].toISOString().slice(0, 10)
+      );
     }
   }
 

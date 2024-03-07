@@ -79,6 +79,7 @@ const AreaSelect = ({
                 visible={visible}
                 setTheMap={setTheMap}
                 textPanel={textPanel}
+                basemap="satellite-v9"
               />
             </Segment>
           </div>

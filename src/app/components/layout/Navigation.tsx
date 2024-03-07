@@ -105,6 +105,12 @@ const pages = [
   },
   {
     id: 6,
+    label: "Map",
+    location: "/map",
+    hide: "no",
+  },
+  {
+    id: 7,
     label: "Query Wizard",
     location: "/query-wizard",
     hide: "no",

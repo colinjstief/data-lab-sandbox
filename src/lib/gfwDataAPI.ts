@@ -105,7 +105,6 @@ export const queryData = async ({
     case "gadm_adm1":
     case "gadm_adm2":
       request = `${apiURL}/dataset/${asset}/${version}/query/json?sql=${query}`;
-      console.log("request", request);
       res = await fetch(request);
       break;
 

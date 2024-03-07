@@ -9,19 +9,19 @@ import {
 import { datasets } from "@/lib/datasets";
 import { WizardQuery } from "@/lib/types";
 
-interface SegmentationProps {
+interface GroupSelectProps {
   options: WizardQuery;
   setOptions: (options: WizardQuery) => void;
   visible: boolean;
   setVisibleTab: (tab: string) => void;
 }
 
-const SegmentSelect = ({
+const GroupSelect = ({
   options,
   setOptions,
   visible,
   setVisibleTab,
-}: SegmentationProps) => {
+}: GroupSelectProps) => {
   const handleTimeClick = (
     e: React.SyntheticEvent<HTMLElement>,
     data: ButtonProps
@@ -58,10 +58,10 @@ const SegmentSelect = ({
   return (
     <Segment.Group className={containerStyle}>
       <Segment className="flex-1">
-        <h3 className="text-xl font-bold mb-5">Select break downs</h3>
+        <h3 className="text-xl font-bold mb-5">Select groupings</h3>
         <div className="flex flex-col">
           <div className="mb-10">
-            <h4 className="mb-2">Do you want a breakdown by year?</h4>
+            <h4 className="mb-2">Do you want to group by year?</h4>
             <ButtonGroup fluid>
               <Button
                 active={options.timeSegment === ""}
@@ -170,4 +170,4 @@ const SegmentSelect = ({
   );
 };
 
-export default SegmentSelect;
+export default GroupSelect;

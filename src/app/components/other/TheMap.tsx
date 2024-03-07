@@ -9,10 +9,11 @@ mapboxgl.accessToken = MB_KEY;
 interface TheMapProps {
   setTheMap: (map: any) => void;
   visible: boolean;
+  basemap: string;
   textPanel: string;
 }
 
-const TheMap = ({ setTheMap, visible, textPanel }: TheMapProps) => {
+const TheMap = ({ setTheMap, visible, basemap, textPanel }: TheMapProps) => {
   const mapContainer = useRef(null);
   const map = useRef<mapboxgl.Map | null>(null);
 
@@ -20,7 +21,7 @@ const TheMap = ({ setTheMap, visible, textPanel }: TheMapProps) => {
     if (map.current) return;
     map.current = new mapboxgl.Map({
       container: mapContainer.current as any,
-      style: "mapbox://styles/mapbox/satellite-v9",
+      style: `mapbox://styles/mapbox/${basemap}`,
       center: [20, 10],
       zoom: 1,
     });

@@ -24,12 +24,18 @@ const FieldSelect = ({
     message: "",
   });
 
-  const [sumFields, setSumFields] = useState<Field[]>([]);
-  const [statChoices, setStatChoices] = useState<Field[]>([]);
+  const [statChoices, setStatChoices] = useState<Field[]>([]); // e.g. sum, mean, count, coordinates
+  const [statFields, setstatFields] = useState<Field[]>([]); // e.g. umd_tree_cover_loss__ha, area__ha
   const [stats, setStats] = useState<{ stat: Field; field: Field }[]>([]);
-  const [filterGroupFields, setFilterGroupFields] = useState<Field[]>([]);
-  const [filters, setFilters] = useState([]);
-  const [groups, setGroups] = useState([]);
+
+  const [filterChoices, setFilterChoices] = useState<Field[]>([]); // e.g. =, !=, IS NOT NULL, IS NULL
+  const [filterFields, setFilterFields] = useState<Field[]>([]); // e.g. umd_tree_cover_density__threshold, is__peatland
+  const [filters, setFilters] = useState<{ operator: Field; field: Field }[]>(
+    []
+  );
+
+  // const [groupFields, setGroupFields] = useState<Field[]>([]); // tsc_tree_cover_loss_drivers__driver, year
+  // const [groups, setGroups] = useState([]);
 
   let containerStyle = "h-full mt-0";
   if (visible) {
@@ -62,7 +68,7 @@ const FieldSelect = ({
           };
         });
 
-        const initialSumFields = initialFields.filter((field) => {
+        const initialStatFields = initialFields.filter((field) => {
           // return ["__ha", "__Mg"].some((item) => {
           //   return field.value.includes(item)
           // });
@@ -74,11 +80,13 @@ const FieldSelect = ({
             return field.value === item;
           });
         });
-        const sortedInitialSumFields = sortByProperty(initialSumFields, "key");
-        setSumFields(sortedInitialSumFields);
-        // console.log("sumFields =>", sumFields);
+        const sortedInitialStatFields = sortByProperty(
+          initialStatFields,
+          "key"
+        );
+        setstatFields(sortedInitialStatFields);
 
-        const initialFilterGroupFields = initialFields.filter((field) => {
+        const initialFilterFields = initialFields.filter((field) => {
           // return ["is__", "__type", "__threshold"].some((item) => {
           //   return field.value.includes(item)
           // });
@@ -86,12 +94,8 @@ const FieldSelect = ({
             return field.value === item;
           });
         });
-        const sortedFilterGroupFields = sortByProperty(
-          initialFilterGroupFields,
-          "key"
-        );
-        setFilterGroupFields(sortedFilterGroupFields);
-        // console.log("sortedFilterGroupFields =>", sortedFilterGroupFields);
+        const sortedFilterFields = sortByProperty(initialFilterFields, "key");
+        setFilterFields(sortedFilterFields);
 
         setAsync({
           status: "",
@@ -119,64 +123,58 @@ const FieldSelect = ({
   useEffect(() => {
     setStats([]);
     setFilters([]);
-    setGroups([]);
   }, [options.asset, options.version]);
 
   // CONSTRUCT SQL
   useEffect(() => {
     const startConstructQueryRequest = async () => {
-      const theQuery = await constructQuery({ options, stats });
+      const theQuery = await constructQuery({
+        options,
+        stats,
+        filters: [],
+        groups: [],
+      });
       // console.log("theQuery =>", theQuery);
       setOptions({
         ...options,
         query: theQuery,
       });
     };
-    startConstructQueryRequest();
-  }, [options.version, stats, filters, groups]);
-
-  // STATISTICS - SET OPTIONS
-  useEffect(() => {
-    // console.log("SET OPTIONS");
-    const choices = [{ key: "sum", value: "sum", text: "sum" }];
-
-    if (!!options.asset && options.asset.includes("alert")) {
-      choices.push({ key: "count", value: "count", text: "count" });
-      choices.push({
-        key: "coordinates",
-        value: "coordinates",
-        text: "coordinates",
-      });
+    if (!!options.version && !!stats) {
+      startConstructQueryRequest();
     }
+  }, [options.version, stats, filters]);
 
-    setStatChoices(choices);
+  // SET CHOICES
+  useEffect(() => {
+    // const statChoices = [
+    //   { key: "sum", value: "sum", text: "sum" },
+    //   { key: "mean", value: "mean", text: "mean" },
+    // ];
+
+    // if (!!options.asset && options.asset.includes("alert")) {
+    //   statChoices.push({ key: "count", value: "count", text: "count" });
+    //   statChoices.push({
+    //     key: "coordinates",
+    //     value: "coordinates",
+    //     text: "coordinates",
+    //   });
+    // }
+
+    setStatChoices([
+      { key: "sum", value: "sum", text: "sum" },
+      { key: "mean", value: "mean", text: "mean" },
+    ]);
+
+    setFilterChoices([{ key: "equals", value: "=", text: "equals" }]);
   }, [options.asset, options.version]);
 
   // STATISTICS - ADD NEW STAT
   const addStat = () => {
-    // console.log("stats =>", stats);
-    // console.log("statChoices =>", statChoices);
-    // console.log("sumFields =>", sumFields);
-
     setStats([
       ...stats,
-      { stat: statChoices[0], field: sumFields[stats.length] },
+      { stat: statChoices[0], field: statFields[stats.length] },
     ]);
-
-    //   if (["count", "coordinates"].some(alertStat => alertStat === statChoices[0].value) || ) {
-    //     setStats([
-    //       ...stats,
-    //       {
-    //         stat: statChoices[0],
-    //         field: { key: "alerts", value: "alerts", text: "alerts" },
-    //       },
-    //     ]);
-    //   } else {
-    //     setStats([
-    //       ...stats,
-    //       { stat: statChoices[0], field: sumFields[stats.length] },
-    //     ]);
-    //   }
   };
 
   // STATISTICS - REMOVE STAT
@@ -221,6 +219,46 @@ const FieldSelect = ({
     setStats(newStats);
   };
 
+  // FILTERS - ADD NEW FILTER
+  const addFilter = () => {
+    setFilters([
+      ...filters,
+      { operator: filterChoices[0], field: filterFields[filters.length] },
+    ]);
+  };
+
+  // FILTERS - REMOVE FILTER
+  const removeFilter = ({ i }: { i: number }) => {
+    setFilters(filters.filter((filter, index) => i !== index));
+  };
+
+  // FILTERS - HANDLE FILTER CHANGE
+  const handleFilterChange = ({
+    i,
+    operator,
+    field,
+  }: {
+    i: number;
+    operator: Field;
+    field: Field;
+  }) => {
+    const newFilters = filters.map((existingFilter, index) => {
+      if (index === i) {
+        return {
+          operator: {
+            key: operator.key,
+            value: operator.value,
+            text: operator.text,
+          },
+          field: { key: field.value, value: field.value, text: field.value },
+        };
+      } else {
+        return existingFilter;
+      }
+    });
+    setFilters(newFilters);
+  };
+
   return (
     <Segment.Group className={containerStyle}>
       <Segment className="flex-1">
@@ -231,9 +269,8 @@ const FieldSelect = ({
             <div>
               {stats.map((stat, i) => {
                 let inputFields;
-                //console.log("stat.stat.value", stat.stat.value);
                 if (stat.stat.value === "sum") {
-                  inputFields = sumFields;
+                  inputFields = statFields;
                 } else {
                   inputFields = [
                     { key: "alerts", value: "alerts", text: "alerts" },
@@ -248,8 +285,6 @@ const FieldSelect = ({
                       options={statChoices}
                       value={stat.stat.value}
                       onChange={(e, newStat) => {
-                        //console.log("newStat", newStat);
-                        //console.log("stat", stat);
                         handleStatChange({
                           i,
                           statValue: newStat.value as string,
@@ -286,66 +321,54 @@ const FieldSelect = ({
             </Button>
           </div>
           <div className="mb-5">
-            {" "}
             <h4 className="text-m mb-3">Filters</h4>
             <div>
-              {stats.map((stat, i) => {
-                let inputFields;
-                //console.log("stat.stat.value", stat.stat.value);
-                if (stat.stat.value === "sum") {
-                  inputFields = sumFields;
-                } else {
-                  inputFields = [
-                    { key: "alerts", value: "alerts", text: "alerts" },
-                  ];
-                }
+              {filters.map((filter, i) => {
                 return (
                   <div key={i} className="flex items-center mb-3">
-                    <p className="m-0">The</p>
                     <Dropdown
                       search
                       selection
-                      options={statChoices}
-                      value={stat.stat.value}
-                      onChange={(e, newStat) => {
-                        //console.log("newStat", newStat);
-                        //console.log("stat", stat);
-                        handleStatChange({
-                          i,
-                          statValue: newStat.value as string,
-                          fieldValue: stat.field.value as string,
-                        });
-                      }}
-                      className="min-w-[120px] mx-3"
-                    />
-                    <p className="m-0">of</p>
-                    <Dropdown
-                      search
-                      selection
-                      options={inputFields}
-                      value={stat.field?.value}
+                      options={filterFields}
+                      value={filter.field?.value}
                       onChange={(e, newField) => {
-                        handleStatChange({
+                        handleFilterChange({
                           i,
-                          statValue: stat.stat.value as string,
-                          fieldValue: newField.value as string,
+                          operator: filter.operator as Field,
+                          field: newField as Field,
                         });
                       }}
                       className="min-w-[330px] mx-3"
                     />
-
-                    <Button icon size="tiny" onClick={() => removeStat({ i })}>
+                    <Dropdown
+                      search
+                      selection
+                      options={filterChoices}
+                      value={filter.operator.value}
+                      onChange={(e, newOperator) => {
+                        handleFilterChange({
+                          i,
+                          operator: newOperator as Field,
+                          field: filter.field as Field,
+                        });
+                      }}
+                      className="min-w-[120px] mx-3"
+                    />
+                    <Button
+                      icon
+                      size="tiny"
+                      onClick={() => removeFilter({ i })}
+                    >
                       <Icon name="delete" />
                     </Button>
                   </div>
                 );
               })}
             </div>
-            <Button onClick={addStat} className="mt-2 ml-2">
+            <Button onClick={addFilter} className="mt-2 ml-2">
               Add
             </Button>
           </div>
-          <div className="mb-5">Group by</div>
         </div>
       </Segment>
       <Segment>
@@ -367,19 +390,17 @@ const FieldSelect = ({
 
 export default FieldSelect;
 
-const booleanParams = [
+const booleanOperators = [
   { key: "true", value: "= 'true'", text: "true" },
   { key: "false", value: "= 'false'", text: "false" },
 ];
-const equalityParams = [
+const existenceOperators = [
   { key: "equals", value: "=", text: "equals" },
   { key: "not_equal", value: "!=", text: "does not equal" },
-];
-const existenceParams = [
   { key: "not_null", value: "IS NOT NULL", text: "IS NOT NULL" },
   { key: "null", value: "IS NULL", text: "IS NULL" },
 ];
-const dateParams = [
+const dateOperators = [
   { key: "before", value: "<", text: "before" },
   { key: "after", value: ">", text: "after" },
   { key: "between", value: "between", text: "between" },
