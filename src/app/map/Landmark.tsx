@@ -174,40 +174,14 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
           setFilters({
             ...filters,
             [filter]: true,
-            identity: true,
             "indigenous-peoples": true,
             "local-communities": true,
-            "recognition-status": true,
             acknowledged: true,
             "not-acknowledged": true,
             "not-documented": true,
             documented: true,
             "claim-submitted": true,
             "customary-tenure": true,
-          });
-          break;
-
-        case "identity":
-          setFilters({
-            ...filters,
-            [filter]: true,
-            "indigenous-peoples": true,
-            "local-communities": true,
-            "land-rights": true,
-          });
-          break;
-
-        case "recognition-status":
-          setFilters({
-            ...filters,
-            [filter]: true,
-            acknowledged: true,
-            "not-acknowledged": true,
-            "not-documented": true,
-            documented: true,
-            "claim-submitted": true,
-            "customary-tenure": true,
-            "land-rights": true,
           });
           break;
 
@@ -216,7 +190,6 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
           setFilters({
             ...filters,
             [filter]: true,
-            identity: true,
             "land-rights": true,
           });
           break;
@@ -227,7 +200,6 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
             [filter]: true,
             "not-documented": true,
             documented: true,
-            "recognition-status": true,
             "land-rights": true,
           });
           break;
@@ -238,7 +210,6 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
             [filter]: true,
             "claim-submitted": true,
             "customary-tenure": true,
-            "recognition-status": true,
             "land-rights": true,
           });
           break;
@@ -249,7 +220,6 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
             ...filters,
             [filter]: true,
             acknowledged: true,
-            "recognition-status": true,
             "land-rights": true,
           });
           break;
@@ -290,37 +260,56 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
           break;
       }
     } else {
+      if (
+        filter === "indigenous-peoples" &&
+        !!!(filters as any)["local-communities"]
+      ) {
+        return;
+      }
+      if (
+        filter === "local-communities" &&
+        !!!(filters as any)["indigenous-peoples"]
+      ) {
+        return;
+      }
+      if (
+        filter === "acknowledged" &&
+        !!!(filters as any)["not-acknowledged"]
+      ) {
+        return;
+      }
+      if (
+        filter === "not-acknowledged" &&
+        !!!(filters as any)["acknowledged"]
+      ) {
+        return;
+      }
+      if (filter === "documented" && !!!(filters as any)["not-documented"]) {
+        return;
+      }
+      if (filter === "not-documented" && !!!(filters as any)["documented"]) {
+        return;
+      }
+      if (
+        filter === "claim-submitted" &&
+        !!!(filters as any)["customary-tenure"]
+      ) {
+        return;
+      }
+      if (
+        filter === "customary-tenure" &&
+        !!!(filters as any)["claim-submitted"]
+      ) {
+        return;
+      }
+
       switch (filter) {
         case "land-rights":
           setFilters({
             ...filters,
             [filter]: false,
-            identity: false,
-            "recognition-status": false,
             "indigenous-peoples": false,
             "local-communities": false,
-            acknowledged: false,
-            documented: false,
-            "not-documented": false,
-            "not-acknowledged": false,
-            "claim-submitted": false,
-            "customary-tenure": false,
-          });
-          break;
-
-        case "identity":
-          setFilters({
-            ...filters,
-            [filter]: false,
-            "indigenous-peoples": false,
-            "local-communities": false,
-          });
-          break;
-
-        case "recognition-status":
-          setFilters({
-            ...filters,
-            [filter]: false,
             acknowledged: false,
             documented: false,
             "not-documented": false,
@@ -391,66 +380,55 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
       );
 
       let currentFilters: any[] = ["all"];
-
-      if ((filters as { [key: string]: boolean })["identity"] === true) {
-        let innerFilterOne: any[] = ["any"];
-
-        if (
-          (filters as { [key: string]: boolean })["indigenous-peoples"] === true
-        ) {
-          innerFilterOne.push(["==", ["get", "identity"], "Indigenous"]);
-        }
-        if (
-          (filters as { [key: string]: boolean })["local-communities"] === true
-        ) {
-          innerFilterOne.push(["==", ["get", "identity"], "Community"]);
-        }
-
-        if (innerFilterOne.length > 1) {
-          currentFilters.push(innerFilterOne);
-        }
-      }
+      let identityFilters: any[] = ["any"];
+      let recognitionFilters: any[] = ["any"];
 
       if (
-        (filters as { [key: string]: boolean })["acknowledged"] === true ||
-        (filters as { [key: string]: boolean })["not-acknowledged"] === true
+        (filters as { [key: string]: boolean })["indigenous-peoples"] === true
       ) {
-        let innerFilterTwo: any[] = ["any"];
-
-        if ((filters as { [key: string]: boolean })["documented"] === true) {
-          innerFilterTwo.push(["==", ["get", "doc_status"], "Documented"]);
-        }
-        if (
-          (filters as { [key: string]: boolean })["not-documented"] === true
-        ) {
-          innerFilterTwo.push(["==", ["get", "doc_status"], "Not documented"]);
-        }
-
-        if (
-          (filters as { [key: string]: boolean })["claim-submitted"] === true
-        ) {
-          innerFilterTwo.push([
-            "==",
-            ["get", "doc_status"],
-            "Held or used with formal land claim submitted",
-          ]);
-        }
-        if (
-          (filters as { [key: string]: boolean })["customary-tenure"] === true
-        ) {
-          innerFilterTwo.push([
-            "==",
-            ["get", "doc_status"],
-            "Held or used under customary tenure",
-          ]);
-        }
-
-        if (innerFilterTwo.length > 1) {
-          currentFilters.push(innerFilterTwo);
-        }
+        identityFilters.push(["==", ["get", "identity"], "Indigenous"]);
+      }
+      if (
+        (filters as { [key: string]: boolean })["local-communities"] === true
+      ) {
+        identityFilters.push(["==", ["get", "identity"], "Community"]);
       }
 
-      console.log("currentFilters =>", currentFilters);
+      if (identityFilters.length > 1) {
+        currentFilters.push(identityFilters);
+      }
+
+      if ((filters as { [key: string]: boolean })["documented"] === true) {
+        recognitionFilters.push(["==", ["get", "doc_status"], "Documented"]);
+      }
+      if ((filters as { [key: string]: boolean })["not-documented"] === true) {
+        recognitionFilters.push([
+          "==",
+          ["get", "doc_status"],
+          "Not documented",
+        ]);
+      }
+
+      if ((filters as { [key: string]: boolean })["claim-submitted"] === true) {
+        recognitionFilters.push([
+          "==",
+          ["get", "doc_status"],
+          "Held or used with formal land claim submitted",
+        ]);
+      }
+      if (
+        (filters as { [key: string]: boolean })["customary-tenure"] === true
+      ) {
+        recognitionFilters.push([
+          "==",
+          ["get", "doc_status"],
+          "Held or used under customary tenure",
+        ]);
+      }
+
+      if (recognitionFilters.length > 1) {
+        currentFilters.push(recognitionFilters);
+      }
 
       if (currentFilters.length > 1) {
         theMap.setFilter(
@@ -578,241 +556,201 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
 
   return (
     <div className="flex flex-col">
-      {/* <Dropdown
-        fluid
-        search
-        selection
-        clearable
-        placeholder="All countries"
-        options={isoOptions}
-        className="mb-5"
-      /> */}
-      <div>
-        <div className="mb-5">
-          <Checkbox
-            label="Indigenous and community land rights"
-            value="land-rights"
-            onChange={(e, data) => {
-              handleFilterChange({
-                filter: "land-rights",
-                checked: data.checked as boolean,
-              });
-            }}
-            checked={filters["land-rights" as keyof typeof filters] === true}
-          />
+      <div className="mb-5">
+        <Checkbox
+          label="Indigenous and community land rights"
+          value="land-rights"
+          onChange={(e, data) => {
+            handleFilterChange({
+              filter: "land-rights",
+              checked: data.checked as boolean,
+            });
+          }}
+          checked={filters["land-rights" as keyof typeof filters] === true}
+        />
+        <div className="flex flex-col my-2 pl-[25px]">
+          <p>
+            <i>Identity</i>
+          </p>
           <div className="flex flex-col my-2 pl-[25px]">
             <Checkbox
-              label="Identity"
-              value="identity"
+              label="Indigenous peoples"
+              value="indigenous-peoples"
               onChange={(e, data) => {
                 handleFilterChange({
-                  filter: "identity",
+                  filter: "indigenous-peoples",
                   checked: data.checked as boolean,
                 });
               }}
-              checked={filters["identity" as keyof typeof filters] === true}
+              checked={
+                filters["indigenous-peoples" as keyof typeof filters] === true
+              }
+            />
+            <Checkbox
+              label="Local communities"
+              value="local-communities"
+              onChange={(e, data) => {
+                handleFilterChange({
+                  filter: "local-communities",
+                  checked: data.checked as boolean,
+                });
+              }}
+              checked={
+                filters["local-communities" as keyof typeof filters] === true
+              }
+            />
+          </div>
+          <p>
+            <i>Recognition Status</i>
+          </p>
+          <div className="flex flex-col my-2 pl-[25px]">
+            <Checkbox
+              label="Acknowledged by government"
+              value="acknowledged"
+              onChange={(e, data) => {
+                handleFilterChange({
+                  filter: "acknowledged",
+                  checked: data.checked as boolean,
+                });
+              }}
+              checked={filters["acknowledged" as keyof typeof filters] === true}
             />
             <div className="flex flex-col my-2 pl-[25px]">
               <Checkbox
-                label="Indigenous peoples"
-                value="indigenous-peoples"
+                label="Documented"
+                value="documented"
                 onChange={(e, data) => {
                   handleFilterChange({
-                    filter: "indigenous-peoples",
+                    filter: "documented",
                     checked: data.checked as boolean,
                   });
                 }}
-                checked={
-                  filters["indigenous-peoples" as keyof typeof filters] === true
-                }
+                checked={filters["documented" as keyof typeof filters] === true}
               />
               <Checkbox
-                label="Local communities"
-                value="local-communities"
+                label="Not documented"
+                value="not-documented"
                 onChange={(e, data) => {
                   handleFilterChange({
-                    filter: "local-communities",
+                    filter: "not-documented",
                     checked: data.checked as boolean,
                   });
                 }}
                 checked={
-                  filters["local-communities" as keyof typeof filters] === true
+                  filters["not-documented" as keyof typeof filters] === true
                 }
               />
             </div>
             <Checkbox
-              label="Recognition Status"
-              value="recognition-status"
+              label="Not acknowledged by government"
+              value="not-acknowledged"
               onChange={(e, data) => {
                 handleFilterChange({
-                  filter: "recognition-status",
+                  filter: "not-acknowledged",
                   checked: data.checked as boolean,
                 });
               }}
               checked={
-                filters["recognition-status" as keyof typeof filters] === true
+                filters["not-acknowledged" as keyof typeof filters] === true
               }
             />
             <div className="flex flex-col my-2 pl-[25px]">
               <Checkbox
-                label="Acknowledged by government"
-                value="acknowledged"
+                label="Held of used with formal land claim submitted"
+                value="claim-submitted"
                 onChange={(e, data) => {
                   handleFilterChange({
-                    filter: "acknowledged",
+                    filter: "claim-submitted",
                     checked: data.checked as boolean,
                   });
                 }}
                 checked={
-                  filters["acknowledged" as keyof typeof filters] === true
+                  filters["claim-submitted" as keyof typeof filters] === true
                 }
               />
-              <div className="flex flex-col my-2 pl-[25px]">
-                <Checkbox
-                  label="Documented"
-                  value="documented"
-                  onChange={(e, data) => {
-                    handleFilterChange({
-                      filter: "documented",
-                      checked: data.checked as boolean,
-                    });
-                  }}
-                  checked={
-                    filters["documented" as keyof typeof filters] === true
-                  }
-                />
-                <Checkbox
-                  label="Not documented"
-                  value="not-documented"
-                  onChange={(e, data) => {
-                    handleFilterChange({
-                      filter: "not-documented",
-                      checked: data.checked as boolean,
-                    });
-                  }}
-                  checked={
-                    filters["not-documented" as keyof typeof filters] === true
-                  }
-                />
-              </div>
               <Checkbox
-                label="Not acknowledged by government"
-                value="not-acknowledged"
+                label="Held of used under customary tenure"
+                value="customary-tenure"
                 onChange={(e, data) => {
                   handleFilterChange({
-                    filter: "not-acknowledged",
+                    filter: "customary-tenure",
                     checked: data.checked as boolean,
                   });
                 }}
                 checked={
-                  filters["not-acknowledged" as keyof typeof filters] === true
+                  filters["customary-tenure" as keyof typeof filters] === true
                 }
               />
-              <div className="flex flex-col my-2 pl-[25px]">
-                <Checkbox
-                  label="Held of used with formal land claim submitted"
-                  value="claim-submitted"
-                  onChange={(e, data) => {
-                    handleFilterChange({
-                      filter: "claim-submitted",
-                      checked: data.checked as boolean,
-                    });
-                  }}
-                  checked={
-                    filters["claim-submitted" as keyof typeof filters] === true
-                  }
-                />
-                <Checkbox
-                  label="Held of used under customary tenure"
-                  value="customary-tenure"
-                  onChange={(e, data) => {
-                    handleFilterChange({
-                      filter: "customary-tenure",
-                      checked: data.checked as boolean,
-                    });
-                  }}
-                  checked={
-                    filters["customary-tenure" as keyof typeof filters] === true
-                  }
-                />
-              </div>
             </div>
           </div>
         </div>
-        <div className="mb-5">
+      </div>
+      <div className="mb-5">
+        <Checkbox
+          label="Indigenous and community natural resource rights"
+          value="resource-rights"
+          onChange={(e, data) => {
+            handleFilterChange({
+              filter: "resource-rights",
+              checked: data.checked as boolean,
+            });
+          }}
+          checked={filters["resource-rights" as keyof typeof filters] === true}
+        />
+        <div className="flex flex-col my-2 pl-[25px]">
           <Checkbox
-            label="Indigenous and community natural resource rights"
-            value="resource-rights"
+            label="Forest Rights"
+            value="forest-rights"
             onChange={(e, data) => {
               handleFilterChange({
-                filter: "resource-rights",
+                filter: "forest-rights",
+                checked: data.checked as boolean,
+              });
+            }}
+            checked={filters["forest-rights" as keyof typeof filters] === true}
+          />
+          <Checkbox
+            label="Hunting/fishing/wildlife rights"
+            value="hunting-fishing-wildlife-rights"
+            onChange={(e, data) => {
+              handleFilterChange({
+                filter: "hunting-fishing-wildlife-rights",
                 checked: data.checked as boolean,
               });
             }}
             checked={
-              filters["resource-rights" as keyof typeof filters] === true
+              filters[
+                "hunting-fishing-wildlife-rights" as keyof typeof filters
+              ] === true
             }
           />
-          <div className="flex flex-col my-2 pl-[25px]">
-            <Checkbox
-              label="Forest Rights"
-              value="forest-rights"
-              onChange={(e, data) => {
-                handleFilterChange({
-                  filter: "forest-rights",
-                  checked: data.checked as boolean,
-                });
-              }}
-              checked={
-                filters["forest-rights" as keyof typeof filters] === true
-              }
-            />
-            <Checkbox
-              label="Hunting/fishing/wildlife rights"
-              value="hunting-fishing-wildlife-rights"
-              onChange={(e, data) => {
-                handleFilterChange({
-                  filter: "hunting-fishing-wildlife-rights",
-                  checked: data.checked as boolean,
-                });
-              }}
-              checked={
-                filters[
-                  "hunting-fishing-wildlife-rights" as keyof typeof filters
-                ] === true
-              }
-            />
-            <Checkbox
-              label="Grazing/pasture rights"
-              value="grazing-pasture-rights"
-              onChange={(e, data) => {
-                handleFilterChange({
-                  filter: "grazing-pasture-rights",
-                  checked: data.checked as boolean,
-                });
-              }}
-              checked={
-                filters["grazing-pasture-rights" as keyof typeof filters] ===
-                true
-              }
-            />
-          </div>
-        </div>
-        <div className="mb-5">
           <Checkbox
-            label="Indicative areas of indigenous and community land rights"
-            value="indicative-areas"
+            label="Grazing/pasture rights"
+            value="grazing-pasture-rights"
             onChange={(e, data) => {
               handleFilterChange({
-                filter: "indicative-areas",
+                filter: "grazing-pasture-rights",
                 checked: data.checked as boolean,
               });
             }}
             checked={
-              filters["indicative-areas" as keyof typeof filters] === true
+              filters["grazing-pasture-rights" as keyof typeof filters] === true
             }
           />
         </div>
+      </div>
+      <div className="mb-5">
+        <Checkbox
+          label="Indicative areas of indigenous and community land rights"
+          value="indicative-areas"
+          onChange={(e, data) => {
+            handleFilterChange({
+              filter: "indicative-areas",
+              checked: data.checked as boolean,
+            });
+          }}
+          checked={filters["indicative-areas" as keyof typeof filters] === true}
+        />
       </div>
     </div>
   );
