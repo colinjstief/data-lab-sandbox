@@ -26,6 +26,7 @@ export interface WizardQuery {
   asset: string;
   version: string;
   query: string;
+  statInQuery: boolean;
   results: string;
 }
 

@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Icon, Button, Dropdown, Segment } from "semantic-ui-react";
 
 import { WizardQuery, GFWAPIField, Field } from "@/lib/types";
 import { wait, sortByProperty } from "@/lib/utils";
 import { getFields } from "@/lib/gfwDataAPI";
 import { constructQuery } from "@/lib/constructQuery";
-import { render } from "react-dom";
 
 interface FieldSelectProps {
   options: WizardQuery;
@@ -29,14 +28,13 @@ const FieldSelect = ({
   const [statFields, setstatFields] = useState<Field[]>([]); // e.g. umd_tree_cover_loss__ha, area__ha
   const [stats, setStats] = useState<{ stat: Field; field: Field }[]>([]);
 
-  const [filterChoices, setFilterChoices] = useState<Field[]>([]); // e.g. =, !=, IS NOT NULL, IS NULL
   const [filterFields, setFilterFields] = useState<Field[]>([]); // e.g. umd_tree_cover_density__threshold, is__peatland
   const [filters, setFilters] = useState<
     { field: Field; operator: Field; operatorValue: Field }[]
   >([]);
 
-  // const [groupFields, setGroupFields] = useState<Field[]>([]); // tsc_tree_cover_loss_drivers__driver, year
-  // const [groups, setGroups] = useState([]);
+  const [groupFields, setGroupFields] = useState<Field[]>([]); // tsc_tree_cover_loss_drivers__driver, year
+  const [groups, setGroups] = useState<Field[]>([]);
 
   let containerStyle = "h-full mt-0";
   if (visible) {
@@ -88,12 +86,11 @@ const FieldSelect = ({
         setstatFields(sortedInitialStatFields);
 
         const initialFilterFields = initialFields.filter((field) => {
-          // return ["is__", "__type", "__threshold"].some((item) => {
+          // return ["is__", "__threshold", "__type", "__driver"].some((item) => {
           //   return field.value.includes(item)
           // });
           return [
             "umd_tree_cover_density__threshold",
-            "tsc_tree_cover_loss_drivers__driver",
             "is__umd_regional_primary_forest_2001",
           ].some((item) => {
             return field.value === item;
@@ -102,6 +99,22 @@ const FieldSelect = ({
         const sortedFilterFields = sortByProperty(initialFilterFields, "key");
 
         setFilterFields(sortedFilterFields);
+
+        const initialGroupFields = initialFields.filter((field) => {
+          // return ["__type", "__driver"].some((item) => {
+          //   return field.value.includes(item)
+          // });
+          return [
+            "tsc_tree_cover_loss_drivers__driver",
+            "gfw_planted_forests__type",
+            "gfw_plantation__type",
+          ].some((item) => {
+            return field.value === item;
+          });
+        });
+        const sortedGroupFields = sortByProperty(initialGroupFields, "key");
+
+        setGroupFields(sortedGroupFields);
 
         setAsync({
           status: "",
@@ -129,27 +142,55 @@ const FieldSelect = ({
   useEffect(() => {
     setStats([]);
     setFilters([]);
+    setGroups([]);
   }, [options.asset, options.version]);
 
   // CONSTRUCT SQL
   useEffect(() => {
     const startConstructQueryRequest = async () => {
+      let allGroups = [...groups];
+
+      if (options.areaGroup) {
+        allGroups.push({
+          key: options.areaGroup,
+          value: options.areaGroup,
+          text: options.areaGroup,
+        });
+      }
+
+      if (options.timeGroup) {
+        allGroups.push({
+          key: options.timeGroup,
+          value: options.timeGroup,
+          text: options.timeGroup,
+        });
+      }
+
       const theQuery = await constructQuery({
         options,
         stats,
-        filters: [],
-        groups: [],
+        filters,
+        groups: allGroups,
       });
-      // console.log("theQuery =>", theQuery);
+
       setOptions({
         ...options,
         query: theQuery,
+        statInQuery: true,
       });
     };
-    if (!!options.version && !!stats) {
+
+    if (!!options.version && stats.length) {
       startConstructQueryRequest();
+    } else {
+      console.log("nope");
+      setOptions({
+        ...options,
+        query: "",
+        statInQuery: false,
+      });
     }
-  }, [options.version, stats, filters]);
+  }, [options.version, stats, filters, groups]);
 
   // SET CHOICES
   useEffect(() => {
@@ -171,16 +212,17 @@ const FieldSelect = ({
       { key: "sum", value: "sum", text: "sum" },
       { key: "mean", value: "mean", text: "mean" },
     ]);
-
-    setFilterChoices([{ key: "equals", value: "=", text: "equals" }]);
   }, [options.asset, options.version]);
 
   // STATISTICS - ADD NEW STAT
   const addStat = () => {
-    setStats([
-      ...stats,
-      { stat: statChoices[0], field: statFields[stats.length] },
-    ]);
+    let field;
+    if (stats.length >= statFields.length) {
+      field = statFields[statFields.length - 1];
+    } else {
+      field = statFields[stats.length];
+    }
+    setStats([...stats, { stat: statChoices[0], field }]);
   };
 
   // STATISTICS - REMOVE STAT
@@ -404,6 +446,40 @@ const FieldSelect = ({
     setFilters(newFilters);
   };
 
+  // GROUPS - ADD NEW GROUP
+  const addGroup = () => {
+    let field;
+    if (groups.length >= groupFields.length) {
+      field = groupFields[groups.length - 1];
+    } else {
+      field = groupFields[groups.length];
+    }
+    setGroups([...groups, field]);
+  };
+
+  // GROUPS - REMOVE GROUP
+  const removeGroup = ({ i }: { i: number }) => {
+    setGroups(groups.filter((group, index) => i !== index));
+  };
+
+  // GROUPS - HANDLE GROUP CHANGE
+  const handleGroupChange = ({
+    i,
+    groupValue,
+  }: {
+    i: number;
+    groupValue: string;
+  }) => {
+    const newGroups = groups.map((existingGroup, index) => {
+      if (index === i) {
+        return { key: groupValue, value: groupValue, text: groupValue };
+      } else {
+        return existingGroup;
+      }
+    });
+    setGroups(newGroups);
+  };
+
   return (
     <Segment.Group className={containerStyle}>
       <Segment className="flex-1">
@@ -427,6 +503,7 @@ const FieldSelect = ({
                     <Dropdown
                       search
                       selection
+                      className="min-w-[120px] mx-3"
                       options={statChoices}
                       value={stat.stat.value}
                       onChange={(e, newStat) => {
@@ -436,12 +513,12 @@ const FieldSelect = ({
                           fieldValue: stat.field.value as string,
                         });
                       }}
-                      className="min-w-[120px] mx-3"
                     />
                     <p className="m-0">of</p>
                     <Dropdown
                       search
                       selection
+                      className="min-w-[330px] mx-3"
                       options={inputFields}
                       value={stat.field?.value}
                       onChange={(e, newField) => {
@@ -451,7 +528,6 @@ const FieldSelect = ({
                           fieldValue: newField.value as string,
                         });
                       }}
-                      className="min-w-[330px] mx-3"
                     />
 
                     <Button icon size="tiny" onClick={() => removeStat({ i })}>
@@ -503,6 +579,70 @@ const FieldSelect = ({
               onClick={() => addOrChangeFilter({ action: "add" })}
               className="mt-2 ml-2"
             >
+              Add
+            </Button>
+          </div>
+          <div className="mb-5">
+            <h4 className="font-bold text-m mb-3">Groups</h4>
+            <div>
+              {options.areaGroup && (
+                <div className="flex items-center mb-3">
+                  <Dropdown
+                    disabled
+                    selection
+                    className="min-w-[330px] mx-3"
+                    options={[
+                      {
+                        key: options.timeGroup,
+                        value: options.timeGroup,
+                        text: options.timeGroup,
+                      },
+                    ]}
+                    value={options.timeGroup}
+                  />
+                </div>
+              )}
+              {options.timeGroup && (
+                <div className="flex items-center mb-3">
+                  <Dropdown
+                    disabled
+                    selection
+                    className="min-w-[330px] mx-3"
+                    options={[
+                      {
+                        key: options.areaGroup,
+                        value: options.areaGroup,
+                        text: options.areaGroup,
+                      },
+                    ]}
+                    value={options.areaGroup}
+                  />
+                </div>
+              )}
+              {groups.map((group, i) => {
+                return (
+                  <div key={i} className="flex items-center mb-3">
+                    <Dropdown
+                      search
+                      selection
+                      className="min-w-[330px] mx-3"
+                      options={groupFields}
+                      value={group.value}
+                      onChange={(e, newGroup) => {
+                        handleGroupChange({
+                          i,
+                          groupValue: newGroup.value as string,
+                        });
+                      }}
+                    />
+                    <Button icon size="tiny" onClick={() => removeGroup({ i })}>
+                      <Icon name="delete" />
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+            <Button onClick={addGroup} className="mt-2 ml-2">
               Add
             </Button>
           </div>

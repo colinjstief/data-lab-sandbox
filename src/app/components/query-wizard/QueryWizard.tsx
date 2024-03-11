@@ -26,18 +26,19 @@ const QueryWizard = ({}: QueryWizardProps) => {
     areaGroup: "",
     asset: "gadm__tcl__iso_summary",
     version: "",
+    statInQuery: false,
     query: "",
     results: "",
   };
 
   const [visibleTab, setVisibleTab] = useState<string>("area");
   const [options, setOptions] = useState<WizardQuery>(initOptions);
-  console.log("options =>", options);
 
   const prevOptionsRef = useRef(options);
 
   // Re-select asset and reset version and query when range or segments change
   useEffect(() => {
+    console.log("resetting one");
     const asset = selectAsset(options);
     setOptions({
       ...options,
@@ -49,6 +50,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   // Reset segments, version, and query when dataset or area type changes
   useEffect(() => {
+    console.log("resetting two");
     const prevOptions = prevOptionsRef.current;
     prevOptionsRef.current = options;
 
@@ -160,7 +162,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
         <Step
           onClick={() => setVisibleTab("result")}
           active={visibleTab === "result"}
-          disabled={!options.query || !options.version}
+          disabled={!options.query || !options.version || !options.statInQuery}
         >
           <Icon name="chart pie" />
           <Step.Content>

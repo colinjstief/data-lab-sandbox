@@ -13,8 +13,8 @@ export const constructQuery = async ({
 }: {
   options: WizardQuery;
   stats: { stat: Field; field: Field }[];
-  filters: [];
-  groups: [];
+  filters: { field: Field; operator: Field; operatorValue: Field }[];
+  groups: Field[];
 }): Promise<string> => {
   console.log("options =>", options);
   console.log("stats =>", stats);
