@@ -249,3 +249,9 @@ export interface GFWAPINewKey {
   message?: string;
   status: string;
 }
+
+export interface GFWAPIQueryResponse {
+  data?: { [key: string]: any }[];
+  message?: string;
+  status: string;
+}

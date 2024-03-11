@@ -28,7 +28,7 @@ const FieldSelect = ({
   const [statFields, setstatFields] = useState<Field[]>([]); // e.g. umd_tree_cover_loss__ha, area__ha
   const [stats, setStats] = useState<{ stat: Field; field: Field }[]>([]);
 
-  const [filterFields, setFilterFields] = useState<Field[]>([]); // e.g. umd_tree_cover_density__threshold, is__peatland
+  const [filterFields, setFilterFields] = useState<Field[]>([]); // e.g. umd_tree_cover_density_2000__threshold, is__peatland
   const [filters, setFilters] = useState<
     { field: Field; operator: Field; operatorValue: Field }[]
   >([]);
@@ -90,7 +90,7 @@ const FieldSelect = ({
           //   return field.value.includes(item)
           // });
           return [
-            "umd_tree_cover_density__threshold",
+            "umd_tree_cover_density_2000__threshold",
             "is__umd_regional_primary_forest_2001",
           ].some((item) => {
             return field.value === item;
@@ -183,7 +183,6 @@ const FieldSelect = ({
     if (!!options.version && stats.length) {
       startConstructQueryRequest();
     } else {
-      console.log("nope");
       setOptions({
         ...options,
         query: "",
@@ -480,6 +479,8 @@ const FieldSelect = ({
     setGroups(newGroups);
   };
 
+  console.log("options =>", options);
+
   return (
     <Segment.Group className={containerStyle}>
       <Segment className="flex-1">
@@ -585,7 +586,7 @@ const FieldSelect = ({
           <div className="mb-5">
             <h4 className="font-bold text-m mb-3">Groups</h4>
             <div>
-              {options.areaGroup && (
+              {options.timeGroup && (
                 <div className="flex items-center mb-3">
                   <Dropdown
                     disabled
@@ -602,7 +603,7 @@ const FieldSelect = ({
                   />
                 </div>
               )}
-              {options.timeGroup && (
+              {options.areaGroup && (
                 <div className="flex items-center mb-3">
                   <Dropdown
                     disabled

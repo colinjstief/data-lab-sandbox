@@ -16,10 +16,10 @@ export const constructQuery = async ({
   filters: { field: Field; operator: Field; operatorValue: Field }[];
   groups: Field[];
 }): Promise<string> => {
-  console.log("options =>", options);
-  console.log("stats =>", stats);
-  console.log("filters =>", filters);
-  console.log("groups =>", groups);
+  // console.log("options =>", options);
+  // console.log("stats =>", stats);
+  // console.log("filters =>", filters);
+  // console.log("groups =>", groups);
 
   const db = knex({
     client: "pg",
@@ -27,6 +27,8 @@ export const constructQuery = async ({
   });
 
   let sql = db("my_table").select();
+
+  const rangeField = selectRangeField(options);
 
   // STATISTICS
   if (stats.length > 0) {
@@ -47,29 +49,35 @@ export const constructQuery = async ({
   } else if (options.area.type === "gadm_iso") {
     // GADM ISO
     const gadm = options.area.value.replace(/_1$/, "");
+    sql = sql.select("iso").groupBy("iso");
     sql = sql.where("iso", gadm);
   } else if (options.area.type === "gadm_adm1") {
     // GADM ADM1
+    sql = sql.select("iso", "adm1").groupBy("iso", "adm1");
     const gadm = options.area.value.replace(/_1$/, "");
     sql = sql.where("iso", gadm.split(".")[0]);
     sql = sql.where("adm1", gadm.split(".")[1]);
   } else if (options.area.type === "gadm_adm2") {
     // GADM ADM2
+    sql = sql.select("iso", "adm1", "adm2").groupBy("iso", "adm1", "adm2");
     const gadm = options.area.value.replace(/_1$/, "");
     sql = sql.where("iso", gadm.split(".")[0]);
     sql = sql.where("adm1", gadm.split(".")[1]);
     sql = sql.where("adm2", gadm.split(".")[2]);
   } else if (options.area.type === "wdpa") {
     // WDPA
+    sql = sql
+      .select("wdpa_protected_area__id")
+      .groupBy("wdpa_protected_area__id");
     sql = sql.where("wdpa_protected_area__id", options.area.value);
   } else if (options.area.type === "geostore") {
     // Geostore (Saved)
+    sql = sql.select("geostore__id").groupBy("geostore__id");
     sql = sql.where("geostore__id", options.area.value);
   }
 
   // DATE RANGE
   if (options.range.length === 2) {
-    const rangeField = selectRangeField(options);
     if (rangeField.includes("__year")) {
       sql = sql.where(
         rangeField,
@@ -93,6 +101,30 @@ export const constructQuery = async ({
         options.range[1].toISOString().slice(0, 10)
       );
     }
+  }
+
+  // FILTERS
+  if (filters.length > 0) {
+    filters.forEach((filter) => {
+      if (filter.operator.value === "=") {
+        sql = sql.where(filter.field.value, filter.operatorValue.value);
+      }
+    });
+  }
+
+  // GROUPS
+  if (groups.length > 0) {
+    groups.forEach((group) => {
+      if (
+        group.value === "year" ||
+        group.value === "week" ||
+        group.value === "day"
+      ) {
+        sql = sql.select(rangeField).groupBy(rangeField);
+      } else {
+        sql = sql.select(group.value).groupBy(group.value);
+      }
+    });
   }
 
   return sql.toString();

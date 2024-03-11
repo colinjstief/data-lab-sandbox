@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button, Segment } from "semantic-ui-react";
 
-import { WizardQuery } from "@/lib/types";
+import { WizardQuery, GFWAPIQueryResponse } from "@/lib/types";
 import { wait } from "@/lib/utils";
 import { queryData } from "@/lib/gfwDataAPI";
 
@@ -18,7 +18,8 @@ const Results = ({
   visible,
   setVisibleTab,
 }: ResultsProps) => {
-  const [results, setResults] = useState<{ [key: string]: any }[]>([]);
+  const [results, setResults] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
   const [async, setAsync] = useState<{
     status: string;
     message: string;
@@ -41,10 +42,15 @@ const Results = ({
         message: "Reticulating splines...",
       });
       try {
-        const results = await queryData({ options });
-        console.log("results =>", results);
-        setResults(results);
-
+        const res = await queryData({ options });
+        console.log("res =>", res);
+        if (res.data) {
+          setResults(JSON.stringify(res.data, null, 2));
+          setMessage("");
+        } else if (res.message) {
+          setResults("");
+          setMessage(res.message);
+        }
         setAsync({
           status: "",
           message: "",
@@ -63,23 +69,34 @@ const Results = ({
     };
 
     if (visible && options.version && options.query) {
-      console.log("here we go");
+      setResults("");
+      setMessage("");
       startSendRequest();
     }
   }, [visible, options.version, options.query]);
 
+  useEffect(() => {
+    setResults("");
+    setMessage("");
+  }, [options.query]);
+
   return (
     <Segment.Group className={containerStyle}>
+      <Segment>
+        <div className="p-4 bg-slate-200">
+          <span className="font-mono">{options.query}</span>
+        </div>
+      </Segment>
       <Segment className="flex-1">
         <h3 className="text-xl font-bold mb-5">Results</h3>
         <div>
-          {results.map((result, index) => (
-            <div key={index}>
-              {Object.entries(result).map(([key, value]) => (
-                <p key={key}>{`${key}: ${value}`}</p>
-              ))}
-            </div>
-          ))}
+          {async.status && <p>Fetching your data...</p>}
+          {message && <p>{message}</p>}
+          {!!results.length && (
+            <pre className="bg-gray-100 text-gray-800 border border-gray-300 p-4 rounded-lg overflow-auto font-mono text-sm leading-6">
+              <code className="text-red-600">{results}</code>
+            </pre>
+          )}
         </div>
       </Segment>
     </Segment.Group>

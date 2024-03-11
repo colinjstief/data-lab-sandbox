@@ -38,7 +38,6 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   // Re-select asset and reset version and query when range or segments change
   useEffect(() => {
-    console.log("resetting one");
     const asset = selectAsset(options);
     setOptions({
       ...options,
@@ -50,7 +49,6 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   // Reset segments, version, and query when dataset or area type changes
   useEffect(() => {
-    console.log("resetting two");
     const prevOptions = prevOptionsRef.current;
     prevOptionsRef.current = options;
 

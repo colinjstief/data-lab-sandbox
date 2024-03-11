@@ -11,6 +11,7 @@ import {
   GFWAPIField,
   GFWAPIKeys,
   GFWAPINewKey,
+  GFWAPIQueryResponse,
   WizardQuery,
 } from "@/lib/types";
 
@@ -84,7 +85,7 @@ export const queryData = async ({
   options,
 }: {
   options: WizardQuery;
-}): Promise<{ [key: string]: any }[] | []> => {
+}): Promise<GFWAPIQueryResponse> => {
   //console.log("options =>", options);
   const { area, asset, version, query } = options;
 
@@ -107,23 +108,16 @@ export const queryData = async ({
       request = `${apiURL}/dataset/${asset}/${version}/query/json?sql=${query}`;
       res = await fetch(request);
       break;
-
-    default:
-      return [];
   }
 
   console.log("request =>", request);
 
   if (res) {
-    if (!res.ok) {
-      throw new Error("Failed to fetch data");
-    }
-
     const data = await res.json();
-    return data.data;
+    return data;
+  } else {
+    return { status: "error", message: "A network error occurred" };
   }
-
-  return [];
 };
 
 ///////////////////
