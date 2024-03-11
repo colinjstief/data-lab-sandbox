@@ -28,7 +28,7 @@ const GroupSelect = ({
   ) => {
     setOptions({
       ...options,
-      timeSegment: data.value as string,
+      timeGroup: data.value as string,
     });
   };
 
@@ -38,14 +38,13 @@ const GroupSelect = ({
   ) => {
     setOptions({
       ...options,
-      areaSegment: data.value as string,
+      areaGroup: data.value as string,
     });
   };
 
-  let segmentOptions =
-    datasets[options.dataset].segmentations[options.area.type];
-  if (!segmentOptions) {
-    segmentOptions = [];
+  let groupOptions = datasets[options.dataset].groups[options.area.type];
+  if (!groupOptions) {
+    groupOptions = [];
   }
 
   let containerStyle = "h-full mt-0";
@@ -64,17 +63,17 @@ const GroupSelect = ({
             <h4 className="mb-2">Do you want to group by year?</h4>
             <ButtonGroup fluid>
               <Button
-                active={options.timeSegment === ""}
+                active={options.timeGroup === ""}
                 onClick={handleTimeClick}
                 value=""
               >
                 No breakdown
               </Button>
-              {segmentOptions.includes("year") && (
+              {groupOptions.includes("year") && (
                 <>
                   <ButtonOr />
                   <Button
-                    active={options.timeSegment === "year"}
+                    active={options.timeGroup === "year"}
                     onClick={handleTimeClick}
                     value="year"
                   >
@@ -82,11 +81,11 @@ const GroupSelect = ({
                   </Button>
                 </>
               )}
-              {segmentOptions.includes("week") && (
+              {groupOptions.includes("week") && (
                 <>
                   <ButtonOr />
                   <Button
-                    active={options.timeSegment === "week"}
+                    active={options.timeGroup === "week"}
                     onClick={handleTimeClick}
                     value="week"
                   >
@@ -94,11 +93,11 @@ const GroupSelect = ({
                   </Button>
                 </>
               )}
-              {segmentOptions.includes("day") && (
+              {groupOptions.includes("day") && (
                 <>
                   <ButtonOr />
                   <Button
-                    active={options.timeSegment === "day"}
+                    active={options.timeGroup === "day"}
                     onClick={handleTimeClick}
                     value="day"
                   >
@@ -112,17 +111,17 @@ const GroupSelect = ({
             <h4 className="mb-2">Area</h4>
             <ButtonGroup fluid>
               <Button
-                active={options.areaSegment === ""}
+                active={options.areaGroup === ""}
                 onClick={handleAreaClick}
                 value=""
               >
                 No breakdown
               </Button>
-              {segmentOptions.includes("iso") && (
+              {groupOptions.includes("iso") && (
                 <>
                   <ButtonOr />
                   <Button
-                    active={options.areaSegment === "iso"}
+                    active={options.areaGroup === "iso"}
                     onClick={handleAreaClick}
                     value="iso"
                   >
@@ -130,11 +129,11 @@ const GroupSelect = ({
                   </Button>
                 </>
               )}
-              {segmentOptions.includes("adm1") && (
+              {groupOptions.includes("adm1") && (
                 <>
                   <ButtonOr />
                   <Button
-                    active={options.areaSegment === "adm1"}
+                    active={options.areaGroup === "adm1"}
                     onClick={handleAreaClick}
                     value="adm1"
                   >
@@ -142,11 +141,11 @@ const GroupSelect = ({
                   </Button>
                 </>
               )}
-              {segmentOptions.includes("adm2") && (
+              {groupOptions.includes("adm2") && (
                 <>
                   <ButtonOr />
                   <Button
-                    active={options.areaSegment === "adm2"}
+                    active={options.areaGroup === "adm2"}
                     onClick={handleAreaClick}
                     value="adm2"
                   >

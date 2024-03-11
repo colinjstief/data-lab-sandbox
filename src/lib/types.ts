@@ -21,8 +21,8 @@ export interface WizardQuery {
   };
   dataset: string;
   range: [Date, Date] | [];
-  timeSegment: string;
-  areaSegment: string;
+  timeGroup: string;
+  areaGroup: string;
   asset: string;
   version: string;
   query: string;
@@ -50,7 +50,7 @@ export interface Dataset {
   name: string;
   icon: string;
   coverage: string;
-  segmentations: Segmentations;
+  groups: Segmentations;
 }
 
 export interface Datasets {

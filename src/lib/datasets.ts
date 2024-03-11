@@ -6,7 +6,7 @@ export const datasets: Datasets = {
     name: "Tree cover loss",
     icon: "tree",
     coverage: "Global",
-    segmentations: {
+    groups: {
       gadm_global: ["year", "iso"],
       gadm_iso: ["year", "adm1", "adm2"],
       gadm_adm1: ["year", "adm2"],
@@ -21,7 +21,7 @@ export const datasets: Datasets = {
     name: "VIIRS fire alerts",
     icon: "fire",
     coverage: "Global",
-    segmentations: {
+    groups: {
       gadm_global: ["week", "iso"],
       gadm_iso: ["week", "adm1", "adm2"],
       gadm_adm1: ["week", "adm2"],
@@ -36,7 +36,7 @@ export const datasets: Datasets = {
     name: "Integrated alerts",
     icon: "chess board",
     coverage: "Tropics",
-    segmentations: {
+    groups: {
       gadm_global: ["day", "iso"],
       gadm_iso: ["day", "adm1", "adm2"],
       gadm_adm1: ["day", "adm2"],
@@ -51,7 +51,7 @@ export const datasets: Datasets = {
     name: "RADD alerts",
     icon: "bullhorn",
     coverage: "Humid tropics",
-    segmentations: {
+    groups: {
       gadm_global: ["day", "iso"],
       gadm_iso: ["day", "adm1", "adm2"],
       gadm_adm1: ["day", "adm2"],
@@ -66,7 +66,7 @@ export const datasets: Datasets = {
     name: "GLAD-S2 alerts",
     icon: "exclamation triangle",
     coverage: "Amazon",
-    segmentations: {
+    groups: {
       gadm_global: ["day", "iso"],
       gadm_iso: ["day", "adm1", "adm2"],
       gadm_adm1: ["day", "adm2"],
@@ -81,7 +81,7 @@ export const datasets: Datasets = {
     name: "GLAD-L",
     icon: "bell",
     coverage: "Tropics",
-    segmentations: {
+    groups: {
       gadm_global: ["day", "week", "iso"],
       gadm_iso: ["day", "week", "adm1", "adm2"],
       gadm_adm1: ["day", "week", "adm2"],

@@ -5,6 +5,7 @@ import { WizardQuery, GFWAPIField, Field } from "@/lib/types";
 import { wait, sortByProperty } from "@/lib/utils";
 import { getFields } from "@/lib/gfwDataAPI";
 import { constructQuery } from "@/lib/constructQuery";
+import { render } from "react-dom";
 
 interface FieldSelectProps {
   options: WizardQuery;
@@ -30,9 +31,9 @@ const FieldSelect = ({
 
   const [filterChoices, setFilterChoices] = useState<Field[]>([]); // e.g. =, !=, IS NOT NULL, IS NULL
   const [filterFields, setFilterFields] = useState<Field[]>([]); // e.g. umd_tree_cover_density__threshold, is__peatland
-  const [filters, setFilters] = useState<{ operator: Field; field: Field }[]>(
-    []
-  );
+  const [filters, setFilters] = useState<
+    { field: Field; operator: Field; operatorValue: Field }[]
+  >([]);
 
   // const [groupFields, setGroupFields] = useState<Field[]>([]); // tsc_tree_cover_loss_drivers__driver, year
   // const [groups, setGroups] = useState([]);
@@ -90,11 +91,16 @@ const FieldSelect = ({
           // return ["is__", "__type", "__threshold"].some((item) => {
           //   return field.value.includes(item)
           // });
-          return ["umd_tree_cover_density__threshold"].some((item) => {
+          return [
+            "umd_tree_cover_density__threshold",
+            "tsc_tree_cover_loss_drivers__driver",
+            "is__umd_regional_primary_forest_2001",
+          ].some((item) => {
             return field.value === item;
           });
         });
         const sortedFilterFields = sortByProperty(initialFilterFields, "key");
+
         setFilterFields(sortedFilterFields);
 
         setAsync({
@@ -219,12 +225,140 @@ const FieldSelect = ({
     setStats(newStats);
   };
 
-  // FILTERS - ADD NEW FILTER
-  const addFilter = () => {
-    setFilters([
-      ...filters,
-      { operator: filterChoices[0], field: filterFields[filters.length] },
-    ]);
+  // FILTERS - ADD OR CHANGE FILTER
+  const addOrChangeFilter = ({
+    action,
+    i,
+    newFieldValue,
+  }: {
+    action: string;
+    i?: number;
+    newFieldValue?: string;
+  }) => {
+    let field;
+    let operator;
+    let operatorValue;
+
+    if (action === "change") {
+      field = filterFields.filter(
+        (filter) => filter.value === newFieldValue
+      )[0];
+    } else {
+      if (filters.length >= filterFields.length) {
+        field = filterFields[filterFields.length - 1];
+      } else {
+        field = filterFields[filters.length];
+      }
+    }
+
+    if (field.value.includes("is__")) {
+      operator = booleanOperators[0];
+      operatorValue = booleanOperatorValues[0];
+    }
+
+    if (field.value.includes("__driver")) {
+      operator = booleanOperators[0];
+      operatorValue = driverValues[0];
+    }
+
+    if (field.value.includes("__threshold")) {
+      operator = booleanOperators[0];
+      operatorValue = densityThresholds[0];
+    }
+
+    const newFilter = {
+      field: field as Field,
+      operator: operator as Field,
+      operatorValue: operatorValue as Field,
+    };
+
+    if (action === "change") {
+      const newFilters = filters.map((existingFilter, index) => {
+        if (index === i) {
+          return newFilter;
+        } else {
+          return existingFilter;
+        }
+      });
+      setFilters(newFilters);
+    } else {
+      setFilters([...filters, newFilter]);
+    }
+  };
+
+  // FILTERS - RENDER FILTER OPERATOR
+  const renderFilterOperator = ({
+    filter,
+    i,
+  }: {
+    filter: { field: Field; operator: Field; operatorValue: Field };
+    i: number;
+  }) => {
+    const fieldValue = filter.field?.value;
+    if (!fieldValue) return <p>not sure about this one...</p>;
+
+    let operatorOptions;
+    let operatorValueOptions;
+
+    if (filter.field.value.includes("is__")) {
+      operatorOptions = booleanOperators;
+      operatorValueOptions = booleanOperatorValues;
+    }
+
+    if (filter.field.value.includes("__driver")) {
+      operatorOptions = booleanOperators;
+      operatorValueOptions = driverValues;
+    }
+
+    if (filter.field.value.includes("__threshold")) {
+      operatorOptions = booleanOperators;
+      operatorValueOptions = densityThresholds;
+    }
+
+    return (
+      <div className="flex flex-row mx-3">
+        <div className="mr-3">
+          <Dropdown
+            selection
+            fluid
+            options={operatorOptions}
+            value={filter.operator?.value}
+            onChange={(e, newOperator) => {
+              handleFilterOperatorChange({
+                i,
+                field: filter.field,
+                operator: {
+                  key: newOperator.value as string,
+                  value: newOperator.value as string,
+                  text: newOperator.value as string,
+                },
+                operatorValue: filter.operatorValue,
+              });
+            }}
+          />
+        </div>
+        <div>
+          <Dropdown
+            selection
+            fluid
+            options={operatorValueOptions}
+            value={filter.operatorValue?.value}
+            onChange={(e, newOperatorValue) => {
+              handleFilterOperatorChange({
+                i,
+                field: filter.field,
+                operator: filter.operator,
+                operatorValue: {
+                  key: newOperatorValue.value as string,
+                  value: newOperatorValue.value as string,
+                  text: newOperatorValue.value as string,
+                },
+              });
+            }}
+          />
+        </div>
+      </div>
+    );
   };
 
   // FILTERS - REMOVE FILTER
@@ -232,25 +366,36 @@ const FieldSelect = ({
     setFilters(filters.filter((filter, index) => i !== index));
   };
 
-  // FILTERS - HANDLE FILTER CHANGE
-  const handleFilterChange = ({
+  // FILTERS - HANDLE FILTER OPERATOR CHANGE
+  const handleFilterOperatorChange = ({
     i,
-    operator,
     field,
+    operator,
+    operatorValue,
   }: {
     i: number;
-    operator: Field;
     field: Field;
+    operator: Field;
+    operatorValue: Field;
   }) => {
+    // console.log("i =>", i);
+    // console.log("field =>", field);
+    // console.log("operator =>", operator);
+    // console.log("operatorValue =>", operatorValue);
     const newFilters = filters.map((existingFilter, index) => {
       if (index === i) {
         return {
+          field: { key: field.value, value: field.value, text: field.value },
           operator: {
             key: operator.key,
             value: operator.value,
             text: operator.text,
           },
-          field: { key: field.value, value: field.value, text: field.value },
+          operatorValue: {
+            key: operatorValue.key,
+            value: operatorValue.value,
+            text: operatorValue.text,
+          },
         };
       } else {
         return existingFilter;
@@ -265,7 +410,7 @@ const FieldSelect = ({
         <h3 className="text-xl font-bold mb-5">Select your fields</h3>
         <div className="flex flex-col">
           <div className="mb-5">
-            <h4 className="text-m mb-3">Statistics</h4>
+            <h4 className="font-bold text-m mb-3">Statistics</h4>
             <div>
               {stats.map((stat, i) => {
                 let inputFields;
@@ -321,39 +466,28 @@ const FieldSelect = ({
             </Button>
           </div>
           <div className="mb-5">
-            <h4 className="text-m mb-3">Filters</h4>
+            <h4 className="font-bold text-m mb-3">Filters</h4>
             <div>
               {filters.map((filter, i) => {
                 return (
                   <div key={i} className="flex items-center mb-3">
-                    <Dropdown
-                      search
-                      selection
-                      options={filterFields}
-                      value={filter.field?.value}
-                      onChange={(e, newField) => {
-                        handleFilterChange({
-                          i,
-                          operator: filter.operator as Field,
-                          field: newField as Field,
-                        });
-                      }}
-                      className="min-w-[330px] mx-3"
-                    />
-                    <Dropdown
-                      search
-                      selection
-                      options={filterChoices}
-                      value={filter.operator.value}
-                      onChange={(e, newOperator) => {
-                        handleFilterChange({
-                          i,
-                          operator: newOperator as Field,
-                          field: filter.field as Field,
-                        });
-                      }}
-                      className="min-w-[120px] mx-3"
-                    />
+                    <div>
+                      <Dropdown
+                        search
+                        selection
+                        className="min-w-[330px]"
+                        options={filterFields}
+                        value={filter.field?.value}
+                        onChange={(e, newField) => {
+                          addOrChangeFilter({
+                            action: "change",
+                            i,
+                            newFieldValue: newField.value as string,
+                          });
+                        }}
+                      />
+                    </div>
+                    {renderFilterOperator({ filter, i })}
                     <Button
                       icon
                       size="tiny"
@@ -365,7 +499,10 @@ const FieldSelect = ({
                 );
               })}
             </div>
-            <Button onClick={addFilter} className="mt-2 ml-2">
+            <Button
+              onClick={() => addOrChangeFilter({ action: "add" })}
+              className="mt-2 ml-2"
+            >
               Add
             </Button>
           </div>
@@ -390,10 +527,40 @@ const FieldSelect = ({
 
 export default FieldSelect;
 
-const booleanOperators = [
-  { key: "true", value: "= 'true'", text: "true" },
-  { key: "false", value: "= 'false'", text: "false" },
+const booleanOperators = [{ key: "=", value: "=", text: "=" }];
+
+const booleanOperatorValues = [
+  { key: "true", value: "true", text: "true" },
+  { key: "false", value: "false", text: "false" },
 ];
+
+const densityThresholds = [
+  { key: "10", value: "10", text: "10%" },
+  { key: "15", value: "15", text: "15%" },
+  { key: "20", value: "20", text: "20%" },
+  { key: "25", value: "25", text: "25%" },
+  { key: "30", value: "30", text: "30%" },
+  { key: "50", value: "50", text: "50%" },
+  { key: "75", value: "75", text: "75%" },
+];
+
+const driverValues = [
+  {
+    key: "Commodity driver deforestation",
+    value: "Commodity driver deforestation",
+    text: "Commodity driver deforestation",
+  },
+  { key: "Forestry", value: "Forestry", text: "Forestry" },
+  {
+    key: "Shifting agriculture",
+    value: "Shifting agriculture",
+    text: "Shifting agriculture",
+  },
+  { key: "Unknown", value: "Unknown", text: "Unknown" },
+  { key: "Urbanization", value: "Urbanization", text: "Urbanization" },
+  { key: "Wildfire", value: "Wildfire", text: "Wildfire" },
+];
+
 const existenceOperators = [
   { key: "equals", value: "=", text: "equals" },
   { key: "not_equal", value: "!=", text: "does not equal" },

@@ -22,8 +22,8 @@ const QueryWizard = ({}: QueryWizardProps) => {
     area: { type: "gadm_global", value: "Global", geometry: null },
     dataset: "tcl",
     range: [],
-    timeSegment: "",
-    areaSegment: "",
+    timeGroup: "",
+    areaGroup: "",
     asset: "gadm__tcl__iso_summary",
     version: "",
     query: "",
@@ -32,12 +32,12 @@ const QueryWizard = ({}: QueryWizardProps) => {
 
   const [visibleTab, setVisibleTab] = useState<string>("area");
   const [options, setOptions] = useState<WizardQuery>(initOptions);
+  console.log("options =>", options);
 
   const prevOptionsRef = useRef(options);
 
   // Re-select asset and reset version and query when range or segments change
   useEffect(() => {
-    console.log("relect asset =>", new Date().toISOString());
     const asset = selectAsset(options);
     setOptions({
       ...options,
@@ -45,7 +45,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
       version: "",
       query: "",
     });
-  }, [options.range, options.timeSegment, options.areaSegment]);
+  }, [options.range, options.timeGroup, options.areaGroup]);
 
   // Reset segments, version, and query when dataset or area type changes
   useEffect(() => {
@@ -60,8 +60,8 @@ const QueryWizard = ({}: QueryWizardProps) => {
       setOptions({
         ...options,
         asset: asset,
-        timeSegment: "",
-        areaSegment: "",
+        timeGroup: "",
+        areaGroup: "",
         version: "",
         query: "",
       });
@@ -69,12 +69,12 @@ const QueryWizard = ({}: QueryWizardProps) => {
   }, [options.dataset, options.area.type]);
 
   let breakdownLabel;
-  if (options.timeSegment && options.areaSegment) {
-    breakdownLabel = `By ${options.timeSegment} by ${options.areaSegment}`;
-  } else if (options.timeSegment && !options.areaSegment) {
-    breakdownLabel = `By ${options.timeSegment}`;
-  } else if (!options.timeSegment && options.areaSegment) {
-    breakdownLabel = `By ${options.areaSegment}`;
+  if (options.timeGroup && options.areaGroup) {
+    breakdownLabel = `By ${options.timeGroup} by ${options.areaGroup}`;
+  } else if (options.timeGroup && !options.areaGroup) {
+    breakdownLabel = `By ${options.timeGroup}`;
+  } else if (!options.timeGroup && options.areaGroup) {
+    breakdownLabel = `By ${options.areaGroup}`;
   } else {
     breakdownLabel = "No breakdown";
   }
