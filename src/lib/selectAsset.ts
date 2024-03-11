@@ -4,8 +4,8 @@ export const selectAsset = ({
   area,
   dataset,
   range,
-  timeSegment,
-  areaSegment,
+  timeGroup,
+  areaGroup,
 }: WizardQuery): string => {
   let asset = "";
 
@@ -13,7 +13,7 @@ export const selectAsset = ({
     case "tcl":
       switch (area.type) {
         case "gadm_global":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "year":
               asset = "gadm__tcl__iso_change";
               break;
@@ -25,9 +25,9 @@ export const selectAsset = ({
           }
           break;
         case "gadm_iso":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "year":
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm1":
                   asset = "gadm__tcl__adm1_change";
                   break;
@@ -40,7 +40,7 @@ export const selectAsset = ({
               }
               break;
             default:
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm1":
                   asset = !!range.length
                     ? "gadm__tcl__adm1_change"
@@ -61,9 +61,9 @@ export const selectAsset = ({
           }
           break;
         case "gadm_adm1":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "year":
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm2":
                   asset = "gadm__tcl__adm2_change";
                   break;
@@ -73,7 +73,7 @@ export const selectAsset = ({
               }
               break;
             default:
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm2":
                   asset = !!range.length
                     ? "gadm__tcl__adm2_change"
@@ -89,7 +89,7 @@ export const selectAsset = ({
           }
           break;
         case "gadm_adm2":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "year":
               asset = "gadm__tcl__adm2_change";
               break;
@@ -101,7 +101,7 @@ export const selectAsset = ({
           }
           break;
         case "wdpa":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "year":
               asset = "wdpa_protected_areas__tcl__change";
               break;
@@ -113,7 +113,7 @@ export const selectAsset = ({
           }
           break;
         case "custom_saved":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "year":
               asset = "geostore__tcl__change";
               break;
@@ -136,7 +136,7 @@ export const selectAsset = ({
           asset = "gadm__viirs__iso_weekly_alerts";
           break;
         case "gadm_iso":
-          switch (areaSegment) {
+          switch (areaGroup) {
             case "adm1":
               asset = "gadm__viirs__adm1_weekly_alerts";
               break;
@@ -149,9 +149,9 @@ export const selectAsset = ({
           }
           break;
         case "gadm_adm1":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm2":
                   asset = "gadm__viirs__adm2_daily_alerts";
                   break;
@@ -161,7 +161,7 @@ export const selectAsset = ({
               }
               break;
             default:
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm2":
                   asset = "gadm__viirs__adm2_weekly_alerts";
                   break;
@@ -173,7 +173,7 @@ export const selectAsset = ({
           }
           break;
         case "gadm_adm2":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
               asset = "gadm__viirs__adm2_daily_alerts";
               break;
@@ -183,7 +183,7 @@ export const selectAsset = ({
           }
           break;
         case "wdpa":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
               asset = "wdpa_protected_areas__viirs__daily_alerts";
               break;
@@ -193,7 +193,7 @@ export const selectAsset = ({
           }
           break;
         case "custom_saved":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
               asset = "geostore__viirs__daily_alerts";
               break;
@@ -216,7 +216,7 @@ export const selectAsset = ({
           asset = "gadm__integrated_alerts__iso_daily_alerts";
           break;
         case "gadm_iso":
-          switch (areaSegment) {
+          switch (areaGroup) {
             case "adm1":
               asset = "gadm__integrated_alerts__adm1_daily_alerts";
               break;
@@ -229,7 +229,7 @@ export const selectAsset = ({
           }
           break;
         case "gadm_adm1":
-          switch (areaSegment) {
+          switch (areaGroup) {
             case "adm2":
               asset = "gadm__integrated_alerts__adm2_daily_alerts";
               break;
@@ -266,7 +266,7 @@ export const selectAsset = ({
     case "glad-l":
       switch (area.type) {
         case "gadm_global":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
               asset = "gadm__glad__iso_daily_alerts";
               break;
@@ -279,9 +279,9 @@ export const selectAsset = ({
           }
           break;
         case "gadm_iso":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm1":
                   asset = "gadm__glad__adm1_daily_alerts";
                   break;
@@ -294,7 +294,7 @@ export const selectAsset = ({
               }
               break;
             case "week":
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm1":
                   asset = "gadm__glad__adm1_weekly_alerts";
                   break;
@@ -307,7 +307,7 @@ export const selectAsset = ({
               }
               break;
             default:
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm1":
                   asset = "gadm__viirs__adm1_weekly_alerts";
                   break;
@@ -322,9 +322,9 @@ export const selectAsset = ({
           }
           break;
         case "gadm_adm1":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm2":
                   asset = "gadm__glad__adm2_daily_alerts";
                   break;
@@ -334,7 +334,7 @@ export const selectAsset = ({
               }
               break;
             case "week":
-              switch (areaSegment) {
+              switch (areaGroup) {
                 case "adm2":
                   asset = "gadm__glad__adm2_weekly_alerts";
                   break;
@@ -349,7 +349,7 @@ export const selectAsset = ({
           }
           break;
         case "gadm_adm2":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
               asset = "gadm__glad__adm2_daily_alerts";
               break;
@@ -362,7 +362,7 @@ export const selectAsset = ({
           }
           break;
         case "wdpa":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
               asset = "wdpa_protected_areas__glad__daily_alerts";
               break;
@@ -375,7 +375,7 @@ export const selectAsset = ({
           }
           break;
         case "custom_saved":
-          switch (timeSegment) {
+          switch (timeGroup) {
             case "day":
               asset = "geostore__glad__daily_alerts";
               break;
