@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import mapboxgl, { LngLatBounds } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 
-import { Checkbox, Dropdown } from "semantic-ui-react";
-
-import { Boundary } from "@/lib/types";
-import { set } from "zod";
+import { Checkbox } from "semantic-ui-react";
 
 interface LandmarkProps {
   theMap: mapboxgl.Map | null;

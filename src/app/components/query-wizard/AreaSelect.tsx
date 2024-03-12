@@ -76,6 +76,7 @@ const AreaSelect = ({
             </Segment>
             <Segment className="flex-1 border mt-0 ml-3">
               <TheMap
+                id="area-select-map"
                 visible={visible}
                 setTheMap={setTheMap}
                 textPanel={textPanel}
