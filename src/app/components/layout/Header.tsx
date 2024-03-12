@@ -30,6 +30,11 @@ const pages = {
     category: "",
     description: "Sandbox for geospatial layers on a map",
   },
+  compare: {
+    title: "Compare",
+    category: "",
+    description: "Comparing land cover datasets",
+  },
   "query-wizard": {
     title: "Query Wizard",
     category: "",

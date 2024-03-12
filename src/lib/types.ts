@@ -58,6 +58,13 @@ export interface Datasets {
   [key: string]: Dataset;
 }
 
+export interface Location {
+  id: string;
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
+
 ////////////////////
 //// NEXT AUTH /////
 ////////////////////

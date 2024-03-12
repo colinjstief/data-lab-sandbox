@@ -111,6 +111,12 @@ const pages = [
   },
   {
     id: 7,
+    label: "Compare",
+    location: "/compare",
+    hide: "no",
+  },
+  {
+    id: 8,
     label: "Query Wizard",
     location: "/query-wizard",
     hide: "no",

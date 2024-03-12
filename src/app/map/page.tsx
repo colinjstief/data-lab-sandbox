@@ -25,9 +25,10 @@ const TheMapPage = ({
       </Segment>
       <Segment className="flex-1 border mt-0 ml-3">
         <TheMap
+          id="Landmark"
           visible={true}
           setTheMap={setTheMap}
-          basemap={"light-v9"}
+          basemap="light-v9"
           textPanel={textPanel}
         />
       </Segment>
