@@ -7,6 +7,7 @@ import { Icon, Segment, SegmentGroup } from "semantic-ui-react";
 
 import TheMap from "@/app/components/other/TheMap";
 import { Location } from "@/lib/types";
+import { set } from "zod";
 
 const Compare = ({
   params,
@@ -96,6 +97,7 @@ const Compare = ({
     location: Location;
   }) => {
     const mapID = `${dataset}-${location.id}`;
+    const basemap = dataset === "" ? "satellite-v9" : "light-v9";
     return (
       <div key={mapID} className="w-full relative">
         <button
@@ -111,12 +113,13 @@ const Compare = ({
           latitude={location.latitude}
           longitude={location.longitude}
           zoom={location.zoom}
+          basemap={basemap}
         />
       </div>
     );
   };
 
-  // Set events for all maps
+  // Set events and layers for all maps
   useEffect(() => {
     Object.values(theMaps).forEach((map) => {
       if (map.mapLoaded) return;
@@ -126,6 +129,38 @@ const Compare = ({
       map.theMap.on("zoomend", () => {
         handleMapMove({ mapID: map.id });
       });
+
+      let tileURL = "";
+
+      if (map.id.includes("umd")) {
+        tileURL =
+          "https://tiles.globalforestwatch.org/umd_regional_primary_forest_2001/v201901/uint16/{z}/{x}/{y}.png";
+      } else if (map.id.includes("wri")) {
+        tileURL =
+          "https://tiles.globalforestwatch.org/wri_tropical_tree_cover/v2020/ttcd_10/{z}/{x}/{y}.png";
+      } else if (map.id.includes("wcs")) {
+        tileURL =
+          "https://tiles.globalforestwatch.org/wcs_forest_landscape_integrity_index/v20190824/default/{z}/{x}/{y}.png";
+      }
+
+      if (tileURL === "") return;
+
+      map.theMap.addLayer({
+        id: map.id,
+        type: "raster",
+        source: {
+          type: "raster",
+          tiles: [tileURL],
+          tileSize: 256,
+        },
+      });
+
+      setTheMaps((currentMaps) => {
+        return {
+          ...currentMaps,
+          [map.id]: { ...currentMaps[map.id], mapLoaded: true },
+        };
+      });
     });
   }, [theMaps]);
 
@@ -134,7 +169,7 @@ const Compare = ({
       <SegmentGroup className="w-full h-full">
         <Segment className="flex gap-5">
           <div className="w-[250px] p-3">
-            <h3 className="font-bold mb-3">UMD tree cover</h3>
+            <h3 className="font-bold mb-3">UMD primary tree cover</h3>
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
               aliquet dui sit amet venenatis sagittis.
@@ -162,7 +197,7 @@ const Compare = ({
         </Segment>
         <Segment className="flex gap-5">
           <div className="w-[250px] p-3">
-            <h3 className="font-bold mb-3">WRI/Google Dynamic World</h3>
+            <h3 className="font-bold mb-3">WCS Forest Landscape Integrity</h3>
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
               aliquet dui sit amet venenatis sagittis.
@@ -170,7 +205,21 @@ const Compare = ({
           </div>
           <div className="flex w-full gap-4">
             {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "google" });
+              return addMap({ location: location, dataset: "wcs" });
+            })}
+          </div>
+        </Segment>
+        <Segment className="flex gap-5">
+          <div className="w-[250px] p-3">
+            <h3 className="font-bold mb-3">The World</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
+              aliquet dui sit amet venenatis sagittis.
+            </p>
+          </div>
+          <div className="flex w-full gap-4">
+            {Object.values(locations).map((location) => {
+              return addMap({ location: location, dataset: "" });
             })}
           </div>
         </Segment>
@@ -198,8 +247,8 @@ const startingLocations = {
   },
   "2": {
     id: "2",
-    latitude: -40,
-    longitude: 40,
+    latitude: 0,
+    longitude: 0,
     zoom: 1,
   },
 };
