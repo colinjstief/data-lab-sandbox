@@ -479,8 +479,6 @@ const FieldSelect = ({
     setGroups(newGroups);
   };
 
-  console.log("options =>", options);
-
   return (
     <Segment.Group className={containerStyle}>
       <Segment className="flex-1">
