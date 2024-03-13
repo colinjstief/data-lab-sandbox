@@ -227,7 +227,7 @@ const Compare = ({
       <button
         className="bg-gray-200 px-5 h-full rounded-[10px] shadow hover:shadow-lg hover:bg-gray-300"
         onClick={handleAddLocation}
-        disabled={Object.keys(locations).length >= 5}
+        disabled={Object.keys(locations).length >= 4}
       >
         <Icon name="plus" />
         <h4>New location</h4>
