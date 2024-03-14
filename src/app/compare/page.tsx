@@ -135,12 +135,12 @@ const Compare = ({
       if (map.id.includes("umd")) {
         tileURL =
           "https://tiles.globalforestwatch.org/umd_regional_primary_forest_2001/v201901/uint16/{z}/{x}/{y}.png";
-      } else if (map.id.includes("wri")) {
+      } else if (map.id.includes("ttc5")) {
         tileURL =
           "https://tiles.globalforestwatch.org/wri_tropical_tree_cover/v2020/ttcd_10/{z}/{x}/{y}.png";
-      } else if (map.id.includes("wcs")) {
+      } else if (map.id.includes("ttc10")) {
         tileURL =
-          "https://tiles.globalforestwatch.org/wcs_forest_landscape_integrity_index/v20190824/default/{z}/{x}/{y}.png";
+          "https://tiles.globalforestwatch.org/wri_trees_in_mosaic_landscapes/v20220922/tcd_40/{z}/{x}/{y}.png";
       }
 
       if (tileURL === "") return;
@@ -183,7 +183,7 @@ const Compare = ({
         </Segment>
         <Segment className="flex gap-5">
           <div className="w-[250px] p-3">
-            <h3 className="font-bold mb-3">WRI Tropical Tree Cover</h3>
+            <h3 className="font-bold mb-3">WRI Tropical Tree Cover (0.5 ha)</h3>
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
               aliquet dui sit amet venenatis sagittis.
@@ -191,13 +191,13 @@ const Compare = ({
           </div>
           <div className="flex w-full gap-4">
             {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "wri" });
+              return addMap({ location: location, dataset: "ttc5" });
             })}
           </div>
         </Segment>
         <Segment className="flex gap-5">
           <div className="w-[250px] p-3">
-            <h3 className="font-bold mb-3">WCS Forest Landscape Integrity</h3>
+            <h3 className="font-bold mb-3">WRI Tropical Tree Cover (10m)</h3>
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
               aliquet dui sit amet venenatis sagittis.
@@ -205,7 +205,7 @@ const Compare = ({
           </div>
           <div className="flex w-full gap-4">
             {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "wcs" });
+              return addMap({ location: location, dataset: "ttc10" });
             })}
           </div>
         </Segment>
