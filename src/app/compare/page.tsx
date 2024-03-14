@@ -135,10 +135,10 @@ const Compare = ({
       if (map.id.includes("umd")) {
         tileURL =
           "https://tiles.globalforestwatch.org/umd_regional_primary_forest_2001/v201901/uint16/{z}/{x}/{y}.png";
-      } else if (map.id.includes("ttc5")) {
+      } else if (map.id.includes("ttcfive")) {
         tileURL =
           "https://tiles.globalforestwatch.org/wri_tropical_tree_cover/v2020/ttcd_10/{z}/{x}/{y}.png";
-      } else if (map.id.includes("ttc10")) {
+      } else if (map.id.includes("ttcten")) {
         tileURL =
           "https://tiles.globalforestwatch.org/wri_trees_in_mosaic_landscapes/v20220922/tcd_40/{z}/{x}/{y}.png";
       }
@@ -191,7 +191,7 @@ const Compare = ({
           </div>
           <div className="flex w-full gap-4">
             {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "ttc5" });
+              return addMap({ location: location, dataset: "ttcfive" });
             })}
           </div>
         </Segment>
@@ -205,7 +205,7 @@ const Compare = ({
           </div>
           <div className="flex w-full gap-4">
             {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "ttc10" });
+              return addMap({ location: location, dataset: "ttcten" });
             })}
           </div>
         </Segment>
@@ -241,12 +241,6 @@ export default Compare;
 const startingLocations = {
   "1": {
     id: "1",
-    latitude: 0,
-    longitude: 0,
-    zoom: 1,
-  },
-  "2": {
-    id: "2",
     latitude: 0,
     longitude: 0,
     zoom: 1,
