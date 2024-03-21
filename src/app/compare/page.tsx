@@ -133,12 +133,15 @@ const Compare = ({
       let tileURL = "";
 
       if (map.id.includes("umd")) {
+        // Primary forest
         tileURL =
           "https://tiles.globalforestwatch.org/umd_regional_primary_forest_2001/v201901/uint16/{z}/{x}/{y}.png";
       } else if (map.id.includes("ttcfive")) {
+        // TTC 0.5 ha
         tileURL =
           "https://tiles.globalforestwatch.org/wri_tropical_tree_cover/v2020/ttcd_10/{z}/{x}/{y}.png";
       } else if (map.id.includes("ttcten")) {
+        // TTC 10m
         tileURL =
           "https://tiles.globalforestwatch.org/wri_trees_in_mosaic_landscapes/v20220922/tcd_40/{z}/{x}/{y}.png";
       }
