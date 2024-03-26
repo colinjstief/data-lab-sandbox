@@ -121,4 +121,10 @@ const pages = [
     location: "/query-wizard",
     hide: "no",
   },
+  {
+    id: 9,
+    label: "Download",
+    location: "/download",
+    hide: "no",
+  },
 ];

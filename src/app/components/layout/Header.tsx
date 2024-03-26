@@ -40,6 +40,11 @@ const pages = {
     category: "",
     description: "Let's make a query together",
   },
+  download: {
+    title: "Download",
+    category: "",
+    description: "Download pre-calculated statistics",
+  },
 };
 
 const Header = ({}: HeaderProps) => {
