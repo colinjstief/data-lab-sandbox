@@ -5,7 +5,7 @@ import { BBox, Geometry } from "geojson";
 
 import { Dropdown } from "semantic-ui-react";
 
-import { Boundary, WizardQuery } from "@/lib/types";
+import { ListItem, WizardQuery } from "@/lib/types";
 import { wait } from "@/lib/utils";
 import { getBoundaries, getFeature } from "@/lib/mapboxAPI";
 
@@ -18,9 +18,9 @@ interface GADMProps {
 
 const GADM = ({ options, setOptions, theMap, setTextPanel }: GADMProps) => {
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
-  const [isoOptions, setIsoOptions] = useState<Boundary[]>([]);
-  const [adm1Options, setAdm1Options] = useState<Boundary[]>([]);
-  const [adm2Options, setAdm2Options] = useState<Boundary[]>([]);
+  const [isoOptions, setIsoOptions] = useState<ListItem[]>([]);
+  const [adm1Options, setAdm1Options] = useState<ListItem[]>([]);
+  const [adm2Options, setAdm2Options] = useState<ListItem[]>([]);
   const [iso, setIso] = useState<string>("");
   const [adm1, setAdm1] = useState<string>("");
   const [adm2, setAdm2] = useState<string>("");

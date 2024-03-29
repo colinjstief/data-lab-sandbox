@@ -10,7 +10,7 @@ interface LandmarkProps {
 
 const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
-  // const [isoOptions, setIsoOptions] = useState<Boundary[]>([
+  // const [isoOptions, setIsoOptions] = useState<ListItem[]>([
   //   { key: "ARG", value: "ARG", text: "Argentina" },
   // ]);
   const [filters, setFilters] = useState<{}>({

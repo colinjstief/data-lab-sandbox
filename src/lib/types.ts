@@ -30,7 +30,7 @@ export interface WizardQuery {
   results: string;
 }
 
-export interface Boundary {
+export interface ListItem {
   key: string;
   value: string;
   text: string;
