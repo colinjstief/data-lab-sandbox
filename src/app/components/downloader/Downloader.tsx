@@ -71,27 +71,31 @@ const Downloader = ({}: DownloaderProps) => {
         default:
           break;
       }
-      setAsyncStatus({
-        ...asyncStatus,
-        area: {
-          status: "Success",
-          message: "",
-        },
+      setAsyncStatus((oldState) => {
+        return {
+          ...oldState,
+          area: {
+            status: "Success",
+            message: "",
+          },
+        };
       });
     } catch (error) {
-      setAsyncStatus({
-        ...asyncStatus,
-        area: {
-          status: "Failed",
-          message: "Failed to load areas. Try reloading?",
-        },
+      setAsyncStatus((oldState) => {
+        return {
+          ...oldState,
+          area: {
+            status: "Failed",
+            message: "Failed to load datasets. Try reloading?",
+          },
+        };
       });
     }
   };
 
   const fetchDatasets = async () => {
     try {
-      const datasets = [
+      setDataOptions([
         {
           key: "1",
           value: "1",
@@ -107,54 +111,80 @@ const Downloader = ({}: DownloaderProps) => {
           value: "3",
           text: "Dataset 3",
         },
-      ];
+      ]);
 
-      setDataOptions(datasets);
-
-      setAsyncStatus({
-        ...asyncStatus,
-        data: {
-          status: "Success",
-          message: "",
-        },
+      setAsyncStatus((oldState) => {
+        return {
+          ...oldState,
+          data: {
+            status: "Success",
+            message: "",
+          },
+        };
       });
     } catch (error) {
-      setAsyncStatus({
-        ...asyncStatus,
-        data: {
-          status: "Failed",
-          message: "Failed to load datasets. Try reloading?",
-        },
+      setAsyncStatus((oldState) => {
+        return {
+          ...oldState,
+          data: {
+            status: "Failed",
+            message: "Failed to load datasets. Try reloading?",
+          },
+        };
       });
     }
   };
 
-  const toggleIsoSelection = (selectedIso: ListItem) => {
+  const toggleSelection = ({
+    type,
+    selection,
+  }: {
+    type: "area" | "data" | "context" | "range";
+    selection: ListItem;
+  }) => {
     setQuery((prevQuery) => {
-      const isAlreadySelected = prevQuery.area.some(
-        (area) => area.value === selectedIso.value
+      const isAlreadySelected = prevQuery[type].some(
+        (item) => item.value === selection.value
       );
 
       return {
         ...prevQuery,
-        area: isAlreadySelected
-          ? prevQuery.area.filter((area) => area.value !== selectedIso.value)
-          : [...prevQuery.area, selectedIso],
+        [type]: isAlreadySelected
+          ? prevQuery[type].filter((item) => item.value !== selection.value)
+          : [...prevQuery[type], selection],
       };
     });
   };
 
-  const selectAll = () => {
+  const selectAll = ({
+    type,
+  }: {
+    type: "area" | "data" | "context" | "range";
+  }) => {
+    let options: ListItem[];
+    switch (type) {
+      case "area":
+        options = areaOptions;
+        break;
+      case "data":
+        options = dataOptions;
+        break;
+    }
+
     setQuery((prevQuery) => ({
       ...prevQuery,
-      area: areaOptions,
+      [type]: options,
     }));
   };
 
-  const clearAll = () => {
+  const clearAll = ({
+    type,
+  }: {
+    type: "area" | "data" | "context" | "range";
+  }) => {
     setQuery((prevQuery) => ({
       ...prevQuery,
-      area: [],
+      [type]: [],
     }));
   };
 
@@ -162,7 +192,7 @@ const Downloader = ({}: DownloaderProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="w-[900px] flex flex-wrap gap-4">
+      <div className="max-w-[900px] flex flex-wrap gap-4">
         {/* AREA SELECTOR */}
         <div className="w-[400px] border border-gray-300">
           <div className="flex gap-4 p-3 border-b border-gray-300">
@@ -187,8 +217,7 @@ const Downloader = ({}: DownloaderProps) => {
             />
           </div>
           <div className="border-b border-gray-300 h-[150px] overflow-auto">
-            {asyncStatus.area.status === "Loading" ||
-            asyncStatus.area.status === "" ? (
+            {asyncStatus.area.status === "Loading" ? (
               <Segment className="h-full">
                 <Dimmer active inverted>
                   <Loader inverted>{asyncStatus.area.message}</Loader>
@@ -206,7 +235,9 @@ const Downloader = ({}: DownloaderProps) => {
                     <li
                       key={area.key}
                       className="px-3 py-1 border-b border-gray-200 cursor-pointer flex gap-3 items-center"
-                      onClick={() => toggleIsoSelection(area)}
+                      onClick={() =>
+                        toggleSelection({ type: "area", selection: area })
+                      }
                     >
                       <div
                         className={`w-[14px] h-[14px] border border-gray-400 ${
@@ -224,16 +255,26 @@ const Downloader = ({}: DownloaderProps) => {
             )}
           </div>
           <div className="p-3 flex gap-4 border-b border-gray-300">
-            <Button fluid content="Select all" onClick={selectAll} />
-            <Button fluid content="Clear all" onClick={clearAll} />
+            <Button
+              fluid
+              content="Select all"
+              onClick={() => selectAll({ type: "area" })}
+            />
+            <Button
+              fluid
+              content="Clear all"
+              onClick={() => clearAll({ type: "area" })}
+            />
           </div>
-          <div>
+          <div className="max-h-[120px] overflow-auto">
             <ul className="p-3 flex flex-wrap gap-2">
               {query.area.map((area) => (
                 <li
                   key={area.key}
                   className="flex gap-1 cursor-pointer px-2 py-1 border border-gray-300"
-                  onClick={() => toggleIsoSelection(area)}
+                  onClick={() =>
+                    toggleSelection({ type: "area", selection: area })
+                  }
                 >
                   <Icon name="x" />
                   {area.text}
@@ -266,8 +307,7 @@ const Downloader = ({}: DownloaderProps) => {
             />
           </div>
           <div className="border-b border-gray-300 h-[150px] overflow-auto">
-            {asyncStatus.data.status === "Loading" ||
-            asyncStatus.data.status === "" ? (
+            {asyncStatus.data.status === "Loading" ? (
               <Segment className="h-full">
                 <Dimmer active inverted>
                   <Loader inverted>{asyncStatus.data.message}</Loader>
@@ -285,7 +325,9 @@ const Downloader = ({}: DownloaderProps) => {
                     <li
                       key={data.key}
                       className="px-3 py-1 border-b border-gray-200 cursor-pointer flex gap-3 items-center"
-                      onClick={() => toggleIsoSelection(data)}
+                      onClick={() =>
+                        toggleSelection({ type: "data", selection: data })
+                      }
                     >
                       <div
                         className={`w-[14px] h-[14px] border border-gray-400 ${
@@ -303,19 +345,29 @@ const Downloader = ({}: DownloaderProps) => {
             )}
           </div>
           <div className="p-3 flex gap-4 border-b border-gray-300">
-            <Button fluid content="Select all" onClick={selectAll} />
-            <Button fluid content="Clear all" onClick={clearAll} />
+            <Button
+              fluid
+              content="Select all"
+              onClick={() => selectAll({ type: "data" })}
+            />
+            <Button
+              fluid
+              content="Clear all"
+              onClick={() => clearAll({ type: "data" })}
+            />
           </div>
-          <div>
+          <div className="max-h-[120px] overflow-auto">
             <ul className="p-3 flex flex-wrap gap-2">
-              {query.area.map((area) => (
+              {query.data.map((data) => (
                 <li
-                  key={area.key}
+                  key={data.key}
                   className="flex gap-1 cursor-pointer px-2 py-1 border border-gray-300"
-                  onClick={() => toggleIsoSelection(area)}
+                  onClick={() =>
+                    toggleSelection({ type: "data", selection: data })
+                  }
                 >
                   <Icon name="x" />
-                  {area.text}
+                  {data.text}
                 </li>
               ))}
             </ul>
