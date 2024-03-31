@@ -6,7 +6,7 @@ const Keys = () => {
     <div className="text-center">
       <div className="inline-block mx-auto">
         <KeyForm />
-        <KeyTable />
+        {/* <KeyTable /> */}
       </div>
     </div>
   );
