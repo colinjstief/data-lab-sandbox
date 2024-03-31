@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 
 import { Icon, Segment, SegmentGroup } from "semantic-ui-react";
@@ -11,8 +11,8 @@ import { Location } from "@/lib/types";
 interface ComparisonMapProps {}
 
 const ComparisonMap = ({}: ComparisonMapProps) => {
-  const [theMaps, setTheMaps] = useState<{
-    [key: string]: { id: string; theMap: mapboxgl.Map; mapLoaded: boolean };
+  const theMaps = useRef<{
+    [key: string]: { id: string; theMap: mapboxgl.Map };
   }>({});
   const [locations, setLocations] = useState<{ [key: string]: Location }>(
     startingLocations
@@ -20,35 +20,39 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
 
   useEffect(() => {
     Object.values(theMaps).forEach((map) => {
+      console.log("Resizing map", map);
+      if (!map.theMap) return;
       map.theMap.resize();
     });
   }, [locations]);
 
   const handleAddLocation = () => {
     const id = Object.keys(locations).length + 1;
-    setLocations({
-      ...locations,
-      [id]: {
-        id: id.toString(),
-        latitude: 0,
-        longitude: 0,
-        zoom: 1,
-      },
+    setLocations((currentLocations) => {
+      return {
+        ...currentLocations,
+        [id]: {
+          id: id.toString(),
+          latitude: 0,
+          longitude: 0,
+          zoom: 1,
+        },
+      };
     });
   };
 
   const handleMapMove = ({ mapID }: { mapID: string }) => {
     const locationID = mapID.split("-")[1];
 
-    setTheMaps((currentMaps) => {
-      const newMaps = { ...currentMaps };
-      Object.keys(newMaps).forEach((key) => {
-        if (key.includes(locationID) && key !== mapID) {
-          newMaps[key].theMap.setCenter(newMaps[mapID].theMap.getCenter());
-          newMaps[key].theMap.setZoom(newMaps[mapID].theMap.getZoom());
-        }
-      });
-      return newMaps;
+    Object.keys(theMaps.current).forEach((key) => {
+      if (key.includes(locationID) && key !== mapID) {
+        theMaps.current[key].theMap.setCenter(
+          theMaps.current[mapID].theMap.getCenter()
+        );
+        theMaps.current[key].theMap.setZoom(
+          theMaps.current[mapID].theMap.getZoom()
+        );
+      }
     });
   };
 
@@ -63,25 +67,50 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
     });
 
     // Remove maps associated with this location
-    setTheMaps((currentMaps) => {
-      const newMaps = { ...currentMaps };
-      Object.keys(newMaps).forEach((key) => {
-        if (key.includes(locationID)) {
-          currentMaps[key].theMap.remove();
-          delete newMaps[key];
-        }
-      });
-      return newMaps;
+    Object.keys(theMaps.current).forEach((key) => {
+      if (key.includes(locationID)) {
+        theMaps.current[key].theMap.remove();
+        delete theMaps.current[key];
+      }
     });
   };
 
   const handleSetTheMap = ({ id, map }: { id: string; map: mapboxgl.Map }) => {
-    setTheMaps((currentMaps) => {
-      return {
-        ...currentMaps,
-        [id]: { id: id, theMap: map, mapLoaded: false },
-      };
+    map.on("drag", () => {
+      handleMapMove({ mapID: id });
     });
+    map.on("zoomend", () => {
+      handleMapMove({ mapID: id });
+    });
+
+    let tileURL = "";
+
+    if (id.includes("umd")) {
+      // Primary forest
+      tileURL =
+        "https://tiles.globalforestwatch.org/umd_regional_primary_forest_2001/v201901/uint16/{z}/{x}/{y}.png";
+    } else if (id.includes("ttcfive")) {
+      // TTC 0.5 ha
+      tileURL =
+        "https://tiles.globalforestwatch.org/wri_tropical_tree_cover/v2020/ttcd_10/{z}/{x}/{y}.png";
+    } else if (id.includes("ttcten")) {
+      // TTC 10m
+      tileURL =
+        "https://tiles.globalforestwatch.org/wri_trees_in_mosaic_landscapes/v20220922/tcd_40/{z}/{x}/{y}.png";
+    }
+
+    if (tileURL === "") return;
+
+    map.addLayer({
+      id,
+      type: "raster",
+      source: {
+        type: "raster",
+        tiles: [tileURL],
+        tileSize: 256,
+      },
+    });
+    theMaps.current[id] = { id, theMap: map };
   };
 
   const addMap = ({
@@ -113,54 +142,6 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
       </div>
     );
   };
-
-  // Set events and layers for all maps
-  useEffect(() => {
-    Object.values(theMaps).forEach((map) => {
-      if (map.mapLoaded) return;
-      map.theMap.on("drag", () => {
-        handleMapMove({ mapID: map.id });
-      });
-      map.theMap.on("zoomend", () => {
-        handleMapMove({ mapID: map.id });
-      });
-
-      let tileURL = "";
-
-      if (map.id.includes("umd")) {
-        // Primary forest
-        tileURL =
-          "https://tiles.globalforestwatch.org/umd_regional_primary_forest_2001/v201901/uint16/{z}/{x}/{y}.png";
-      } else if (map.id.includes("ttcfive")) {
-        // TTC 0.5 ha
-        tileURL =
-          "https://tiles.globalforestwatch.org/wri_tropical_tree_cover/v2020/ttcd_10/{z}/{x}/{y}.png";
-      } else if (map.id.includes("ttcten")) {
-        // TTC 10m
-        tileURL =
-          "https://tiles.globalforestwatch.org/wri_trees_in_mosaic_landscapes/v20220922/tcd_40/{z}/{x}/{y}.png";
-      }
-
-      if (tileURL === "") return;
-
-      map.theMap.addLayer({
-        id: map.id,
-        type: "raster",
-        source: {
-          type: "raster",
-          tiles: [tileURL],
-          tileSize: 256,
-        },
-      });
-
-      setTheMaps((currentMaps) => {
-        return {
-          ...currentMaps,
-          [map.id]: { ...currentMaps[map.id], mapLoaded: true },
-        };
-      });
-    });
-  }, [theMaps]);
 
   return (
     <div className="flex w-full h-full gap-4">
@@ -225,7 +206,7 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
       <button
         className="bg-gray-200 px-5 h-full rounded-[10px] shadow hover:shadow-lg hover:bg-gray-300"
         onClick={handleAddLocation}
-        disabled={Object.keys(locations).length >= 4}
+        disabled={Object.keys(locations).length >= 3}
       >
         <Icon name="plus" />
         <h4>New location</h4>
