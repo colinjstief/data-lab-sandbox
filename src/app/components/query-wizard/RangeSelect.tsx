@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { Button, Dropdown, Segment } from "semantic-ui-react";
+import { Button, Segment } from "semantic-ui-react";
 import DatePicker from "react-datepicker";
 
 import { WizardQuery } from "@/lib/types";
