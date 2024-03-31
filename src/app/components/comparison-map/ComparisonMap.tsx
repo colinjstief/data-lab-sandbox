@@ -8,6 +8,8 @@ import { Icon, Segment, SegmentGroup } from "semantic-ui-react";
 import TheMap from "@/app/components/other/TheMap";
 import { Location } from "@/lib/types";
 
+import { wait } from "@/lib/utils";
+
 interface ComparisonMapProps {}
 
 const ComparisonMap = ({}: ComparisonMapProps) => {
@@ -17,14 +19,6 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
   const [locations, setLocations] = useState<{ [key: string]: Location }>(
     startingLocations
   );
-
-  useEffect(() => {
-    Object.values(theMaps).forEach((map) => {
-      console.log("Resizing map", map);
-      if (!map.theMap) return;
-      map.theMap.resize();
-    });
-  }, [locations]);
 
   const handleAddLocation = () => {
     const id = Object.keys(locations).length + 1;
@@ -56,7 +50,7 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
     });
   };
 
-  const handleRemoveLocationByMapId = ({ mapID }: { mapID: string }) => {
+  const handleRemoveLocationByMapId = async ({ mapID }: { mapID: string }) => {
     const locationID = mapID.split("-")[1];
 
     // Remove this location
@@ -73,9 +67,18 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
         delete theMaps.current[key];
       }
     });
+
+    await wait(100); // Wait for the maps to be fully removed before resizing the remaining maps
+
+    Object.values(theMaps.current).forEach((map) => {
+      if (!map.theMap) return;
+      console.log("Resizing map");
+      map.theMap.resize();
+    });
   };
 
   const handleSetTheMap = ({ id, map }: { id: string; map: mapboxgl.Map }) => {
+    theMaps.current[id] = { id, theMap: map };
     map.on("drag", () => {
       handleMapMove({ mapID: id });
     });
@@ -110,7 +113,6 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
         tileSize: 256,
       },
     });
-    theMaps.current[id] = { id, theMap: map };
   };
 
   const addMap = ({
@@ -121,12 +123,15 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
     location: Location;
   }) => {
     const mapID = `${dataset}-${location.id}`;
-    const basemap = dataset === "" ? "satellite-v9" : "light-v9";
+    const basemap = dataset === "world" ? "satellite-v9" : "light-v9";
     return (
       <div key={mapID} className="w-full relative">
         <button
           className="absolute top-1 right-1 z-10 cursor-pointer"
-          onClick={() => handleRemoveLocationByMapId({ mapID: mapID })}
+          onClick={() => {
+            if (Object.keys(locations).length === 1) return;
+            handleRemoveLocationByMapId({ mapID: mapID });
+          }}
         >
           <Icon name="x" />
         </button>
@@ -198,7 +203,7 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
           </div>
           <div className="flex w-full gap-4">
             {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "" });
+              return addMap({ location: location, dataset: "world" });
             })}
           </div>
         </Segment>
