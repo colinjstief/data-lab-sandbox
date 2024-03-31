@@ -53,6 +53,7 @@ export interface Field {
 }
 
 export interface Dataset {
+  include: boolean;
   dataset: string;
   name: string;
   icon: string;

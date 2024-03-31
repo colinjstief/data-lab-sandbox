@@ -36,6 +36,8 @@ const DataSelect = ({
         <h3 className="text-xl font-bold mb-5">Select a dataset</h3>
         <div className="flex flex-wrap">
           {Object.entries(datasets).map(([key, value]) => {
+            if (!value.include) return null;
+
             let cardStyle;
             let radioButton;
             if (options.dataset === value.dataset) {

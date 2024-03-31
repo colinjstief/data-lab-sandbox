@@ -2,6 +2,7 @@ import { Datasets } from "@/lib/types";
 
 export const datasets: Datasets = {
   tcl: {
+    include: true,
     dataset: "tcl",
     name: "Tree cover loss",
     icon: "tree",
@@ -17,6 +18,7 @@ export const datasets: Datasets = {
     },
   },
   viirs: {
+    include: false,
     dataset: "viirs",
     name: "VIIRS fire alerts",
     icon: "fire",
@@ -32,6 +34,7 @@ export const datasets: Datasets = {
     },
   },
   integrated: {
+    include: false,
     dataset: "integrated",
     name: "Integrated alerts",
     icon: "chess board",
@@ -47,6 +50,7 @@ export const datasets: Datasets = {
     },
   },
   radd: {
+    include: false,
     dataset: "radd",
     name: "RADD alerts",
     icon: "bullhorn",
@@ -62,6 +66,7 @@ export const datasets: Datasets = {
     },
   },
   "glad-s2": {
+    include: false,
     dataset: "glad-s2",
     name: "GLAD-S2 alerts",
     icon: "exclamation triangle",
@@ -77,6 +82,7 @@ export const datasets: Datasets = {
     },
   },
   "glad-l": {
+    include: false,
     dataset: "glad-l",
     name: "GLAD-L",
     icon: "bell",
