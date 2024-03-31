@@ -13,6 +13,11 @@ export const signinSchema = z.object({
 });
 export type SignInData = z.infer<typeof signinSchema>;
 
+export interface AsyncStatus {
+  status: string;
+  message: string;
+}
+
 export interface WizardQuery {
   area: {
     type: string;
@@ -30,10 +35,11 @@ export interface WizardQuery {
   results: string;
 }
 
-export interface ListItem {
-  key: string;
-  value: string;
-  text: string;
+export interface DownloadQuery {
+  area: Field[];
+  dataset: Field[];
+  context: Field[];
+  range: Field[];
 }
 
 export interface Segmentations {
