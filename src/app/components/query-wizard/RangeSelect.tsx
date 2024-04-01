@@ -57,19 +57,18 @@ const RangeSelect = ({
                   Subset of years
                 </Button>
                 {!!options.range.length && (
-                  <p>Hi</p>
-                  // <DatePicker
-                  //   className="cursor-pointer p-1.5 border border-gray-300"
-                  //   selected={options.range[0]}
-                  //   onChange={handleChange}
-                  //   selectsRange
-                  //   startDate={options.range[0]}
-                  //   endDate={options.range[1]}
-                  //   minDate={new Date("2001-06-01")}
-                  //   maxDate={new Date("2022-06-01")}
-                  //   dateFormat="yyyy"
-                  //   showYearPicker
-                  // />
+                  <DatePicker
+                    className="cursor-pointer p-1.5 border border-gray-300"
+                    selected={options.range[0]}
+                    onChange={handleChange}
+                    selectsRange
+                    startDate={options.range[0]}
+                    endDate={options.range[1]}
+                    minDate={new Date("2001-06-01")}
+                    maxDate={new Date("2022-06-01")}
+                    dateFormat="yyyy"
+                    showYearPicker
+                  />
                 )}
               </div>
             ) : (
