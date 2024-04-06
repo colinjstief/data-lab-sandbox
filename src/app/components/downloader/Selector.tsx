@@ -61,7 +61,7 @@ const Selector = ({
 
   return (
     <div className="w-[400px] border border-gray-300">
-      <div className="flex gap-4 p-3 border-b border-gray-300">Tabs</div>
+      {/* <div className="flex gap-4 p-3 border-b border-gray-300">Tabs</div> */}
       <div className="p-3 border-b border-gray-300">
         <Input
           fluid

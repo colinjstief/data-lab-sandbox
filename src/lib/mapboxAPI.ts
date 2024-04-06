@@ -61,7 +61,7 @@ export const getFeature = async ({
     })
     .send();
 
-  console.log(res.body);
+  //console.log(res.body);
 
   return res.body;
 };
