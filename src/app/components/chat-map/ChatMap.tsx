@@ -292,6 +292,10 @@ const ChatMap = ({}: ChatMapProps) => {
           ref={scrollRef}
           className="flex flex-1 flex-col overflow-auto max-h-[65vh] pr-2"
         >
+          <div className="flex gap-2.5 max-w-[80%] mb-3 border border-gray-300 rounded-lg py-2 px-4 bg-gray-100 border-gray-300">
+            <Icon name="computer" siz="tiny" />
+            <p>Where would you like to go?</p>
+          </div>
           {history.map((message, index) => {
             return (
               <div
@@ -330,7 +334,7 @@ const ChatMap = ({}: ChatMapProps) => {
           <div data-component="chatInput">
             <Input
               fluid
-              placeholder="Where would you like to go?"
+              placeholder="Where to?"
               value={promptValue}
               onChange={(e, { value }) => setPromptValue(value)}
               onKeyDown={(e: React.KeyboardEvent) => {
