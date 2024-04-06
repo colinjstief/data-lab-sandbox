@@ -46,7 +46,7 @@ const Navigation = ({ menuVisible, hideMenu }: NavigationProps) => {
           >
             <Link
               href={page.location}
-              className="text-white hover:text-white"
+              className="text-white hover:font-bold"
               onClick={() => hideMenu()}
             >
               {page.label.toLowerCase().replaceAll(" ", "") === section ? (
@@ -60,7 +60,7 @@ const Navigation = ({ menuVisible, hideMenu }: NavigationProps) => {
       })}
       {status === "authenticated" && (
         <button
-          className="text-white hover:text-white text-left"
+          className="text-xl py-4 justify-center flex sm:text-base sm:py-0 sm:justify-start sm:block text-white hover:font-bold text-left"
           onClick={() => signOut()}
         >
           Sign out
@@ -125,6 +125,12 @@ const pages = [
     id: 9,
     label: "Download",
     location: "/download",
+    hide: "no",
+  },
+  {
+    id: 10,
+    label: "Chat Map",
+    location: "/chat-map",
     hide: "no",
   },
 ];

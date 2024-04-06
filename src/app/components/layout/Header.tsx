@@ -45,6 +45,11 @@ const pages = {
     category: "",
     description: "Download pre-calculated statistics",
   },
+  "chat-map": {
+    title: "Chat Map",
+    category: "",
+    description: "Chat your way around the world",
+  },
 };
 
 const Header = ({}: HeaderProps) => {
