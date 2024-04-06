@@ -4,12 +4,12 @@ import { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import bbox from "@turf/bbox";
 import { BBox, Geometry } from "geojson";
+import { Content } from "@google/generative-ai";
 
 import {
   Icon,
   Input,
   Segment,
-  SegmentGroup,
   Message,
   MessageContent,
   SemanticCOLORS,
@@ -22,15 +22,20 @@ import { wait } from "@/lib/utils";
 import { getFeature } from "@/lib/mapboxAPI";
 import { AsyncStatus, Field } from "@/lib/types";
 import { sendPrompt } from "@/lib/geminiAPI";
+import { set } from "date-fns";
+import { isObject } from "util";
 
 interface ChatMapProps {}
 
 const ChatMap = ({}: ChatMapProps) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   const [asyncStatus, setAsyncStatus] = useState<AsyncStatus>({
     status: "",
     message: "",
   });
   const theMap = useRef<mapboxgl.Map | null>(null);
+  const [history, setHistory] = useState<Content[]>([]);
   const [promptValue, setPromptValue] = useState<string>("");
   const [iso, setIso] = useState<Field>({
     key: "",
@@ -49,8 +54,6 @@ const ChatMap = ({}: ChatMapProps) => {
 
   const initializeMap = ({ map }: { map: mapboxgl.Map }) => {
     addMapLayers({ map });
-    //setHoverEvent({ map });
-    //setClickEvent({ map });
   };
 
   const addMapLayers = ({ map }: { map: mapboxgl.Map }) => {
@@ -93,37 +96,6 @@ const ChatMap = ({}: ChatMapProps) => {
       });
     }
   };
-
-  // const setHoverEvent = ({ map }: { map: mapboxgl.Map }) => {
-  //   map.on("mousemove", (e: mapboxgl.MapMouseEvent) => {
-  //     const features = map.queryRenderedFeatures(e.point);
-  //     if (features.length) {
-  //       map.getCanvas().style.cursor = "pointer";
-  //     } else {
-  //       map.getCanvas().style.cursor = "";
-  //     }
-  //   });
-  // };
-
-  // const setClickEvent = ({ map }: { map: mapboxgl.Map }) => {
-  //   map.on("click", (e: mapboxgl.MapMouseEvent) => {
-  //     const features = map.queryRenderedFeatures(e.point);
-  //     if (features.length) {
-  //       for (const feature of features) {
-  //         if (
-  //           feature.properties &&
-  //           feature.layer.id === "wri-gadm-36-iso-layer-fill"
-  //         ) {
-  //           setIso({
-  //             key: feature.properties.GID_0,
-  //             value: feature.properties.GID_0,
-  //             text: feature.properties.NAME_0,
-  //           });
-  //         }
-  //       }
-  //     }
-  //   });
-  // };
 
   const zoomToGeometry = ({ geometry }: { geometry: Geometry }) => {
     if (!theMap.current) return;
@@ -204,16 +176,43 @@ const ChatMap = ({}: ChatMapProps) => {
   };
 
   const handleMessageSubmit = async ({ value }: { value: string }) => {
+    setPromptValue("");
     if (value) {
+      const currentHistory = [...history];
+      setHistory((prevHistory) => {
+        const newHistory = [
+          ...prevHistory,
+          { role: "user", parts: [{ text: value }] },
+        ];
+        return newHistory;
+      });
       setAsyncStatus({
         status: "loading",
         message: "Reticulating splines...",
       });
       try {
         const response = await sendPrompt({
-          history: [],
+          providedHistory: currentHistory,
           prompt: value,
         });
+
+        setHistory((prevHistory) => {
+          const newHistory = [
+            ...prevHistory,
+            { role: "model", parts: [{ text: response }] },
+          ];
+          return newHistory;
+        });
+
+        const iso = extractIsoCode({ text: response });
+
+        if (iso) {
+          setIso({
+            key: iso,
+            value: iso,
+            text: iso,
+          });
+        }
 
         setAsyncStatus({
           status: "",
@@ -243,6 +242,16 @@ const ChatMap = ({}: ChatMapProps) => {
     }
   };
 
+  const extractIsoCode = ({ text }: { text: string }) => {
+    const regex = /\(([A-Z]{3})\)\.\.\./;
+    const matches = text.match(regex);
+
+    if (matches && matches[1]) {
+      return matches[1];
+    }
+    return null;
+  };
+
   useEffect(() => {
     if (!theMap.current) return;
     const tasks = async () => {
@@ -260,41 +269,56 @@ const ChatMap = ({}: ChatMapProps) => {
     tasks();
   }, [iso]);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [history]);
+
   const currentAsyncStatus =
     asyncStatusConfig[asyncStatus.status as keyof typeof asyncStatusConfig] ||
     asyncStatusConfig.default;
 
+  console.log("history", history);
+
   return (
-    <div className="flex flex-1 h-full flex-col md:flex-row">
-      <Segment className="flex flex-1 flex-col justify-between gap-5 m-0">
-        <div className="flex flex-1 flex-col justify-between gap-5">
-          <div className="flex flex-col">
-            {messages.map((message, index) => {
-              if (message.role === "system") {
-                return (
-                  <div
-                    key={index}
-                    className="flex gap-2.5 max-w-[80%] mb-2 bg-gray-100 border border-gray-300 rounded-lg py-2 px-4"
-                  >
-                    <Icon name="computer" siz="tiny" />
-                    <p>{message.parts[0].text}</p>
-                  </div>
-                );
-              } else if (message.role === "user") {
-                return (
-                  <div
-                    key={index}
-                    className="flex gap-2.5 self-end max-w-[80%] mb-2 bg-blue-100 border border-blue-300 rounded-lg py-2 px-4"
-                  >
-                    <Icon name="user" siz="tiny" />
-                    <p>{message.parts[0].text}</p>
-                  </div>
-                );
-              }
-            })}
-          </div>
+    <div className="flex w-full h-full gap-3">
+      <Segment
+        data-component="chatBoxContainer"
+        className="flex-1 flex flex-col m-0 justify-between"
+      >
+        <div
+          data-component="chatLog"
+          ref={scrollRef}
+          className="flex flex-1 flex-col overflow-auto max-h-[65vh] pr-2"
+        >
+          {history.map((message, index) => {
+            return (
+              <div
+                key={index}
+                className={`flex gap-2.5 max-w-[80%] mb-3 border border-gray-300 rounded-lg py-2 px-4 ${
+                  message.role === "user"
+                    ? "self-end bg-blue-100 border-blue-300"
+                    : "bg-gray-100 border-gray-300"
+                }`}
+              >
+                <Icon
+                  name={`${message.role === "user" ? "user" : "computer"}`}
+                  siz="tiny"
+                />
+                <p>{message.parts[0].text}</p>
+              </div>
+            );
+          })}
+        </div>
+        <div>
           {asyncStatus.status && (
-            <Message icon size="mini" color={currentAsyncStatus.color}>
+            <Message
+              data-component="chatAsync"
+              icon
+              size="mini"
+              color={currentAsyncStatus.color}
+            >
               <Icon
                 size="mini"
                 name={currentAsyncStatus.iconName}
@@ -303,21 +327,26 @@ const ChatMap = ({}: ChatMapProps) => {
               <MessageContent>{asyncStatus.message}</MessageContent>
             </Message>
           )}
-        </div>
-        <div>
-          <Input
-            fluid
-            placeholder="Where would you like to go?"
-            value={promptValue}
-            onChange={(e, { value }) => setPromptValue(value)}
-            action={{
-              content: "Submit",
-              onClick: () => handleMessageSubmit({ value: promptValue }),
-            }}
-          />
+          <div data-component="chatInput">
+            <Input
+              fluid
+              placeholder="Where would you like to go?"
+              value={promptValue}
+              onChange={(e, { value }) => setPromptValue(value)}
+              onKeyDown={(e: React.KeyboardEvent) => {
+                if (e.key === "Enter") {
+                  handleMessageSubmit({ value: promptValue });
+                }
+              }}
+              action={{
+                content: "Submit",
+                onClick: () => handleMessageSubmit({ value: promptValue }),
+              }}
+            />
+          </div>
         </div>
       </Segment>
-      <Segment className="flex flex-1 h-full w-full border mt-5 md:mt-0 md:ml-3 ml-0">
+      <Segment data-component="mapContainer" className="flex-1 m-0">
         <TheMap
           id="ChatMap"
           visible={true}
@@ -354,14 +383,3 @@ const asyncStatusConfig = {
     loading: false,
   },
 };
-
-const messages = [
-  {
-    role: "system",
-    parts: [
-      {
-        text: "What country do you want to go to?",
-      },
-    ],
-  },
-];
