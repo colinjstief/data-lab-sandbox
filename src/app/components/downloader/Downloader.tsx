@@ -109,6 +109,7 @@ const Downloader = ({}: DownloaderProps) => {
       </div>
       <div>
         <Button
+          disabled={true}
           content="Download data"
           icon="download"
           labelPosition="left"
