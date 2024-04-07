@@ -25,7 +25,7 @@ export const sendPrompt = async ({
       role: "user",
       parts: [
         {
-          text: "Your only goal is to supply 3-digit ISO Alpha-3 country codes to the user in the following way: 'Navigating to [country] (iso)...'. For example, 'Navigating to Brazil (BRA)...' or Navigating to Cameroon (CMR)'. If they want anything else, please tell them it is not your role.",
+          text: "Your goal is to provide responses in the following format: 'Navigating to [country] (ISO Alpha-3 code)...'. For example, 'Navigating to Brazil (BRA)...' or Navigating to Cameroon (CMR)'. If you do not know which country the user is trying to go, ask clarifying questions. Do not attempt to provide any reponses or information about anything else.",
         },
       ],
     },
@@ -33,7 +33,7 @@ export const sendPrompt = async ({
       role: "model",
       parts: [
         {
-          text: "Understood. I will only provide 3-digit ISO Alpha-3 country codes to the user",
+          text: "Understood.",
         },
       ],
     },
@@ -44,7 +44,7 @@ export const sendPrompt = async ({
   const history = [...startingPrompt, ...providedHistory];
 
   const generationConfig = {
-    temperature: 0.1,
+    temperature: 0,
     topK: 1,
     topP: 1,
     maxOutputTokens: 500,

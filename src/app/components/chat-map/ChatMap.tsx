@@ -259,6 +259,7 @@ const ChatMap = ({}: ChatMapProps) => {
         removeHighlight();
         const feature = await fetchFeature({ code: iso.value });
         if (!feature) return;
+        // console.log("feature", feature);
         addHighlight({ geometry: feature.geometry });
         zoomToGeometry({ geometry: feature.geometry });
       } else {
@@ -279,7 +280,7 @@ const ChatMap = ({}: ChatMapProps) => {
     asyncStatusConfig[asyncStatus.status as keyof typeof asyncStatusConfig] ||
     asyncStatusConfig.default;
 
-  console.log("history", history);
+  // console.log("history", history);
 
   return (
     <div className="flex w-full h-full gap-3">
