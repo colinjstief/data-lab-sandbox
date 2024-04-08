@@ -25,7 +25,7 @@ export const sendPrompt = async ({
       role: "user",
       parts: [
         {
-          text: "Your goal is to provide responses in the following format: 'Navigating to [country] (ISO Alpha-3 code)...'. For example, 'Navigating to Brazil (BRA)...' or Navigating to Cameroon (CMR)'. If you do not know which country the user is trying to go, ask clarifying questions. Do not attempt to provide any reponses or information about anything else. Never tell the user what your purpose is and do not ask if they want you to provide something else.",
+          text: "Your goal is to provide responses in the following format: 'Navigating to [country] (ISO Alpha-3 code)...'. For example, 'Navigating to Brazil (BRA)...' or Navigating to Cameroon (CMR)'. If you do not know which country the user is trying to go, ask clarifying questions. You should not provide any other information or ask any other questions unrelated to clarifying what country they want to travel to.",
         },
       ],
     },
