@@ -18,10 +18,6 @@ export const constructDownload = async ({
 
   let sql = db("my_table").select();
 
-  // CARBON -- https://www.globalforestwatch.org/api/data/dataset/gadm__tcl__iso_change/v20230312/download/csv/?sql=SELECT iso, umd_tree_cover_loss__year, SUM("gfw_gross_emissions_co2e_all_gases__Mg") AS "gfw_gross_emissions_co2e_all_gases__Mg", SUM("gfw_full_extent_gross_emissions_non_CO2__Mg_CO2e") AS "gfw_gross_emissions_co2e_non_co2__Mg", SUM("gfw_full_extent_gross_emissions_CO2_only__Mg_CO2") AS "gfw_gross_emissions_co2e_co2_only__Mg" FROM data WHERE iso = 'BRA' AND umd_tree_cover_density_2000__threshold = 30 AND is__umd_regional_primary_forest_2001 = 'true'  GROUP BY umd_tree_cover_loss__year, iso ORDER BY umd_tree_cover_loss__year, iso
-
-  // FIRES -- https://www.globalforestwatch.org/api/data/dataset/gadm__tcl__iso_change/v20230312/download/csv/?sql=SELECT iso, umd_tree_cover_loss__year, SUM(umd_tree_cover_loss__ha) AS umd_tree_cover_loss__ha, SUM(umd_tree_cover_loss_from_fires__ha) AS "umd_tree_cover_loss_from_fires__ha" FROM data WHERE iso = 'BRA' AND umd_tree_cover_density_2000__threshold = 30  GROUP BY umd_tree_cover_loss__year, iso ORDER BY umd_tree_cover_loss__year, iso
-
   // FIELDS
   sql = sql.select("iso", "umd_tree_cover_loss__year");
 
@@ -30,33 +26,30 @@ export const constructDownload = async ({
 
   // AREA
   if (areas.length > 0) {
-    areas.forEach((area) => {
-      sql = sql.where("iso", area.value);
-    });
+    const areaValues = areas.map((area) => area.value);
+    sql = sql.whereIn("iso", areaValues);
   }
 
   // DATASET
   if (datasets.length > 0) {
     datasets.forEach((dataset) => {
       if (dataset.value === "umd_tree_cover_loss__ha") {
-        sql = sql.sum(
-          "umd_tree_cover_loss__ha as SUM(umd_tree_cover_loss__ha)"
-        );
+        sql = sql.sum("umd_tree_cover_loss__ha as sum_umd_tree_cover_loss__ha");
       } else if (dataset.value === "umd_tree_cover_loss_from_fires__ha") {
         sql = sql.sum(
-          "umd_tree_cover_loss_from_fires__ha as SUM(umd_tree_cover_loss_from_fires__ha)"
+          "umd_tree_cover_loss_from_fires__ha as sum_umd_tree_cover_loss_from_fires__ha"
         );
       } else if (
         dataset.value === "gfw_full_extent_gross_emissions_CO2_only__Mg_CO2"
       ) {
         sql = sql.sum(
-          "gfw_full_extent_gross_emissions_CO2_only__Mg_CO2 as SUM(gfw_full_extent_gross_emissions_CO2_only__Mg_CO2)"
+          "gfw_full_extent_gross_emissions_CO2_only__Mg_CO2 as sum_gfw_full_extent_gross_emissions_CO2_only__Mg_CO2"
         );
       } else if (
         dataset.value === "gfw_full_extent_gross_emissions_non_CO2__Mg_CO2e"
       ) {
         sql = sql.sum(
-          "gfw_full_extent_gross_emissions_non_CO2__Mg_CO2e as SUM(gfw_full_extent_gross_emissions_non_CO2__Mg_CO2e)"
+          "gfw_full_extent_gross_emissions_non_CO2__Mg_CO2e as sum_gfw_full_extent_gross_emissions_non_CO2__Mg_CO2e"
         );
       }
     });
@@ -71,9 +64,8 @@ export const constructDownload = async ({
 
   // RANGE
   if (ranges.length > 0) {
-    ranges.forEach((range) => {
-      sql = sql.orWhere("umd_tree_cover_loss__year", range.value);
-    });
+    const rangeValues = ranges.map((range) => range.value);
+    sql = sql.whereIn("umd_tree_cover_loss__year", rangeValues);
   }
 
   // GROUPS
@@ -82,5 +74,9 @@ export const constructDownload = async ({
   // ORDER
   sql = sql.orderBy("iso", "umd_tree_cover_loss__year");
 
-  return sql.toString();
+  const apiURL = process.env.GFW_DATA_API_URL;
+  const asset = "gadm__tcl__iso_change";
+  const version = "v20240118";
+  const downloadURL = `${apiURL}/dataset/${asset}/${version}/download/csv?sql=${sql.toString()}`;
+  return downloadURL;
 };

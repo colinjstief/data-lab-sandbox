@@ -27,6 +27,21 @@ export const contexts = [
     value: "is__umd_regional_primary_forest_2001",
     text: "Primary forests (2001, topics only)",
   },
+  {
+    key: "is__gmw_global_mangrove_extent_2020",
+    value: "is__gmw_global_mangrove_extent_2020",
+    text: "Global mangrove extent (2020)",
+  },
+  {
+    key: "is__gmw_global_mangrove_extent_1996",
+    value: "is__gmw_global_mangrove_extent_1996",
+    text: "Global mangrove extent (1996)",
+  },
+  {
+    key: "is__landmark_indigenous_and_community_lands",
+    value: "is__landmark_indigenous_and_community_lands",
+    text: "Landmark indigenous and community lands",
+  },
 ];
 
 export const ranges = [
@@ -134,5 +149,10 @@ export const ranges = [
     key: "2021",
     value: "2021",
     text: "2021",
+  },
+  {
+    key: "2022",
+    value: "2022",
+    text: "2022",
   },
 ];

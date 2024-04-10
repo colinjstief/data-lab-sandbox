@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Button, Segment } from "semantic-ui-react";
+import { Segment } from "semantic-ui-react";
 
-import { WizardQuery, GFWAPIQueryResponse } from "@/lib/types";
+import { WizardQuery } from "@/lib/types";
 import { wait } from "@/lib/utils";
 import { queryData } from "@/lib/gfwDataAPI";
 
