@@ -49,7 +49,7 @@ const Navigation = ({ menuVisible, hideMenu }: NavigationProps) => {
               className="text-white hover:font-bold"
               onClick={() => hideMenu()}
             >
-              {page.label.toLowerCase().replaceAll(" ", "") === section ? (
+              {page.label.toLowerCase().replaceAll(" ", "-") === section ? (
                 <b>{page.label}</b>
               ) : (
                 <span>{page.label}</span>
