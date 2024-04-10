@@ -13,6 +13,7 @@ import {
   GFWAPINewKey,
   GFWAPIQueryResponse,
   WizardQuery,
+  DownloadQuery,
 } from "@/lib/types";
 
 const apiURL = process.env.GFW_DATA_API_URL;
@@ -111,6 +112,28 @@ export const queryData = async ({
   }
 
   console.log("request =>", request);
+
+  if (res) {
+    const data = await res.json();
+    return data;
+  } else {
+    return { status: "error", message: "A network error occurred" };
+  }
+};
+
+///////////////////
+//// DOWNLOAD /////
+///////////////////
+export const downloadData = async ({
+  sql,
+}: {
+  sql: string;
+}): Promise<GFWAPIQueryResponse> => {
+  const asset = "gadm__tcl__iso_change";
+  const version = "v20240118";
+
+  const request = `${apiURL}/dataset/${asset}/${version}/download/csv?sql=${sql}`;
+  const res = await fetch(request);
 
   if (res) {
     const data = await res.json();

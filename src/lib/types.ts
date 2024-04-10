@@ -36,10 +36,10 @@ export interface WizardQuery {
 }
 
 export interface DownloadQuery {
-  area: Field[];
-  dataset: Field[];
-  context: Field[];
-  range: Field[];
+  areas: Field[];
+  datasets: Field[];
+  contexts: Field[];
+  ranges: Field[];
 }
 
 export interface Segmentations {

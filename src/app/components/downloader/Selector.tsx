@@ -17,7 +17,7 @@ interface SelectorProps {
   options: Field[];
   query: DownloadQuery;
   setQuery: Dispatch<SetStateAction<DownloadQuery>>;
-  type: "area" | "dataset" | "context" | "range";
+  type: "areas" | "datasets" | "contexts" | "ranges";
 }
 
 const Selector = ({

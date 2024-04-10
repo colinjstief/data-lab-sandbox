@@ -38,7 +38,7 @@ export const constructQuery = async ({
       } else if (stat.stat.value === "count") {
         sql = sql.count("*");
       } else {
-        sql = sql.sum(`${stat.field?.value}`);
+        sql = sql.sum(`${stat.field?.value} as SUM(${stat.field?.value})`);
       }
     });
   }
