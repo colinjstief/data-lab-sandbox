@@ -1,3 +1,5 @@
+import { text } from "stream/consumers";
+
 export const datasets = [
   {
     key: "umd_tree_cover_loss__ha",
@@ -23,9 +25,29 @@ export const datasets = [
 
 export const contexts = [
   {
+    key: "tsc_tree_cover_loss_drivers__driver",
+    value: "tsc_tree_cover_loss_drivers__driver",
+    text: "Drivers of tree cover loss",
+  },
+  {
+    key: "wdpa_protected_areas__iucn_cat",
+    value: "wdpa_protected_areas__iucn_cat",
+    text: "WDPA protected area",
+  },
+  {
+    key: "gfw_planted_forests__type",
+    value: "gfw_planted_forests__type",
+    text: "Planted forest type",
+  },
+  {
     key: "is__umd_regional_primary_forest_2001",
     value: "is__umd_regional_primary_forest_2001",
     text: "Primary forests (2001, topics only)",
+  },
+  {
+    key: "is__gfw_peatlands",
+    value: "is__gfw_peatlands",
+    text: "Peatland",
   },
   {
     key: "is__gmw_global_mangrove_extent_2020",
@@ -38,9 +60,49 @@ export const contexts = [
     text: "Global mangrove extent (1996)",
   },
   {
+    key: "is__gfw_managed_forests",
+    value: "is__gfw_managed_forests",
+    text: "Managed forest",
+  },
+  {
     key: "is__landmark_indigenous_and_community_lands",
     value: "is__landmark_indigenous_and_community_lands",
     text: "Landmark indigenous and community lands",
+  },
+  {
+    key: "is__gfw_resource_rights",
+    value: "is__gfw_resource_rights",
+    text: "Landmark resource rights",
+  },
+  {
+    key: "is__gfw_mining_concessions",
+    value: "is__gfw_mining_concessions",
+    text: "Mining concessions",
+  },
+  {
+    key: "is__gfw_oil_palm",
+    value: "is__gfw_oil_palm",
+    text: "Oil palm concessions",
+  },
+  {
+    key: "is__gfw_wood_fiber",
+    value: "is__gfw_wood_fiber",
+    text: "Wood fiber",
+  },
+  {
+    key: "is__ifl_intact_forest_landscapes_2000",
+    value: "is__ifl_intact_forest_landscapes_2000",
+    text: "Intact Forest Landcape (2000)",
+  },
+  {
+    key: "is__birdlife_alliance_for_zero_extinction_sites",
+    value: "is__birdlife_alliance_for_zero_extinction_sites",
+    text: "Birdlife Alliance for Zero Extinction Sites",
+  },
+  {
+    key: "is__birdlife_key_biodiversity_areas",
+    value: "is__birdlife_key_biodiversity_areas",
+    text: "Birdlife Key Biodiversity Areas",
   },
 ];
 

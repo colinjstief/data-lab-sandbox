@@ -55,17 +55,23 @@ export const constructDownload = async ({
     });
   }
 
-  // CONTEXT
-  if (contexts.length > 0) {
-    contexts.forEach((context) => {
-      sql = sql.where(context.value, true);
-    });
-  }
-
   // RANGE
   if (ranges.length > 0) {
     const rangeValues = ranges.map((range) => range.value);
     sql = sql.whereIn("umd_tree_cover_loss__year", rangeValues);
+  }
+
+  // CONTEXT
+  if (contexts.length > 0) {
+    contexts.forEach((context) => {
+      sql.select(context.value);
+      if (context.value.includes("is__")) {
+        sql = sql.where(context.value, true);
+      } else {
+        sql = sql.whereNotNull(context.value);
+      }
+      sql.groupBy(context.value);
+    });
   }
 
   // GROUPS
