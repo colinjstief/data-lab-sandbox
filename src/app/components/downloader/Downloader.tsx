@@ -197,7 +197,7 @@ const Downloader = ({}: DownloaderProps) => {
           asyncStatus={asyncStatus.contexts}
           query={query}
           setQuery={setQuery}
-          message="Filter by selected fields using AND operator"
+          message="Group by all possible values in the selected fields"
           tabs={[
             { label: "Groupings", value: "contexts", options: contextOptions },
           ]}
