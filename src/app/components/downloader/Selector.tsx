@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Dispatch, SetStateAction } from "react";
+import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { AsyncStatus, Field, DownloadQuery } from "@/lib/types";
 
 import {
@@ -10,27 +10,54 @@ import {
   Dimmer,
   Loader,
   Segment,
+  SemanticCOLORS,
 } from "semantic-ui-react";
 
 interface SelectorProps {
   asyncStatus: AsyncStatus;
-  options: Field[];
   query: DownloadQuery;
   setQuery: Dispatch<SetStateAction<DownloadQuery>>;
+  tabs: Array<{
+    label: string;
+    value: string;
+    options: Field[];
+    disabled?: boolean;
+  }>;
+  activeTabs: {
+    [key: string]: string;
+  };
+  setActiveTabs: Dispatch<
+    SetStateAction<{
+      [key: string]: string;
+    }>
+  >;
   type: "areas" | "datasets" | "contexts" | "ranges";
   message: string;
 }
 
 const Selector = ({
   asyncStatus,
-  options,
   query,
   setQuery,
   type,
   message,
+  tabs,
+  activeTabs,
+  setActiveTabs,
 }: SelectorProps) => {
-  //const [activeTabs, setActiveTab] = useState<string>("iso");
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState<string>("");
+  const [options, setOptions] = useState<Field[]>(tabs[0].options);
+
+  useEffect(() => {
+    const newOptions = tabs.find(
+      (tab) => tab.value === activeTabs[type]
+    )?.options;
+    setOptions(newOptions ? newOptions : []);
+  }, [tabs]);
+
+  useEffect(() => {
+    setSearchText("");
+  }, [activeTabs[type]]);
 
   const toggleSelection = ({ selection }: { selection: Field }) => {
     setQuery((prevQuery) => {
@@ -48,22 +75,91 @@ const Selector = ({
   };
 
   const selectAll = () => {
-    setQuery((prevQuery) => ({
-      ...prevQuery,
-      [type]: options,
-    }));
+    if (type === "areas") {
+      const iso = query.areas.find((area) => area.type === "iso");
+      const adm1 = query.areas.find((area) => area.type === "adm1");
+
+      if (activeTabs.areas === "adm2" && iso && adm1) {
+        setQuery((prevQuery) => ({
+          ...prevQuery,
+          [type]: [iso, adm1, ...options],
+        }));
+      } else if (activeTabs.areas === "adm1" && iso) {
+        setQuery((prevQuery) => ({
+          ...prevQuery,
+          [type]: [iso, ...options],
+        }));
+      } else {
+        setQuery((prevQuery) => ({
+          ...prevQuery,
+          [type]: options,
+        }));
+      }
+    } else {
+      setQuery((prevQuery) => ({
+        ...prevQuery,
+        [type]: options,
+      }));
+    }
   };
 
   const clearAll = () => {
-    setQuery((prevQuery) => ({
-      ...prevQuery,
-      [type]: [],
-    }));
+    if (type === "areas") {
+      const iso = query.areas.find((area) => area.type === "iso");
+      const adm1 = query.areas.find((area) => area.type === "adm1");
+      if (activeTabs.areas === "adm2" && iso && adm1) {
+        setQuery((prevQuery) => ({
+          ...prevQuery,
+          [type]: [iso, adm1],
+        }));
+      } else if (activeTabs.areas === "adm1" && iso) {
+        setQuery((prevQuery) => ({
+          ...prevQuery,
+          [type]: [iso],
+        }));
+      } else {
+        setQuery((prevQuery) => ({
+          ...prevQuery,
+          [type]: [],
+        }));
+      }
+    } else {
+      setQuery((prevQuery) => ({
+        ...prevQuery,
+        [type]: [],
+      }));
+    }
   };
 
   return (
     <div className="w-[400px] border border-gray-300">
       <div className="flex gap-4 p-3 border-b border-gray-300">{message}</div>
+      <div className="flex gap-4 p-3 border-b border-gray-300">
+        {tabs.map((tab) => {
+          let styles;
+          if (tab.disabled) {
+            styles = "uppercase text-gray-400 cursor-not-allowed";
+          } else if (activeTabs[type] === tab.value) {
+            styles = "uppercase text-blue-500 border-b border-blue-500";
+          } else {
+            styles = "uppercase cursor-pointer";
+          }
+
+          return (
+            <div
+              key={tab.value}
+              className={styles}
+              onClick={() => {
+                if (!tab.disabled) {
+                  setActiveTabs({ ...activeTabs, [type]: tab.value });
+                }
+              }}
+            >
+              {tab.label}
+            </div>
+          );
+        })}
+      </div>
       <div className="p-3 border-b border-gray-300">
         <Input
           fluid
@@ -117,16 +213,35 @@ const Selector = ({
       {query[type].length > 0 && (
         <div className="max-h-[120px] overflow-auto">
           <ul className="p-3 flex flex-wrap gap-2">
-            {query[type].map((item) => (
-              <li
-                key={item.key}
-                className="flex gap-1 cursor-pointer px-2 py-1 border border-gray-300"
-                onClick={() => toggleSelection({ selection: item })}
-              >
-                <Icon name="x" />
-                {item.text}
-              </li>
-            ))}
+            {query[type].map((item) => {
+              let itemStyle;
+              let fontColor;
+              let iconColor: SemanticCOLORS;
+              if (activeTabs[type] === item?.type) {
+                itemStyle =
+                  "flex gap-1 cursor-pointer px-2 py-1 border border-gray-400";
+                fontColor = "";
+                iconColor = "black";
+              } else {
+                itemStyle = "flex gap-1 px-2 py-1 border border-gray-200";
+                fontColor = "text-slate-400";
+                iconColor = "grey";
+              }
+              return (
+                <li
+                  key={item.key}
+                  className={itemStyle}
+                  onClick={() => {
+                    if (activeTabs[type] === item?.type) {
+                      toggleSelection({ selection: item });
+                    }
+                  }}
+                >
+                  <Icon name="x" color={iconColor} />
+                  <span className={fontColor}>{item.text}</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

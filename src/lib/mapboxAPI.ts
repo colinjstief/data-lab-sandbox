@@ -1,7 +1,6 @@
 "use server";
 
 import { datasetsClient } from "@/lib/mapboxSDK";
-import { Feature, Polygon, MultiPolygon } from "geojson";
 
 export const getBoundaries = async ({
   type,
@@ -41,6 +40,7 @@ export const getBoundaries = async ({
         key: newItemID,
         value: item.id,
         text: `(${newItemID}) ${item.name}`,
+        type: type,
       };
     });
     return shapedData;

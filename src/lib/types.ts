@@ -50,6 +50,7 @@ export interface Field {
   key: string;
   value: string;
   text: string;
+  type?: string;
 }
 
 export interface Dataset {
