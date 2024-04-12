@@ -32,7 +32,7 @@ interface SelectorProps {
     }>
   >;
   type: "areas" | "datasets" | "contexts" | "ranges";
-  message: string;
+  message?: string;
 }
 
 const Selector = ({
@@ -133,7 +133,9 @@ const Selector = ({
 
   return (
     <div className="w-[400px] border border-gray-300">
-      <div className="flex gap-4 p-3 border-b border-gray-300">{message}</div>
+      {message && (
+        <div className="flex gap-4 p-3 border-b border-gray-300">{message}</div>
+      )}
       <div className="flex gap-4 p-3 border-b border-gray-300">
         {tabs.map((tab) => {
           let styles;
