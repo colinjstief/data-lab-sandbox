@@ -159,7 +159,6 @@ const Downloader = ({}: DownloaderProps) => {
           asyncStatus={asyncStatus.areas}
           query={query}
           setQuery={setQuery}
-          message="Groups results by selected geographies"
           tabs={[
             { label: "ISO", value: "iso", options: areaOptions },
             {
@@ -185,7 +184,6 @@ const Downloader = ({}: DownloaderProps) => {
           asyncStatus={asyncStatus.datasets}
           query={query}
           setQuery={setQuery}
-          message="Gets the SUM of the selected fields"
           tabs={[
             { label: "Datasets", value: "datasets", options: datasetOptions },
           ]}
@@ -197,7 +195,6 @@ const Downloader = ({}: DownloaderProps) => {
           asyncStatus={asyncStatus.contexts}
           query={query}
           setQuery={setQuery}
-          message="Group by all possible values in the selected fields"
           tabs={[
             { label: "Groupings", value: "contexts", options: contextOptions },
           ]}
@@ -209,7 +206,6 @@ const Downloader = ({}: DownloaderProps) => {
           asyncStatus={asyncStatus.ranges}
           query={query}
           setQuery={setQuery}
-          message="Groups results by selected years"
           tabs={[{ label: "Years", value: "ranges", options: rangeOptions }]}
           activeTabs={activeTabs}
           setActiveTabs={setActiveTabs}
