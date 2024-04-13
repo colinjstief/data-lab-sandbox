@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./globals.css";
 
 import type { Metadata } from "next";
+import { GoogleTagManager } from "@next/third-parties/google";
 // import { Roboto } from "next/font/google";
 
 import AuthProvider from "@/app/context/AuthProvider";
@@ -28,6 +29,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en" className="min-h-screen">
+      <GoogleTagManager gtmId="GTM-PLGWCPCL" />
       <body className="min-h-screen h-auto flex flex-1 flex-col sm:flex-row">
         <AuthProvider>
           <Panel />
