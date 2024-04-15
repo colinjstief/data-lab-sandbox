@@ -206,9 +206,13 @@ const TileExport = ({}: TileExportProps) => {
       });
     } catch (error) {
       setAsyncStatus((oldState) => {
-        return { status: "error", message: "Sorry this doesn't work yet!" };
+        return {
+          status: "error",
+          message:
+            "Sorry this doesn't work yet! But if you know how to receive and zip a bunch of .tiff files on a server then pass it to the client, let's talk!",
+        };
       });
-      await wait(2000);
+      await wait(5000);
       setAsyncStatus({
         status: "",
         message: "",
