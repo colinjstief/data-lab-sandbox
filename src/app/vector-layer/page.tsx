@@ -8,7 +8,7 @@ import { Segment } from "semantic-ui-react";
 import TheMap from "@/app/components/other/TheMap";
 import Landmark from "./Landmark";
 
-const TheMapPage = ({
+const VectorLayerPage = ({
   params,
   searchParams,
 }: {
@@ -41,4 +41,4 @@ const TheMapPage = ({
   );
 };
 
-export default TheMapPage;
+export default VectorLayerPage;
