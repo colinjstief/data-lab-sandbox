@@ -42,6 +42,14 @@ export interface DownloadQuery {
   ranges: Field[];
 }
 
+export interface GeoTIFFDownloadOptions {
+  asset: string;
+  version: string;
+  grid: string;
+  tileID: string;
+  pixelMeaning: string;
+}
+
 export interface Segmentations {
   [key: string]: string[];
 }
@@ -50,7 +58,7 @@ export interface Field {
   key: string;
   value: string;
   text: string;
-  type?: string;
+  [propName: string]: any;
 }
 
 export interface Dataset {

@@ -14,6 +14,7 @@ interface TheMapProps {
   longitude?: number;
   zoom?: number;
   basemap?: string;
+  doubleClickZoom?: boolean;
   textPanel?: string;
 }
 
@@ -25,6 +26,7 @@ const TheMap = ({
   longitude = 0,
   zoom = 5,
   basemap = "light-v9",
+  doubleClickZoom = true,
   textPanel,
 }: TheMapProps) => {
   const mapContainer = useRef(null);
@@ -36,7 +38,8 @@ const TheMap = ({
       container: mapContainer.current as any,
       style: `mapbox://styles/mapbox/${basemap}`,
       center: [longitude, latitude],
-      zoom: zoom,
+      zoom,
+      doubleClickZoom,
     });
 
     map.current.addControl(

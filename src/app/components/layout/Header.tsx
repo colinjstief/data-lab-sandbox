@@ -25,10 +25,10 @@ const pages = {
     category: "",
     description: "All the GFW Data API has to offer",
   },
-  map: {
-    title: "Map",
+  "vector-layer": {
+    title: "Vector Layer",
     category: "",
-    description: "Sandbox for geospatial layers on a map",
+    description: "Showing vector layers and fitlering by attributes",
   },
   compare: {
     title: "Compare",
@@ -44,6 +44,11 @@ const pages = {
     title: "Download",
     category: "",
     description: "Download pre-calculated statistics",
+  },
+  "tile-export": {
+    title: "Tile export",
+    category: "",
+    description: "Grab some tiles for your analysis",
   },
   "chat-map": {
     title: "Chat Map",

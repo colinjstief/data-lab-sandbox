@@ -13,9 +13,11 @@ import {
   GFWAPINewKey,
   GFWAPIQueryResponse,
   WizardQuery,
+  GeoTIFFDownloadOptions,
 } from "@/lib/types";
 
 const apiURL = process.env.GFW_DATA_API_URL;
+const apiKey = process.env.GFW_DATA_API_KEY;
 
 //////////////////
 //// DATASET /////
@@ -118,6 +120,28 @@ export const queryData = async ({
   } else {
     return { status: "error", message: "A network error occurred" };
   }
+};
+
+/////////////////////////////////////////////
+////  CREATE DOWNLOAD GEOTIFF TILE LINK /////
+/////////////////////////////////////////////
+export const createGeotiffLink = async ({
+  asset,
+  version,
+  grid,
+  tileID,
+  pixelMeaning,
+}: GeoTIFFDownloadOptions): Promise<any> => {
+  const request = `${apiURL}/dataset/${asset}/${version}/download/geotiff?grid=${grid}&tile_id=${tileID}&pixel_meaning=${pixelMeaning}&x-api-key=${apiKey}`;
+
+  return request;
+
+  // if (res) {
+  //   const data = await res.json();
+  //   return data;
+  // } else {
+  //   return { status: "error", message: "A network error occurred" };
+  // }
 };
 
 ///////////////////

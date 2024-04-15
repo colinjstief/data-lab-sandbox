@@ -12,8 +12,6 @@ import {
   Segment,
   Message,
   MessageContent,
-  SemanticCOLORS,
-  SemanticICONS,
 } from "semantic-ui-react";
 
 import TheMap from "@/app/components/other/TheMap";
@@ -21,9 +19,8 @@ import TheMap from "@/app/components/other/TheMap";
 import { wait } from "@/lib/utils";
 import { getFeature } from "@/lib/mapboxAPI";
 import { AsyncStatus, Field } from "@/lib/types";
+import { asyncStatuses } from "@/lib/asyncStatuses";
 import { sendPrompt } from "@/lib/geminiAPI";
-import { set } from "date-fns";
-import { isObject } from "util";
 
 interface ChatMapProps {}
 
@@ -277,8 +274,8 @@ const ChatMap = ({}: ChatMapProps) => {
   }, [history]);
 
   const currentAsyncStatus =
-    asyncStatusConfig[asyncStatus.status as keyof typeof asyncStatusConfig] ||
-    asyncStatusConfig.default;
+    asyncStatuses[asyncStatus.status as keyof typeof asyncStatuses] ||
+    asyncStatuses.default;
 
   // console.log("history", history);
 
@@ -365,26 +362,3 @@ const ChatMap = ({}: ChatMapProps) => {
 };
 
 export default ChatMap;
-
-const asyncStatusConfig = {
-  loading: {
-    iconName: "circle notched" as SemanticICONS,
-    color: "blue" as SemanticCOLORS,
-    loading: true,
-  },
-  success: {
-    iconName: "check" as SemanticICONS,
-    color: "green" as SemanticCOLORS,
-    loading: false,
-  },
-  error: {
-    iconName: "times circle" as SemanticICONS,
-    color: "red" as SemanticCOLORS,
-    loading: false,
-  },
-  default: {
-    iconName: "pause" as SemanticICONS,
-    color: "blue" as SemanticCOLORS,
-    loading: false,
-  },
-};

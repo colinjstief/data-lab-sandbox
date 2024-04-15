@@ -30,15 +30,22 @@ const Keys = async () => {
         </thead>
         <tbody className="">
           {keys?.reverse().map((key) => {
+            console.log("key =>", key);
             return (
               <tr key={key.alias} className="border-b py-2">
                 <td className="px-5 py-2">{key.alias}</td>
                 <td className="px-5 py-2">{key.api_key}</td>
-                <td className="px-5 py-2">{key.created_on.split("T")[0]}</td>
+                <td className="px-5 py-2">
+                  {key.created_on ? key.created_on.split("T")[0] : ""}
+                </td>
                 <td className="px-5 py-2">{key.organization}</td>
                 <td className="px-5 py-2">{key.email}</td>
                 <td className="px-5 py-2">{key.domains.join(", ")}</td>
-                <td className="px-5 py-2">{key.expires_on.split("T")[0]}</td>
+                <td className="px-5 py-2">
+                  {key.expires_on
+                    ? key.expires_on.split("T")[0]
+                    : "Does not expire"}
+                </td>
                 <td className="px-5 py-2">
                   <DeleteButton api_key={key} />
                 </td>

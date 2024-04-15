@@ -105,8 +105,8 @@ const pages = [
   },
   {
     id: 6,
-    label: "Map",
-    location: "/map",
+    label: "Vector Layer",
+    location: "/vector-layer",
     hide: "no",
   },
   {
@@ -123,12 +123,18 @@ const pages = [
   },
   {
     id: 9,
-    label: "Download",
+    label: "Download Stats",
     location: "/download",
     hide: "no",
   },
   {
     id: 10,
+    label: "Tile export",
+    location: "/tile-export",
+    hide: "no",
+  },
+  {
+    id: 11,
     label: "Chat Map",
     location: "/chat-map",
     hide: "no",
