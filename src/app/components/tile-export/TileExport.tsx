@@ -291,7 +291,7 @@ const TileExport = ({}: TileExportProps) => {
           visible={true}
           setTheMap={handleSetTheMap}
           basemap="light-v9"
-          zoom={2}
+          zoom={0}
           doubleClickZoom={false}
         />
       </Segment>
