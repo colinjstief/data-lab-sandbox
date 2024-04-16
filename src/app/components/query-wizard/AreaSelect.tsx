@@ -31,9 +31,6 @@ const AreaSelect = ({
   const [areaType, setAreaType] = useState<string>("gadm");
   const [theMap, setTheMap] = useState<mapboxgl.Map | null>(null);
   const [textPanel, setTextPanel] = useState<string>("");
-  const handleSetTheMap = ({ id, map }: { id: string; map: mapboxgl.Map }) => {
-    setTheMap(map);
-  };
 
   const handleChange = (
     e: React.SyntheticEvent<HTMLElement>,
@@ -78,12 +75,13 @@ const AreaSelect = ({
             </Segment>
             <Segment className="flex-1 border mt-0 ml-3">
               <TheMap
-                id="area-select-map"
                 visible={visible}
-                setTheMap={handleSetTheMap}
-                textPanel={textPanel}
+                setTheMap={setTheMap}
                 basemap="satellite-v9"
-                zoom={1}
+                mapOptions={{
+                  zoom: 1,
+                }}
+                textPanel={textPanel}
               />
             </Segment>
           </div>

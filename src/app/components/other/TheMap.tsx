@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect, MutableRefObject } from "react";
 import mapboxgl from "mapbox-gl";
 import { MB_KEY } from "@/lib/keys";
 
@@ -7,26 +7,29 @@ import { Segment } from "semantic-ui-react";
 mapboxgl.accessToken = MB_KEY;
 
 interface TheMapProps {
-  id: string;
   setTheMap: (map: any) => void;
-  visible?: boolean;
-  latitude?: number;
-  longitude?: number;
-  zoom?: number;
+  id?: string;
   basemap?: string;
-  doubleClickZoom?: boolean;
+  mapOptions?: {
+    center?: [number, number];
+    zoom?: number;
+    doubleClickZoom?: boolean;
+  };
+
+  visible?: boolean;
   textPanel?: string;
 }
 
 const TheMap = ({
-  id,
   setTheMap,
-  visible = true,
-  latitude = 0,
-  longitude = 0,
-  zoom = 5,
+  id,
   basemap = "light-v9",
-  doubleClickZoom = true,
+  mapOptions = {
+    center: [0, 0],
+    zoom: 5,
+    doubleClickZoom: true,
+  },
+  visible = true,
   textPanel,
 }: TheMapProps) => {
   const mapContainer = useRef(null);
@@ -37,9 +40,9 @@ const TheMap = ({
     map.current = new mapboxgl.Map({
       container: mapContainer.current as any,
       style: `mapbox://styles/mapbox/${basemap}`,
-      center: [longitude, latitude],
-      zoom,
-      doubleClickZoom,
+      center: mapOptions.center,
+      zoom: mapOptions.zoom,
+      doubleClickZoom: mapOptions.doubleClickZoom,
     });
 
     map.current.addControl(
@@ -48,7 +51,11 @@ const TheMap = ({
     );
 
     map.current.on("load", () => {
-      setTheMap({ id, map: map.current });
+      if (id) {
+        setTheMap({ id, map: map.current });
+      } else {
+        setTheMap(map.current);
+      }
     });
   });
 

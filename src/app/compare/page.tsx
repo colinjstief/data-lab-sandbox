@@ -1,4 +1,4 @@
-import ComparisonMap from "../components/comparison-map/ComparisonMap";
+import Compare from "@/app/components/compare/Compare";
 
 const ComparePage = ({
   params,
@@ -7,7 +7,7 @@ const ComparePage = ({
   params: { slug: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  return <ComparisonMap />;
+  return <Compare />;
 };
 
 export default ComparePage;

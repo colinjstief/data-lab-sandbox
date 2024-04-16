@@ -26,12 +26,9 @@ interface ChatMapProps {}
 
 const ChatMap = ({}: ChatMapProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [theMap, setTheMap] = useState<mapboxgl.Map | null>(null);
+  const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
-  const [asyncStatus, setAsyncStatus] = useState<AsyncStatus>({
-    status: "",
-    message: "",
-  });
-  const theMap = useRef<mapboxgl.Map | null>(null);
   const [history, setHistory] = useState<Content[]>([]);
   const [promptValue, setPromptValue] = useState<string>("");
   const [iso, setIso] = useState<Field>({
@@ -39,27 +36,19 @@ const ChatMap = ({}: ChatMapProps) => {
     value: "",
     text: "",
   });
+  const [asyncStatus, setAsyncStatus] = useState<AsyncStatus>({
+    status: "",
+    message: "",
+  });
 
-  const handleSetTheMap = ({ map }: { map: mapboxgl.Map }) => {
-    theMap.current = map;
-    if (map.isStyleLoaded()) {
-      initializeMap({ map });
-    } else {
-      map.on("load", () => initializeMap({ map }));
-    }
-  };
-
-  const initializeMap = ({ map }: { map: mapboxgl.Map }) => {
-    addMapLayers({ map });
-  };
-
-  const addMapLayers = ({ map }: { map: mapboxgl.Map }) => {
-    if (!map.getSource("wri-gadm-36-iso")) {
-      map.addSource("wri-gadm-36-iso", {
+  const loadSources = () => {
+    if (!theMap) return;
+    if (!theMap.getSource("wri-gadm-36-iso")) {
+      theMap.addSource("wri-gadm-36-iso", {
         type: "vector",
         url: "mapbox://duncanrager.175ly863",
       });
-      map.addLayer({
+      theMap.addLayer({
         id: "wri-gadm-36-iso-layer-fill",
         source: "wri-gadm-36-iso",
         "source-layer": "gadm36_0_simple1000",
@@ -78,7 +67,7 @@ const ChatMap = ({}: ChatMapProps) => {
           visibility: "visible",
         },
       });
-      map.addLayer({
+      theMap.addLayer({
         id: "wri-gadm-36-iso-layer-line",
         source: "wri-gadm-36-iso",
         "source-layer": "gadm36_0_simple1000",
@@ -95,7 +84,7 @@ const ChatMap = ({}: ChatMapProps) => {
   };
 
   const zoomToGeometry = ({ geometry }: { geometry: Geometry }) => {
-    if (!theMap.current) return;
+    if (!theMap) return;
     const bounds: BBox = bbox(geometry);
     const lngLatBounds: mapboxgl.LngLatBoundsLike = [
       bounds[0],
@@ -103,13 +92,13 @@ const ChatMap = ({}: ChatMapProps) => {
       bounds[2],
       bounds[3],
     ];
-    theMap.current.fitBounds(lngLatBounds);
+    theMap.fitBounds(lngLatBounds);
   };
 
   const addHighlight = ({ geometry }: { geometry: Geometry }) => {
-    if (!theMap.current) return;
+    if (!theMap) return;
 
-    theMap.current.addSource(`selected-iso-source`, {
+    theMap.addSource(`selected-iso-source`, {
       type: "geojson",
       data: {
         type: "Feature",
@@ -118,7 +107,7 @@ const ChatMap = ({}: ChatMapProps) => {
       },
     });
 
-    theMap.current.addLayer({
+    theMap.addLayer({
       id: `selected-iso-layer`,
       type: "line",
       source: `selected-iso-source`,
@@ -131,12 +120,12 @@ const ChatMap = ({}: ChatMapProps) => {
   };
 
   const removeHighlight = () => {
-    if (!theMap.current) return;
-    if (theMap.current.getLayer(`selected-iso-layer`)) {
-      theMap.current.removeLayer(`selected-iso-layer`);
+    if (!theMap) return;
+    if (theMap.getLayer(`selected-iso-layer`)) {
+      theMap.removeLayer(`selected-iso-layer`);
     }
-    if (theMap.current.getSource(`selected-iso-source`)) {
-      theMap.current.removeSource(`selected-iso-source`);
+    if (theMap.getSource(`selected-iso-source`)) {
+      theMap.removeSource(`selected-iso-source`);
     }
   };
 
@@ -250,7 +239,7 @@ const ChatMap = ({}: ChatMapProps) => {
   };
 
   useEffect(() => {
-    if (!theMap.current) return;
+    if (!theMap) return;
     const tasks = async () => {
       if (iso) {
         removeHighlight();
@@ -260,7 +249,7 @@ const ChatMap = ({}: ChatMapProps) => {
         addHighlight({ geometry: feature.geometry });
         zoomToGeometry({ geometry: feature.geometry });
       } else {
-        theMap.current?.flyTo({ center: [0, 0], zoom: 2 });
+        theMap?.flyTo({ center: [0, 0], zoom: 2 });
         removeHighlight();
       }
     };
@@ -272,6 +261,12 @@ const ChatMap = ({}: ChatMapProps) => {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [history]);
+
+  useEffect(() => {
+    if (!theMap || mapLoaded) return;
+    loadSources();
+    setMapLoaded(true);
+  }, [theMap]);
 
   const currentAsyncStatus =
     asyncStatuses[asyncStatus.status as keyof typeof asyncStatuses] ||
@@ -350,11 +345,12 @@ const ChatMap = ({}: ChatMapProps) => {
       </Segment>
       <Segment data-component="mapContainer" className="flex-1 m-0">
         <TheMap
-          id="ChatMap"
           visible={true}
-          setTheMap={handleSetTheMap}
+          setTheMap={setTheMap}
           basemap="light-v9"
-          zoom={2}
+          mapOptions={{
+            zoom: 2,
+          }}
         />
       </Segment>
     </div>

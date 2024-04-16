@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import {
+  useState,
+  useRef,
+  MutableRefObject,
+  useEffect,
+  createRef,
+} from "react";
 import mapboxgl from "mapbox-gl";
 
 import { Icon, Segment, SegmentGroup } from "semantic-ui-react";
@@ -10,14 +16,22 @@ import { Location } from "@/lib/types";
 
 import { wait } from "@/lib/utils";
 
-interface ComparisonMapProps {}
+interface CompareProps {}
 
-const ComparisonMap = ({}: ComparisonMapProps) => {
+const Compare = ({}: CompareProps) => {
+  const [datasets, setDatasets] = useState<{
+    [key: string]: {
+      id: string;
+      title: string;
+      description: string;
+    };
+  }>(initialDatasets);
+
   const theMaps = useRef<{
     [key: string]: { id: string; theMap: mapboxgl.Map };
   }>({});
   const [locations, setLocations] = useState<{ [key: string]: Location }>(
-    startingLocations
+    initialLocations
   );
 
   const handleAddLocation = () => {
@@ -137,12 +151,13 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
         </button>
         <TheMap
           id={mapID}
-          visible={true}
           setTheMap={handleSetTheMap}
-          latitude={location.latitude}
-          longitude={location.longitude}
-          zoom={location.zoom}
+          mapOptions={{
+            center: [location.longitude, location.latitude],
+            zoom: location.zoom,
+          }}
           basemap={basemap}
+          visible={true}
         />
       </div>
     );
@@ -151,62 +166,21 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
   return (
     <div className="flex w-full h-full gap-4">
       <SegmentGroup className="w-full h-full">
-        <Segment className="flex gap-5">
-          <div className="w-[250px] p-3">
-            <h3 className="font-bold mb-3">UMD primary tree cover</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              aliquet dui sit amet venenatis sagittis.
-            </p>
-          </div>
-          <div className="flex w-full gap-4">
-            {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "umd" });
-            })}
-          </div>
-        </Segment>
-        <Segment className="flex gap-5">
-          <div className="w-[250px] p-3">
-            <h3 className="font-bold mb-3">WRI Tropical Tree Cover (0.5 ha)</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              aliquet dui sit amet venenatis sagittis.
-            </p>
-          </div>
-          <div className="flex w-full gap-4">
-            {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "ttcfive" });
-            })}
-          </div>
-        </Segment>
-        <Segment className="flex gap-5">
-          <div className="w-[250px] p-3">
-            <h3 className="font-bold mb-3">WRI Tropical Tree Cover (10m)</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              aliquet dui sit amet venenatis sagittis.
-            </p>
-          </div>
-          <div className="flex w-full gap-4">
-            {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "ttcten" });
-            })}
-          </div>
-        </Segment>
-        <Segment className="flex gap-5">
-          <div className="w-[250px] p-3">
-            <h3 className="font-bold mb-3">The World</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              aliquet dui sit amet venenatis sagittis.
-            </p>
-          </div>
-          <div className="flex w-full gap-4">
-            {Object.values(locations).map((location) => {
-              return addMap({ location: location, dataset: "world" });
-            })}
-          </div>
-        </Segment>
+        {Object.values(datasets).map((dataset) => {
+          return (
+            <div key={dataset.id} className="flex p-4">
+              <div className="w-[250px] p-3">
+                <h3 className="font-bold mb-3">{dataset.title}</h3>
+                <p>{dataset.description}</p>
+              </div>
+              <div className="flex w-full gap-4">
+                {Object.values(locations).map((location) => {
+                  return addMap({ dataset: dataset.id, location });
+                })}
+              </div>
+            </div>
+          );
+        })}
       </SegmentGroup>
       <button
         className="bg-gray-200 px-5 h-full rounded-[10px] shadow hover:shadow-lg hover:bg-gray-300"
@@ -220,9 +194,36 @@ const ComparisonMap = ({}: ComparisonMapProps) => {
   );
 };
 
-export default ComparisonMap;
+export default Compare;
 
-const startingLocations = {
+const initialDatasets = {
+  umd: {
+    id: "umd",
+    title: "UMD primary tree cover",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquet dui sit amet venenatis sagittis.",
+  },
+  ttcfive: {
+    id: "ttcfive",
+    title: "WRI Tropical Tree Cover (0.5 ha)",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquet dui sit amet venenatis sagittis.",
+  },
+  ttcten: {
+    id: "ttcten",
+    title: "WRI Tropical Tree Cover (10m)",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquet dui sit amet venenatis sagittis.",
+  },
+  world: {
+    id: "world",
+    title: "The World",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquet dui sit amet venenatis sagittis.",
+  },
+};
+
+const initialLocations = {
   "1": {
     id: "1",
     latitude: 0,

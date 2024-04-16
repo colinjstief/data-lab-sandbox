@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, MutableRefObject } from "react";
 import mapboxgl from "mapbox-gl";
 
 import { Checkbox } from "semantic-ui-react";
@@ -31,6 +31,13 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
     "grazing-pasture-rights": true,
     "indicative-areas": true,
   });
+
+  useEffect(() => {
+    if (!theMap || mapLoaded) return;
+    loadSources(); // Layers
+    setHoverEvents(); // Set mouse hover events
+    setMapLoaded(true); // Don't repeat these init steps
+  }, [theMap]);
 
   const loadSources = () => {
     if (!theMap) return;
@@ -143,6 +150,7 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
   const setHoverEvents = () => {
     if (!theMap) return;
     theMap.on("mousemove", (e: mapboxgl.MapMouseEvent) => {
+      if (!theMap) return;
       const features = theMap.queryRenderedFeatures(e.point);
       if (features.length) {
         for (const feature of features) {
@@ -350,16 +358,6 @@ const Landmark = ({ theMap, setTextPanel }: LandmarkProps) => {
       }
     }
   };
-
-  /////////////////////
-  //// On Map Load ////
-  /////////////////////
-  useEffect(() => {
-    if (!theMap || mapLoaded) return;
-    loadSources(); // Layers
-    setHoverEvents(); // Set mouse hover events
-    setMapLoaded(true); // Don't repeat these init steps
-  }, [theMap]);
 
   useEffect(() => {
     if (!theMap) return;

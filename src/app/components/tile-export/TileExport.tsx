@@ -31,31 +31,28 @@ const TileExport = ({}: TileExportProps) => {
   const [dataset, setDataset] = useState<string>(tileDatasets[0].value);
   const [selectedTiles, setSelectedTiles] = useState<string[]>([]);
 
-  const theMap = useRef<mapboxgl.Map | null>(null);
+  const [theMap, setTheMap] = useState<mapboxgl.Map | null>(null);
+  const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    if (theMap.current) {
+    if (!theMap || mapLoaded) return;
+    loadSources();
+    setGrid();
+    setHoverEvents();
+    setClickEvents();
+    setMapLoaded(true);
+  }, [theMap]);
+
+  useEffect(() => {
+    if (theMap) {
       const grid = getGridLayer(dataset);
       setVisibleLayers([grid]);
     }
   }, [dataset]);
 
-  const handleSetTheMap = ({ map }: { map: mapboxgl.Map }) => {
-    theMap.current = map;
-    if (map.isStyleLoaded()) {
-      initializeMap();
-    } else {
-      map.on("load", () => initializeMap());
-    }
-  };
-
-  const initializeMap = () => {
-    if (!theMap.current) return;
-    addMapLayers();
+  const setGrid = () => {
     const grid = getGridLayer(dataset);
     setVisibleLayers([grid]);
-    setHoverEvents();
-    theMap.current.on("click", (e) => handleMapClick(e));
   };
 
   const getGridLayer = (dataset: string) => {
@@ -64,15 +61,15 @@ const TileExport = ({}: TileExportProps) => {
     return layerId;
   };
 
-  const addMapLayers = () => {
-    if (!theMap.current) return;
-    if (!theMap.current.getSource("wri-grid_10_40000")) {
-      theMap.current.addSource("wri-grid_10_40000", {
+  const loadSources = () => {
+    if (!theMap) return;
+    if (!theMap.getSource("wri-grid_10_40000")) {
+      theMap.addSource("wri-grid_10_40000", {
         type: "geojson",
         data: grid_10_40000 as FeatureCollection,
         promoteId: "tile_id",
       });
-      theMap.current.addLayer({
+      theMap.addLayer({
         id: "wri-grid_10_40000-layer",
         type: "fill",
         source: "wri-grid_10_40000",
@@ -90,13 +87,13 @@ const TileExport = ({}: TileExportProps) => {
         },
       });
     }
-    if (!theMap.current.getSource("wri-grid_10_100000")) {
-      theMap.current.addSource("wri-grid_10_100000", {
+    if (!theMap.getSource("wri-grid_10_100000")) {
+      theMap.addSource("wri-grid_10_100000", {
         type: "geojson",
         data: grid_10_100000 as FeatureCollection,
         promoteId: "tile_id",
       });
-      theMap.current.addLayer({
+      theMap.addLayer({
         id: "wri-grid_10_100000-layer",
         type: "fill",
         source: "wri-grid_10_100000",
@@ -117,39 +114,44 @@ const TileExport = ({}: TileExportProps) => {
   };
 
   const setVisibleLayers = (layers: string[]) => {
-    if (!theMap.current) return;
-    const mapLayers = theMap.current.getStyle().layers;
+    if (!theMap) return;
+    const mapLayers = theMap.getStyle().layers;
     for (const layer of mapLayers) {
       if (layer.id.includes("wri-")) {
         if (layers.includes(layer.id)) {
-          theMap.current.setLayoutProperty(layer.id, "visibility", "visible");
+          theMap.setLayoutProperty(layer.id, "visibility", "visible");
         } else {
-          theMap.current.setLayoutProperty(layer.id, "visibility", "none");
+          theMap.setLayoutProperty(layer.id, "visibility", "none");
         }
       }
     }
   };
 
   const setHoverEvents = () => {
-    if (!theMap.current) return;
-    theMap.current.on("mousemove", (e: mapboxgl.MapMouseEvent) => {
-      if (!theMap.current) return;
-      const features = theMap.current.queryRenderedFeatures(e.point);
+    if (!theMap) return;
+    theMap.on("mousemove", (e: mapboxgl.MapMouseEvent) => {
+      if (!theMap) return;
+      const features = theMap.queryRenderedFeatures(e.point);
       if (features.length) {
         for (const feature of features) {
           if (feature.layer.id.includes("wri-")) {
-            theMap.current.getCanvas().style.cursor = "pointer";
+            theMap.getCanvas().style.cursor = "pointer";
           }
         }
       } else {
-        theMap.current.getCanvas().style.cursor = "";
+        theMap.getCanvas().style.cursor = "";
       }
     });
   };
 
+  const setClickEvents = () => {
+    if (!theMap) return;
+    theMap.on("click", (e) => handleMapClick(e));
+  };
+
   const handleMapClick = (e: mapboxgl.MapMouseEvent) => {
-    if (!theMap.current) return;
-    const features = theMap.current.queryRenderedFeatures(e.point);
+    if (!theMap) return;
+    const features = theMap.queryRenderedFeatures(e.point);
     if (features.length) {
       for (const feature of features) {
         if (feature.layer.id.includes("wri-")) {
@@ -180,8 +182,8 @@ const TileExport = ({}: TileExportProps) => {
     id: string | number;
     highlight: boolean;
   }) => {
-    if (!theMap.current) return;
-    theMap.current.setFeatureState({ source, id }, { hover: highlight });
+    if (!theMap) return;
+    theMap.setFeatureState({ source, id }, { hover: highlight });
   };
 
   const fetchZip = async () => {
@@ -291,12 +293,13 @@ const TileExport = ({}: TileExportProps) => {
       </Segment>
       <Segment className="flex-1 m-0">
         <TheMap
-          id="TileExportMap"
           visible={true}
-          setTheMap={handleSetTheMap}
+          setTheMap={setTheMap}
           basemap="light-v9"
-          zoom={1}
-          doubleClickZoom={false}
+          mapOptions={{
+            zoom: 1,
+            doubleClickZoom: false,
+          }}
         />
       </Segment>
     </div>
