@@ -13,6 +13,8 @@ interface NavigationProps {
 
 const Navigation = ({ menuVisible, hideMenu }: NavigationProps) => {
   const { data: session, status } = useSession();
+  console.log("status =>", status);
+  console.log("session =>", session);
 
   const pathname = usePathname();
   const section = pathname.split("/")[1];
@@ -31,6 +33,13 @@ const Navigation = ({ menuVisible, hideMenu }: NavigationProps) => {
   return (
     <nav data-component="Navigation" className={styles}>
       {pages.map((page) => {
+        if (
+          page.hide === "when-not-admin" &&
+          session?.user.email !== "sky.chancy.0l@icloud.com"
+        ) {
+          return null;
+        }
+
         if (page.hide === "when-unauth" && status !== "authenticated") {
           return null;
         }
@@ -138,5 +147,11 @@ const pages = [
     label: "Chat Map",
     location: "/chat-map",
     hide: "no",
+  },
+  {
+    id: 12,
+    label: "Deck Map",
+    location: "/deck-map",
+    hide: "when-not-admin",
   },
 ];

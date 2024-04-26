@@ -55,6 +55,11 @@ const pages = {
     category: "",
     description: "Chat your way around the world",
   },
+  "deck-map": {
+    title: "Deck GL Map",
+    category: "",
+    description: "Advanced mapping with Deck GL",
+  },
 };
 
 const Header = ({}: HeaderProps) => {

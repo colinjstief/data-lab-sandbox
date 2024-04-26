@@ -1,14 +1,14 @@
 import React from "react";
-import Signin from "@/app/components/auth/SigninForm";
+import SignInForm from "@/app/components/auth/SigninForm";
 
-const SignIn = () => {
+const SignInPage = () => {
   return (
     <div className="text-center">
       <div className="inline-block mx-auto">
-        <Signin />
+        <SignInForm />
       </div>
     </div>
   );
 };
 
-export default SignIn;
+export default SignInPage;
