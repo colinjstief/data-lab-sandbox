@@ -25,6 +25,7 @@
     "autoprefixer": "10.4.14",
     "axios": "^1.6.8",
     "date-fns": "^3.2.0",
+    "deck.gl": "^9.0.10",
     "eslint": "8.46.0",
     "eslint-config-next": "^14.1.4",
     "knex": "^3.1.0",

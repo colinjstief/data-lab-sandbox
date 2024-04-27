@@ -1,15 +1,13 @@
-const DeckMap = ({
+import DeckMap from "@/app/components/other/DeckMap";
+
+const DeckMapPage = ({
   params,
   searchParams,
 }: {
   params: { slug: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  return (
-    <div>
-      <h1>Deck map here</h1>
-    </div>
-  );
+  return <DeckMap />;
 };
 
-export default DeckMap;
+export default DeckMapPage;

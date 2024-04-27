@@ -2,7 +2,6 @@ import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 // Ref: https://next-auth.js.org/configuration/nextjs#advanced-usage
 import { getToken, JWT } from "next-auth/jwt";
-import path from "path";
 
 export default async function middleware(
   req: NextRequest,

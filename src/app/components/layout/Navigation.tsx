@@ -13,8 +13,6 @@ interface NavigationProps {
 
 const Navigation = ({ menuVisible, hideMenu }: NavigationProps) => {
   const { data: session, status } = useSession();
-  console.log("status =>", status);
-  console.log("session =>", session);
 
   const pathname = usePathname();
   const section = pathname.split("/")[1];

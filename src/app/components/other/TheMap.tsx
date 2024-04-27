@@ -1,4 +1,4 @@
-import { useRef, useEffect, MutableRefObject } from "react";
+import { useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import { MB_KEY } from "@/lib/keys";
 
