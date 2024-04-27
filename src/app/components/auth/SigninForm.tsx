@@ -10,7 +10,7 @@ import { signinSchema, SignInData } from "@/lib/types";
 
 import { Button, Icon, Form, Message, Divider } from "semantic-ui-react";
 
-const SignInForm = () => {
+const SigninForm = () => {
   const [currentUrl, setCurrentUrl] = useState<string | null>(null);
 
   const router = useRouter();
@@ -168,4 +168,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default SigninForm;
