@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useRef,
-  MutableRefObject,
-  useEffect,
-  createRef,
-} from "react";
+import { useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 
 import { Icon, Segment, SegmentGroup } from "semantic-ui-react";

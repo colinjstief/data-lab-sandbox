@@ -25,14 +25,19 @@ const DeckMap = ({}: DeckMapProps) => {
     zoom: 3.5,
   });
 
+  const devicePixelRatio =
+    (typeof window !== "undefined" && window.devicePixelRatio) || 1;
+
   const layer = new TileLayer({
     id: "TileLayer",
     data: "https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png",
-    maxZoom: 15,
+    maxZoom: 12,
     minZoom: 0,
     longitude: mapState.longitude,
     latitude: mapState.latitude,
     zoom: mapState.zoom,
+    tileSize: 256,
+    zoomOffset: devicePixelRatio === 1 ? -1 : 0,
 
     renderSubLayers: (props) => {
       const { boundingBox } = props.tile;
@@ -40,6 +45,10 @@ const DeckMap = ({}: DeckMapProps) => {
       return new DecodedLayer(props, {
         data: undefined,
         image: props.data,
+        textureParameters: {
+          minFilter: "nearest",
+          magFilter: "nearest",
+        },
         bounds: [
           boundingBox[0][0],
           boundingBox[0][1],
@@ -85,7 +94,6 @@ class DecodedLayer extends BitmapLayer {
     // console.log("opts =>", opts);
     // console.log("this.props =>", this.props);
     const zoom = (this.props as any).zoom;
-    console.log("zoom =>", zoom);
     // const colorRange: number[][] = [
     //   [235, 0, 0, 255],
     //   [0, 255, 125, 255],
