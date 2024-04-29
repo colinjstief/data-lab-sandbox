@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { Map, useControl } from "react-map-gl";
 import { MapboxOverlay } from "@deck.gl/mapbox";
 import { DeckProps } from "@deck.gl/core";
 import { TileLayer, TileLayerPickingInfo } from "@deck.gl/geo-layers";
 import { BitmapLayer } from "@deck.gl/layers";
 import { MB_KEY } from "@/lib/keys";
+import { map } from "zod";
 
 function DeckGLOverlay(props: DeckProps) {
   const overlay = useControl<MapboxOverlay>(() => new MapboxOverlay(props));
@@ -16,11 +18,20 @@ function DeckGLOverlay(props: DeckProps) {
 interface DeckMapProps {}
 
 const DeckMap = ({}: DeckMapProps) => {
+  const [mapState, setMapState] = useState({
+    longitude: -100,
+    latitude: 40,
+    zoom: 3.5,
+  });
+
   const layer = new TileLayer({
     id: "TileLayer",
-    data: "https://tiles.globalforestwatch.org/umd_regional_primary_forest_2001/v201901/uint16/{z}/{x}/{y}.png",
-    maxZoom: 13,
+    data: "https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png",
+    maxZoom: 15,
     minZoom: 0,
+    longitude: mapState.longitude,
+    latitude: mapState.latitude,
+    zoom: mapState.zoom,
 
     renderSubLayers: (props) => {
       const { boundingBox } = props.tile;
@@ -41,11 +52,8 @@ const DeckMap = ({}: DeckMapProps) => {
 
   return (
     <Map
-      initialViewState={{
-        longitude: 0,
-        latitude: 0,
-        zoom: 3,
-      }}
+      {...mapState}
+      onMove={(evt) => setMapState(evt.viewState)}
       mapStyle="mapbox://styles/mapbox/light-v9"
       mapboxAccessToken={MB_KEY}
     >
@@ -61,33 +69,28 @@ class DecodedLayer extends BitmapLayer {
     return {
       ...super.getShaders(),
       inject: {
-        // Include declarations for any needed uniforms
         "fs:#decl": `
-          uniform vec4 purpleColor;
-          uniform float threshold; // Threshold below which pixels are considered "null"
+            uniform float zoom;
         `,
-        // Adjust the color filtering logic
         "fs:DECKGL_FILTER_COLOR": `
-          // Calculate the grayscale value to determine pixel intensity
-          float grayscale = (color.r + color.g + color.b) / 3.0;
-          // Check if the grayscale value is above the threshold
-          if (grayscale > threshold) {
-            color = purpleColor;
-          } else {
-            color = vec4(0.0, 0.0, 0.0, 0.0); // Make color transparent
-          }
-        `,
+            color.r = zoom < 5. ? 151. / 255. : 100. / 255.;
+            color.g = zoom < 5. ? 189. / 255. : 200. / 255.;
+            color.b = zoom < 5. ? 61. / 255. : 150. / 255.;
+          `,
       },
     };
   }
   draw(opts: any) {
-    // Define the purple color and threshold
-    const purpleColor = [128, 0, 128, 255]; // RGBA for purple
-    const threshold = 0.01; // Threshold for determining "null" pixels
-
-    // Pass the uniform values to the shader
-    opts.uniforms.purpleColor = purpleColor.map((x) => x / 255); // Normalize RGBA to 0-1
-    opts.uniforms.threshold = threshold;
+    // console.log("opts =>", opts);
+    // console.log("this.props =>", this.props);
+    const zoom = (this.props as any).zoom;
+    console.log("zoom =>", zoom);
+    // const colorRange: number[][] = [
+    //   [235, 0, 0, 255],
+    //   [0, 255, 125, 255],
+    // ];
+    opts.uniforms.zoom = zoom;
+    // opts.uniforms.toColor = colorRange[1].map((x) => x / 255);
     super.draw(opts);
   }
 }
