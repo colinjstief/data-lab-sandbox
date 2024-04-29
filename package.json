@@ -29,7 +29,7 @@
     "eslint": "8.46.0",
     "eslint-config-next": "^14.1.4",
     "knex": "^3.1.0",
-    "mapbox-gl": "^2.15.0",
+    "mapbox-gl": "^3.3.0",
     "mongoose": "^7.4.3",
     "next": "^14.1.4",
     "next-auth": "^4.23.0",

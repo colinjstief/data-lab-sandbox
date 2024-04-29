@@ -4,13 +4,14 @@ import { useState } from "react";
 import { Map, useControl } from "react-map-gl";
 import { MapboxOverlay } from "@deck.gl/mapbox";
 import { DeckProps } from "@deck.gl/core";
-import { TileLayer, TileLayerPickingInfo } from "@deck.gl/geo-layers";
+import { TileLayer } from "@deck.gl/geo-layers";
 import { BitmapLayer } from "@deck.gl/layers";
 import { MB_KEY } from "@/lib/keys";
-import { map } from "zod";
 
 function DeckGLOverlay(props: DeckProps) {
-  const overlay = useControl<MapboxOverlay>(() => new MapboxOverlay(props));
+  const overlay = useControl<MapboxOverlay>(
+    () => new MapboxOverlay({ ...props, interleaved: true })
+  );
   overlay.setProps(props);
   return null;
 }
