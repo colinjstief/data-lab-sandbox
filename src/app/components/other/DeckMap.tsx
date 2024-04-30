@@ -36,8 +36,6 @@ const DeckMap = ({}: DeckMapProps) => {
     longitude: mapState.longitude,
     latitude: mapState.latitude,
     zoom: mapState.zoom,
-    tileSize: 256,
-    zoomOffset: devicePixelRatio === 1 ? -1 : 0,
 
     renderSubLayers: (props) => {
       const { boundingBox } = props.tile;
@@ -80,13 +78,35 @@ class DecodedLayer extends BitmapLayer {
       ...super.getShaders(),
       inject: {
         "fs:#decl": `
-            uniform float zoom;
+          uniform float zoom;
+          uniform float startYear;
+          uniform float endYear;
         `,
         "fs:DECKGL_FILTER_COLOR": `
-            color.r = zoom < 5. ? 151. / 255. : 100. / 255.;
-            color.g = zoom < 5. ? 189. / 255. : 200. / 255.;
-            color.b = zoom < 5. ? 61. / 255. : 150. / 255.;
-          `,
+
+          float domainMin = 0.0;
+          float domainMax = 255.0;
+          float rangeMin = 0.0;
+          float rangeMax = 255.0;
+          float exponent = zoom < 13.0 ? 0.3 + (zoom - 3.0) / 20.0 : 1.0;
+          float intensity = color.r * 255.0;
+
+          float minPow = pow(domainMin, exponent - domainMin);
+          float maxPow = pow(domainMax, exponent);
+          float currentPow = pow(intensity, exponent);
+          float scaleIntensity = ((currentPow - minPow) / (maxPow - minPow) * (rangeMax - rangeMin)) + rangeMin;
+          
+          float year = 2000.0 + (color.b * 255.0);
+
+          if (year >= startYear && year <= endYear && year >= 2001.) {
+              color.r = 220.0 / 255.0;
+              color.g = (72.0 - zoom + 102.0 - 3.0 * scaleIntensity / zoom) / 255.0;
+              color.b = (33.0 - zoom + 153.0 - intensity / zoom) / 255.0;
+              color.a = zoom < 13. ? scaleIntensity / 255. : color.g;
+          } else {
+              discard;
+          }
+        `,
       },
     };
   }
@@ -94,12 +114,11 @@ class DecodedLayer extends BitmapLayer {
     // console.log("opts =>", opts);
     // console.log("this.props =>", this.props);
     const zoom = (this.props as any).zoom;
-    // const colorRange: number[][] = [
-    //   [235, 0, 0, 255],
-    //   [0, 255, 125, 255],
-    // ];
+    const startYear = 2001;
+    const endYear = 2003;
     opts.uniforms.zoom = zoom;
-    // opts.uniforms.toColor = colorRange[1].map((x) => x / 255);
+    opts.uniforms.startYear = startYear;
+    opts.uniforms.endYear = endYear;
     super.draw(opts);
   }
 }
