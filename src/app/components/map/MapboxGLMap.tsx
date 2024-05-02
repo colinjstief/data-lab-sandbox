@@ -20,7 +20,7 @@ interface TheMapProps {
   textPanel?: string;
 }
 
-const TheMap = ({
+const MapboxGLMap = ({
   setTheMap,
   id,
   basemap = "light-v9",
@@ -76,4 +76,4 @@ const TheMap = ({
   );
 };
 
-export default TheMap;
+export default MapboxGLMap;

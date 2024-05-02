@@ -5,7 +5,7 @@ import mapboxgl from "mapbox-gl";
 
 import { Segment } from "semantic-ui-react";
 
-import TheMap from "@/app/components/other/TheMap";
+import MapboxGLMap from "@/app/components/map/MapboxGLMap";
 import Landmark from "@/app/components/vector-layer/Landmark";
 
 interface VectorLayerProps {}
@@ -20,7 +20,7 @@ const VectorLayer = ({}: VectorLayerProps) => {
         <Landmark theMap={theMap} setTextPanel={setTextPanel} />
       </Segment>
       <Segment className="flex-1 border mt-0 ml-3">
-        <TheMap
+        <MapboxGLMap
           visible={true}
           setTheMap={setTheMap}
           basemap="light-v9"

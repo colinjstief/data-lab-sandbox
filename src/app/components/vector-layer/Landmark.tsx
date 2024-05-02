@@ -1,4 +1,4 @@
-import { useState, useEffect, MutableRefObject } from "react";
+import { useState, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 
 import { Checkbox } from "semantic-ui-react";

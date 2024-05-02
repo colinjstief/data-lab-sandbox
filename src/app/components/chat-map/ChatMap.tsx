@@ -14,7 +14,7 @@ import {
   MessageContent,
 } from "semantic-ui-react";
 
-import TheMap from "@/app/components/other/TheMap";
+import MapboxGLMap from "@/app/components/map/MapboxGLMap";
 
 import { wait } from "@/lib/utils";
 import { getFeature } from "@/lib/mapboxAPI";
@@ -344,7 +344,7 @@ const ChatMap = ({}: ChatMapProps) => {
         </div>
       </Segment>
       <Segment data-component="mapContainer" className="flex-1 m-0">
-        <TheMap
+        <MapboxGLMap
           visible={true}
           setTheMap={setTheMap}
           basemap="light-v9"

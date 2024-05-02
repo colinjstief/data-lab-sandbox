@@ -5,7 +5,7 @@ import { Dropdown, DropdownProps, Button, Segment } from "semantic-ui-react";
 
 import { WizardQuery } from "@/lib/types";
 
-import TheMap from "@/app/components/other/TheMap";
+import MapboxGLMap from "@/app/components/map/MapboxGLMap";
 import GADM from "@/app/components/query-wizard/GADM";
 
 interface AreaSelectProps {
@@ -74,7 +74,7 @@ const AreaSelect = ({
               )} */}
             </Segment>
             <Segment className="flex-1 border mt-0 ml-3">
-              <TheMap
+              <MapboxGLMap
                 visible={visible}
                 setTheMap={setTheMap}
                 basemap="satellite-v9"

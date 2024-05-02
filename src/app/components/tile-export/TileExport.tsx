@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { FeatureCollection } from "geojson";
 import {
@@ -12,7 +12,7 @@ import {
   Dropdown,
 } from "semantic-ui-react";
 
-import TheMap from "@/app/components/other/TheMap";
+import MapboxGLMap from "@/app/components/map/MapboxGLMap";
 
 import { AsyncStatus } from "@/lib/types";
 import { asyncStatuses } from "@/lib/asyncStatuses";
@@ -292,7 +292,7 @@ const TileExport = ({}: TileExportProps) => {
         </div>
       </Segment>
       <Segment className="flex-1 m-0">
-        <TheMap
+        <MapboxGLMap
           visible={true}
           setTheMap={setTheMap}
           basemap="light-v9"

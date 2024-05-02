@@ -55,10 +55,10 @@ const pages = {
     category: "",
     description: "Chat your way around the world",
   },
-  "deck-map": {
-    title: "Deck GL Map",
+  "raster-layer": {
+    title: "Raster layer",
     category: "",
-    description: "Advanced mapping with Deck GL",
+    description: "Decoded raster layers with DeckGL",
   },
 };
 

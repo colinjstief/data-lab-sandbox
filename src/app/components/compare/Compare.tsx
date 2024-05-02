@@ -5,7 +5,7 @@ import mapboxgl from "mapbox-gl";
 
 import { Icon, Segment, SegmentGroup } from "semantic-ui-react";
 
-import TheMap from "@/app/components/other/TheMap";
+import MapboxGLMap from "@/app/components/map/MapboxGLMap";
 import { Location } from "@/lib/types";
 
 import { wait } from "@/lib/utils";
@@ -143,7 +143,7 @@ const Compare = ({}: CompareProps) => {
         >
           <Icon name="x" />
         </button>
-        <TheMap
+        <MapboxGLMap
           id={mapID}
           setTheMap={handleSetTheMap}
           mapOptions={{
