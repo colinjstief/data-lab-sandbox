@@ -1,8 +1,4 @@
-import { number, z } from "zod";
-
-/////////////////
-//// CUSTOM /////
-/////////////////
+import { z } from "zod";
 
 export const signinSchema = z.object({
   email: z
@@ -79,6 +75,26 @@ export interface Location {
   latitude: number;
   longitude: number;
   zoom: number;
+}
+
+/////////////////////
+//// CONTENTFUL /////
+/////////////////////
+
+export interface ContentfulAsset {
+  fields: { [key: string]: any };
+  metadata: { [key: string]: any };
+  sys: { [key: string]: any };
+}
+
+export interface ContentfulResponse {
+  sys: {
+    type: string;
+  };
+  total: number;
+  skip: number;
+  limit: number;
+  items: ContentfulAsset[];
 }
 
 ////////////////////

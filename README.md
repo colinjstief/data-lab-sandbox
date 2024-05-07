@@ -2,12 +2,14 @@
 
 ## Built With
 
+- [Vercel](https://vercel.com/)
 - [Next.js](https://nextjs.org/)
-- [Mapbox](https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/)
+- [Contenful](https://www.contentful.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Semantic UI](https://react.semantic-ui.com/)
 - [Typescript](https://www.typescriptlang.org/)
-- [Vercel](https://vercel.com/)
+- [Mapbox](https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/)
+- [DeckGL](https://deck.gl/)
 
 ## Install
 

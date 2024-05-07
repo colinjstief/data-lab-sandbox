@@ -1,3 +1,5 @@
+"use client";
+
 import { Icon, Button } from "semantic-ui-react";
 
 interface TopBarProps {

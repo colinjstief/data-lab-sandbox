@@ -112,8 +112,6 @@ export const queryData = async ({
       break;
   }
 
-  console.log("request =>", request);
-
   if (res) {
     const data = await res.json();
     return data;

@@ -10,6 +10,8 @@ import { GoogleTagManager } from "@next/third-parties/google";
 import AuthProvider from "@/app/context/AuthProvider";
 import Panel from "@/app/components/layout/Panel";
 import Header from "@/app/components/layout/Header";
+import { getAssetByType } from "@/lib/contentfulAPI";
+import { ContentfulResponse } from "@/lib/types";
 
 // const roboto = Roboto({
 //   weight: ["100", "300", "400", "500", "700", "900"],
@@ -26,13 +28,15 @@ export const metadata: Metadata = {
   },
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const pages: ContentfulResponse = await getAssetByType({ type: "page" });
+
   return (
     <html lang="en" className="min-h-screen">
       <GoogleTagManager gtmId="GTM-PLGWCPCL" />
       <body className="min-h-screen h-auto flex flex-1 flex-col sm:flex-row">
         <AuthProvider>
-          <Panel />
+          <Panel pages={pages} />
           <main className="flex flex-col flex-1 overflow-auto">
             <Header />
             <div className="flex-1 flex-auto p-5">{children}</div>

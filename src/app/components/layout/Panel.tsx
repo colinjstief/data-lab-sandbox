@@ -5,10 +5,13 @@ import { useState } from "react";
 import TopBar from "@/app/components/layout/TopBar";
 import Banner from "@/app/components/layout/Banner";
 import Navigation from "@/app/components/layout/Navigation";
+import { ContentfulResponse } from "@/lib/types";
 
-interface PanelProps {}
+interface PanelProps {
+  pages: ContentfulResponse;
+}
 
-const Panel = ({}: PanelProps) => {
+const Panel = ({ pages }: PanelProps) => {
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   const toggleMenuVisibility = () => {
@@ -26,7 +29,11 @@ const Panel = ({}: PanelProps) => {
     >
       <TopBar handleClick={toggleMenuVisibility} />
       <Banner />
-      <Navigation menuVisible={menuVisible} hideMenu={toggleMenuVisibility} />
+      <Navigation
+        pages={pages}
+        menuVisible={menuVisible}
+        hideMenu={toggleMenuVisibility}
+      />
     </div>
   );
 };
