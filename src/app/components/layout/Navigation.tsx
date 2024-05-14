@@ -57,22 +57,20 @@ const Navigation = ({ pages, menuVisible, hideMenu }: NavigationProps) => {
           }
 
           return (
-            <div
+            <Link
               key={page.sys.id}
-              className="text-xl py-4 justify-center flex sm:text-base sm:py-0 sm:justify-start sm:block"
+              href={page.fields.path}
+              className="text-white hover:font-bold"
+              onClick={() => hideMenu()}
             >
-              <Link
-                href={page.fields.path}
-                className="text-white hover:font-bold"
-                onClick={() => hideMenu()}
-              >
+              <div className="text-xl py-4 justify-center flex sm:text-base sm:py-0 sm:justify-start sm:block">
                 {page.fields.value === section ? (
                   <b>{page.fields.label}</b>
                 ) : (
                   <span>{page.fields.label}</span>
                 )}
-              </Link>
-            </div>
+              </div>
+            </Link>
           );
         })}
       {status === "authenticated" && (
@@ -88,78 +86,3 @@ const Navigation = ({ pages, menuVisible, hideMenu }: NavigationProps) => {
 };
 
 export default Navigation;
-
-// const pages = [
-//   {
-//     id: 1,
-//     label: "Home",
-//     location: "/",
-//     hide: "no",
-//   },
-//   {
-//     id: 2,
-//     label: "Sign in",
-//     location: "/signin",
-//     hide: "when-auth",
-//   },
-//   {
-//     id: 3,
-//     label: "Profile",
-//     location: "/profile",
-//     hide: "when-unauth",
-//   },
-//   {
-//     id: 4,
-//     label: "API Keys",
-//     location: "/api-keys",
-//     hide: "when-unauth",
-//   },
-//   {
-//     id: 5,
-//     label: "Datasets",
-//     location: "/datasets?pageSize=10&pageNumber=1",
-//     hide: "no",
-//   },
-//   {
-//     id: 6,
-//     label: "Vector Layer",
-//     location: "/vector-layer",
-//     hide: "no",
-//   },
-//   {
-//     id: 7,
-//     label: "Raster Layer",
-//     location: "/raster-layer",
-//     hide: "no",
-//   },
-//   {
-//     id: 8,
-//     label: "Compare",
-//     location: "/compare",
-//     hide: "no",
-//   },
-//   {
-//     id: 9,
-//     label: "Query Wizard",
-//     location: "/query-wizard",
-//     hide: "no",
-//   },
-//   {
-//     id: 10,
-//     label: "Download Stats",
-//     location: "/download",
-//     hide: "no",
-//   },
-//   {
-//     id: 11,
-//     label: "Tile export",
-//     location: "/tile-export",
-//     hide: "no",
-//   },
-//   {
-//     id: 12,
-//     label: "Chat Map",
-//     location: "/chat-map",
-//     hide: "no",
-//   },
-// ];

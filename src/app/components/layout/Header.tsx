@@ -8,7 +8,7 @@ const pages = {
   signin: {
     title: "Sign in",
     category: "",
-    description: "Acces your stuff",
+    description: "Access your stuff",
   },
   profile: {
     title: "Profile",
@@ -59,6 +59,12 @@ const pages = {
     title: "Raster layer",
     category: "",
     description: "Decoded raster layers with DeckGL",
+  },
+  "gen-ui": {
+    title: "Generative User Interfaces",
+    category: "",
+    description:
+      "Using the Vercel AI SDK to generate interactive components with LLMs",
   },
 };
 

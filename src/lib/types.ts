@@ -98,6 +98,18 @@ export interface ContentfulResponse {
 }
 
 ////////////////////
+//// NEXT JS ///////
+////////////////////
+
+export interface NextPageParams {
+  slug: string;
+}
+
+export interface NextPageSearchParams {
+  [key: string]: string | string[] | undefined;
+}
+
+////////////////////
 //// NEXT AUTH /////
 ////////////////////
 
