@@ -1,39 +1,7 @@
-"use client";
-
-import { Placeholder } from "semantic-ui-react";
+import LoadingScreen from "@/app/(components)/(other)/LoadingScreen";
 
 const Loading = () => {
-  return (
-    <Placeholder fluid>
-      <Placeholder.Header image>
-        <Placeholder.Line />
-        <Placeholder.Line />
-      </Placeholder.Header>
-      <Placeholder.Paragraph>
-        <Placeholder.Line length="full" />
-        <Placeholder.Line length="full" />
-        <Placeholder.Line length="full" />
-      </Placeholder.Paragraph>
-      <Placeholder.Header image>
-        <Placeholder.Line />
-        <Placeholder.Line />
-      </Placeholder.Header>
-      <Placeholder.Paragraph>
-        <Placeholder.Line length="full" />
-        <Placeholder.Line length="full" />
-        <Placeholder.Line length="full" />
-      </Placeholder.Paragraph>
-      <Placeholder.Header image>
-        <Placeholder.Line />
-        <Placeholder.Line />
-      </Placeholder.Header>
-      <Placeholder.Paragraph>
-        <Placeholder.Line length="full" />
-        <Placeholder.Line length="full" />
-        <Placeholder.Line length="full" />
-      </Placeholder.Paragraph>
-    </Placeholder>
-  );
+  return <LoadingScreen stack={3} />;
 };
 
 export default Loading;

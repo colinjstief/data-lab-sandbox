@@ -1,18 +1,28 @@
 import { redirect } from "next/navigation";
-
 import { Suspense } from "react";
 
-import DatasetTable from "@/app/components/datasets/DatasetTable";
-import LoadingScreen from "@/app/components/other/LoadingScreen";
+import { getAssetByType } from "@/lib/apis/contentful";
+import { NextPageParams, NextPageSearchParams } from "@/lib/types";
+import Header from "@/app/(components)/(layout)/Header";
+import DatasetTable from "@/app/(components)/datasets/DatasetTable";
+import LoadingScreen from "@/app/(components)/(other)/LoadingScreen";
 
 const DatasetsPage = async ({
+  params,
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: NextPageParams;
+  searchParams: NextPageSearchParams;
 }) => {
-  if (!searchParams?.pageSize || !searchParams?.pageNumber) {
+  if (!searchParams.pageSize || !searchParams.pageNumber) {
     redirect("/datasets?pageSize=10&pageNumber=1");
   }
+
+  const res = await getAssetByType({ type: "page" });
+  const thisPage = res.data.filter((item) => item.fields.value === "datasets");
+  const title = thisPage.length > 0 ? thisPage[0].fields.label : "Loading...";
+  const description =
+    thisPage.length > 0 ? thisPage[0].fields.description : "Loading...";
 
   const pageSize =
     typeof searchParams.pageSize === "string"
@@ -24,11 +34,14 @@ const DatasetsPage = async ({
       : 1;
 
   return (
-    <div key={Math.random()}>
-      <Suspense fallback={<LoadingScreen stack={1} />}>
-        <DatasetTable pageSize={pageSize} pageNumber={pageNumber} />
-      </Suspense>
-    </div>
+    <>
+      <Header title={title} description={description} />
+      <div key={Math.random()} className="p-5">
+        <Suspense fallback={<LoadingScreen stack={1} />}>
+          <DatasetTable pageSize={pageSize} pageNumber={pageNumber} />
+        </Suspense>
+      </div>
+    </>
   );
 };
 

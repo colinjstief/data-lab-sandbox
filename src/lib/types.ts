@@ -1,11 +1,15 @@
 import { z } from "zod";
 
+/////////////////
+//// CUSTOM /////
+/////////////////
+
 export const signinSchema = z.object({
   email: z
     .string()
-    .nonempty("Email required")
+    .min(1, "Email required")
     .email("Please enter a valid email"),
-  password: z.string().nonempty("Password required"),
+  password: z.string().min(1, "Password required"),
 });
 export type SignInData = z.infer<typeof signinSchema>;
 
@@ -77,26 +81,6 @@ export interface Location {
   zoom: number;
 }
 
-/////////////////////
-//// CONTENTFUL /////
-/////////////////////
-
-export interface ContentfulAsset {
-  fields: { [key: string]: any };
-  metadata: { [key: string]: any };
-  sys: { [key: string]: any };
-}
-
-export interface ContentfulResponse {
-  sys: {
-    type: string;
-  };
-  total: number;
-  skip: number;
-  limit: number;
-  items: ContentfulAsset[];
-}
-
 ////////////////////
 //// NEXT JS ///////
 ////////////////////
@@ -114,7 +98,7 @@ export interface NextPageSearchParams {
 ////////////////////
 
 import { DefaultSession, DefaultUser } from "next-auth";
-import { JWT, DefaultJWT } from "next-auth/jwt";
+import { DefaultJWT } from "next-auth/jwt";
 
 declare module "next-auth" {
   interface Session {
@@ -146,11 +130,81 @@ declare module "next-auth/jwt" {
   }
 }
 
-///////////////////////
-//// RW DATA API /////
-///////////////////////
+//////////////////////////////////
+//// Server action response //////
+//////////////////////////////////
+export interface ServerActionResponse {
+  status: "success" | "error";
+  message: string;
+}
 
-interface RWAPIGFWProfile {
+export class ServerActionError extends Error {
+  status: "error";
+  constructor(message: string) {
+    super(message);
+    this.status = "error";
+    this.name = "ServerActionError";
+  }
+}
+
+/////////////////
+//// Mapbox /////
+/////////////////
+
+/////////////////////
+//// Contentful /////
+/////////////////////
+
+export interface ContentfulAPIResponse<T> extends ServerActionResponse {
+  data?: T | T[];
+}
+
+export interface ContentfulAsset {
+  fields: { [key: string]: any };
+  metadata: { [key: string]: any };
+  sys: { [key: string]: any };
+}
+
+export interface ContentfulResponse {
+  sys: {
+    type: string;
+  };
+  total: number;
+  skip: number;
+  limit: number;
+  items: ContentfulAsset[];
+}
+
+///////////////////
+//// WRI API //////
+///////////////////
+
+export interface PaginationLinks {
+  self: string;
+  first: string;
+  last: string;
+  prev: string;
+  next: string;
+}
+
+export interface PaginationMeta {
+  size: number;
+  "total-items"?: number;
+  "total-pages"?: number;
+  total_items?: number;
+  total_pages?: number;
+}
+
+///////////////////////
+//// RW DATA API //////
+///////////////////////
+export interface RWAPIResponse<T> extends ServerActionResponse {
+  data?: T | T[];
+  links?: PaginationLinks;
+  meta?: PaginationMeta;
+}
+
+export interface RWAPIGFWProfile {
   sector: string;
   state: string;
   city: string;
@@ -165,24 +219,57 @@ interface RWAPIGFWProfile {
 }
 
 export interface RWAPIUser {
-  data: {
-    type: string;
-    id: string;
-    attributes: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      createdAt: string;
-      applicationData: {
-        gfw: RWAPIGFWProfile;
-      };
+  type: string;
+  id: string;
+  attributes: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    createdAt: string;
+    applicationData: {
+      gfw: RWAPIGFWProfile;
     };
+  };
+}
+
+export interface RWAPIArea {
+  type: string;
+  id: string;
+  attributes: {
+    name: string;
+    application: string;
+    geostore: string;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+    image: string;
+    datasets: [];
+    use: {};
+    env: string;
+    iso: {};
+    admin: {};
+    tags: [];
+    status: string;
+    public: boolean;
+    fireAlerts: boolean;
+    deforestationAlerts: boolean;
+    webhookUrl: string;
+    monthlySummary: boolean;
+    subscriptionId: string;
+    email: string;
+    language: string;
+    confirmed: boolean;
   };
 }
 
 ///////////////////////
 //// GFW DATA API /////
 ///////////////////////
+export interface GFWAPIResponse<T> extends ServerActionResponse {
+  data?: T | T[];
+  links?: PaginationLinks;
+  meta?: PaginationMeta;
+}
 
 export interface GFWAPIMetadata {
   created_on: string;
@@ -215,27 +302,6 @@ export interface GFWAPIDataset {
   versions: string[] | null;
 }
 
-export interface GFWAPILinks {
-  self: string;
-  first: string;
-  last: string;
-  prev: string;
-  next: string;
-}
-
-export interface GFWAPIMeta {
-  size: number;
-  total_items: number;
-  total_pages: number;
-}
-
-export interface GFWAPIDatasets {
-  data: GFWAPIDataset[];
-  status: string;
-  links: GFWAPILinks;
-  meta: GFWAPIMeta;
-}
-
 export interface GFWAPIKey {
   created_on: string;
   updated_on: string;
@@ -246,11 +312,6 @@ export interface GFWAPIKey {
   email: string;
   domains: string[];
   expires_on: string;
-}
-
-export interface GFWAPIKeys {
-  data: GFWAPIKey[];
-  status: string;
 }
 
 export interface GFWAPITableValue {
@@ -275,12 +336,16 @@ export interface GFWAPIField {
   no_data_value: number;
 }
 
+export interface GFWAPIQueryResponse {
+  [key: string]: any;
+}
+
 export const GFWAPICreateKeyFormSchema = z.object({
-  alias: z.string().nonempty("Name required"),
-  organization: z.string().nonempty("Organization required"),
+  alias: z.string().min(1, "Name required"),
+  organization: z.string().min(1, "Organization required"),
   email: z
     .string()
-    .nonempty("Email required")
+    .min(1, "Email required")
     .email("Please enter a valid email"),
   domains: z.string().optional().default("[]"),
   neverExpires: z.boolean().optional(),
@@ -293,16 +358,4 @@ export interface GFWAPICreateKey {
   email: string;
   domains?: string[] | [];
   neverExpires?: boolean;
-}
-
-export interface GFWAPINewKey {
-  data?: GFWAPIKey;
-  message?: string;
-  status: string;
-}
-
-export interface GFWAPIQueryResponse {
-  data?: { [key: string]: any }[];
-  message?: string;
-  status: string;
 }

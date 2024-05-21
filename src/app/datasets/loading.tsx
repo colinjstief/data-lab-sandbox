@@ -1,6 +1,4 @@
-"use client";
-
-import LoadingScreen from "@/app/components/other/LoadingScreen";
+import LoadingScreen from "@/app/(components)/(other)/LoadingScreen";
 
 const Loading = () => {
   return <LoadingScreen stack={3} />;

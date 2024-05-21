@@ -5,20 +5,9 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { GoogleTagManager } from "@next/third-parties/google";
-// import { Roboto } from "next/font/google";
 
-import AuthProvider from "@/app/context/AuthProvider";
-import Panel from "@/app/components/layout/Panel";
-import Header from "@/app/components/layout/Header";
-import { getAssetByType } from "@/lib/contentfulAPI";
-import { ContentfulResponse } from "@/lib/types";
-
-// const roboto = Roboto({
-//   weight: ["100", "300", "400", "500", "700", "900"],
-//   style: ["normal", "italic"],
-//   subsets: ["latin"],
-//   display: "swap",
-// });
+import AuthProvider from "@/app/(context)/AuthProvider";
+import Panel from "@/app/(components)/(layout)/Panel";
 
 export const metadata: Metadata = {
   title: "Data Lab Sandbox",
@@ -28,19 +17,20 @@ export const metadata: Metadata = {
   },
 };
 
-const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-  const pages: ContentfulResponse = await getAssetByType({ type: "page" });
-
+const RootLayout = async ({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { id: string };
+}) => {
   return (
-    <html lang="en" className="min-h-screen">
+    <html lang="en">
       <GoogleTagManager gtmId="GTM-PLGWCPCL" />
-      <body className="min-h-screen h-auto flex flex-1 flex-col sm:flex-row">
+      <body className="flex flex-col h-auto min-h-screen md:flex-row ">
         <AuthProvider>
-          <Panel pages={pages} />
-          <main className="flex flex-col flex-1 overflow-auto">
-            <Header />
-            <div className="flex-1 flex-auto p-5">{children}</div>
-          </main>
+          <Panel />
+          <main className="flex flex-col flex-1">{children}</main>
         </AuthProvider>
       </body>
     </html>

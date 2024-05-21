@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import archiver from "archiver";
 import axios from "axios";
 
-import { createGeotiffLink } from "@/lib/gfwDataAPI";
+import { createGeotiffLink } from "@/lib/apis/gfw";
 
 export async function POST(request: Request) {
   try {
