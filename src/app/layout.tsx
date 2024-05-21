@@ -17,13 +17,7 @@ export const metadata: Metadata = {
   },
 };
 
-const RootLayout = async ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { id: string };
-}) => {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <GoogleTagManager gtmId="GTM-PLGWCPCL" />

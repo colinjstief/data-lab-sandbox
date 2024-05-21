@@ -107,13 +107,13 @@ const SigninForm = () => {
 
   useEffect(() => {
     setCurrentUrl(window.location.origin);
-  }, []);
+  });
 
   useEffect(() => {
     if (rwToken) {
       tryToken({ rwToken });
     }
-  }, []);
+  });
 
   const asyncPresets =
     asyncStatuses[asyncStatus.status as keyof typeof asyncStatuses] ||

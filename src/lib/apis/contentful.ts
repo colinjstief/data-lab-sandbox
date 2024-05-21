@@ -4,7 +4,6 @@ import {
   ContentfulAsset,
   ContentfulResponse,
   ServerActionError,
-  ContentfulAPIResponse,
 } from "@/lib/types";
 
 const apiURL = process.env.CONTENTFUL_API_URL;

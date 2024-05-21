@@ -1,8 +1,11 @@
+import { Suspense } from "react";
+
 import { getAssetByType } from "@/lib/apis/contentful";
 
 import TopBar from "@/app/(components)/(layout)/TopBar";
 import Banner from "@/app/(components)/(layout)/Banner";
 import Navigation from "@/app/(components)/(layout)/Navigation";
+import LoadingScreen from "@/app/(components)/(other)/LoadingScreen";
 
 interface PanelProps {}
 
@@ -17,9 +20,11 @@ const Panel = async ({}: PanelProps) => {
       data-component="Panel"
       className="flex flex-col w-full md:w-48 bg-primary-blue z-999"
     >
-      <TopBar />
-      <Banner />
-      <Navigation sortedPages={sortedPages} />
+      <Suspense fallback={<LoadingScreen stack={1} />}>
+        <TopBar />
+        <Banner />
+        <Navigation sortedPages={sortedPages} />
+      </Suspense>
     </div>
   );
 };
