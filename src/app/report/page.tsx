@@ -1,6 +1,7 @@
 import { getAssetByType } from "@/lib/apis/contentful";
 import { NextPageParams, NextPageSearchParams } from "@/lib/types";
 import Header from "@/app/(components)/(layout)/Header";
+import Report from "@/app/(components)/report/Report";
 
 const ReportPage = async ({
   params,
@@ -17,9 +18,7 @@ const ReportPage = async ({
   return (
     <>
       <Header title={title} description={description} />
-      <div className="p-5">
-        <p>Report</p>
-      </div>
+      <Report />
     </>
   );
 };

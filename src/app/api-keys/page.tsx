@@ -1,6 +1,9 @@
+import { Suspense } from "react";
+
 import { getAssetByType } from "@/lib/apis/contentful";
 import { NextPageParams, NextPageSearchParams } from "@/lib/types";
 import Header from "@/app/(components)/(layout)/Header";
+import LoadingScreen from "../(components)/(other)/LoadingScreen";
 import KeyTable from "@/app/(components)/api-keys/KeyTable";
 import KeyForm from "@/app/(components)/api-keys/KeyForm";
 
@@ -21,9 +24,10 @@ const APIKeysPage = async ({
     <>
       <Header title={title} description={description} />
       <div className="flex flex-col gap-5 p-5">
-        \
         <KeyForm />
-        <KeyTable />
+        <Suspense fallback={<LoadingScreen stack={1} header={false} />}>
+          <KeyTable />
+        </Suspense>
       </div>
     </>
   );

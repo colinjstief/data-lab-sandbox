@@ -260,6 +260,23 @@ export interface RWAPIArea {
     language: string;
     confirmed: boolean;
   };
+  geostore: RWAPIGeostore;
+}
+
+export interface RWAPIGeostore {
+  type: string;
+  id: string;
+  attributes: {
+    geojson: GeoJSON.FeatureCollection;
+    hash: string;
+    provider: {};
+    areaHa: number;
+    bbox: [number, number, number, number];
+    lock: boolean;
+    info: {
+      use: {};
+    };
+  };
 }
 
 ///////////////////////

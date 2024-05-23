@@ -1,8 +1,10 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { getAssetByType } from "@/lib/apis/contentful";
 import { NextPageParams, NextPageSearchParams } from "@/lib/types";
 import Header from "@/app/(components)/(layout)/Header";
+import LoadingScreen from "../(components)/(other)/LoadingScreen";
 import DatasetTable from "@/app/(components)/datasets/DatasetTable";
 
 const DatasetsPage = async ({
@@ -34,9 +36,11 @@ const DatasetsPage = async ({
   return (
     <>
       <Header title={title} description={description} />
-      <div key={Math.random()} className="p-5">
-        <DatasetTable pageSize={pageSize} pageNumber={pageNumber} />
-      </div>
+      <Suspense fallback={<LoadingScreen stack={1} />}>
+        <div key={Math.random()} className="p-5 w-full overflow-auto">
+          <DatasetTable pageSize={pageSize} pageNumber={pageNumber} />
+        </div>
+      </Suspense>
     </>
   );
 };

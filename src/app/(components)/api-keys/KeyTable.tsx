@@ -1,14 +1,13 @@
 import { getKeys } from "@/lib/apis/gfw";
 
 import DeleteButton from "@/app/(components)/api-keys/DeleteButton";
-import { GFWAPIResponse, GFWAPIKey } from "@/lib/types";
 
 const Keys = async () => {
   const res = await getKeys();
   const keys = res.data;
 
   return (
-    <div className="w-full shadow-md border border-gray-300 rounded p-5">
+    <div className="w-full shadow-md border border-gray-300 rounded p-5 overflow-x-auto">
       <h2 className="text-xl font-bold mb-5">Your keys</h2>
       <table className="w-full">
         <thead className="">

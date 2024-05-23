@@ -1,10 +1,11 @@
 "use client";
 
-import { Map } from "react-map-gl";
+import { useRef } from "react";
+import { Map, MapRef } from "react-map-gl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { MB_KEY } from "@/lib/keys";
 import ReactSlider from "react-slider";
 
+import { MB_KEY } from "@/lib/keys";
 import DeckGLOverlay from "@/app/(components)/(map)/DeckGLOverlay";
 import { createDecodedLayer } from "@/lib/createDecodedLayer";
 
@@ -43,6 +44,8 @@ const RasterLayer = ({}: RasterLayerProps) => {
   const endYear = currentParams.get("endYear")
     ? Number(currentParams.get("endYear"))
     : 2023;
+
+  const mapRef = useRef<MapRef>(null);
 
   const updateQueryParams = ({
     params,
@@ -173,6 +176,7 @@ const RasterLayer = ({}: RasterLayerProps) => {
       </div>
       <div className="sm:col-span-8 h-[calc(100vh-360px)] sm:h-auto relative">
         <Map
+          ref={mapRef}
           initialViewState={{
             longitude: longitude,
             latitude: latitude,

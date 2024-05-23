@@ -26,7 +26,6 @@ const Navigation = ({ sortedPages }: NavigationProps) => {
 
   const hideMenu = () => {
     currentParams.delete("menu");
-
     const search = currentParams.toString();
     const query = search ? `?${search}` : "";
     router.push(`${pathname}${query}`);
