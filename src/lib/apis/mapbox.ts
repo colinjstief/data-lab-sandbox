@@ -1,11 +1,16 @@
 "use server";
 
-import { MB_KEY } from "@/lib/keys";
 import mapboxDatasets from "@mapbox/mapbox-sdk/services/datasets";
+
+import { MB_KEY } from "@/lib/keys";
+import { MapboxAPIResponse, ServerActionError } from "@/lib/types";
 
 const datasetsClient = mapboxDatasets({
   accessToken: MB_KEY,
 });
+
+const apiURL = process.env.MAPBOX_API_URL;
+const username = process.env.MAPBOX_USERNAME;
 
 export const getBoundaries = async ({
   type,
@@ -69,4 +74,36 @@ export const getFeature = async ({
   //console.log(res.body);
 
   return res.body;
+};
+
+export const getStaticImageURL = async ({
+  style_id = "ckltwsd8k1lwb17qaqbwtxeis",
+  geojson,
+  width = 100,
+  height = 100,
+}: {
+  style_id?:
+    | "ckltwsd8k1lwb17qaqbwtxeis"
+    | "light-v11"
+    | "dark-v11"
+    | "streets-v12"
+    | "satellite-v9"
+    | "satellite-streets-v12";
+  geojson: string;
+  width?: number;
+  height?: number;
+}): Promise<MapboxAPIResponse<string>> => {
+  try {
+    const url = `${apiURL}/styles/v1/${username}/${style_id}/static/geojson(${encodeURIComponent(
+      geojson
+    )})/auto/${width}x${height}?access_token=${MB_KEY}"`;
+
+    return {
+      status: "success",
+      message: "Static image generated",
+      data: url,
+    };
+  } catch (error) {
+    throw new ServerActionError("Unexpected server error.");
+  }
 };

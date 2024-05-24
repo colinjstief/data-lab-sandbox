@@ -8,7 +8,6 @@ import { MapViewState, WebMercatorViewport } from "@deck.gl/core";
 import { MB_KEY } from "@/lib/keys";
 import { RWAPIArea } from "@/lib/types";
 import DeckGLOverlay from "@/app/(components)/(map)/DeckGLOverlay";
-import { set } from "date-fns";
 
 interface AreasMapProps {
   setTheMap: (map: any) => void;

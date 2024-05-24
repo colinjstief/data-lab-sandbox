@@ -1,6 +1,7 @@
 "use client";
 
 import { RWAPIArea } from "@/lib/types";
+import MapImage from "@/app/(components)/aoi/MapImage";
 
 const AreasTable = ({
   userAreas = [],
@@ -24,7 +25,7 @@ const AreasTable = ({
             }`}
             onClick={() => setSelectedArea(area)}
           >
-            <div className="h-[100px] w-[100px] bg-slate-200"></div>
+            <MapImage userArea={area} />
             <div className="p-4 text-left">
               <h2>{`Area ID: ${area.id}`}</h2>
               <h2>{`Geostore ID: ${area.attributes.geostore}`}</h2>

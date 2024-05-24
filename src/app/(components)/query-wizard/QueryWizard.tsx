@@ -80,8 +80,8 @@ const QueryWizard = ({}: QueryWizardProps) => {
   }
 
   return (
-    <div className="flex items-start h-full p-5">
-      <Step.Group vertical size="mini" className="w-[220px]">
+    <div className="flex flex-col h-full p-5">
+      <Step.Group size="mini" className="h-[200px] sm:h-auto overflow-x-auto">
         <Step
           onClick={() => setVisibleTab("area")}
           active={visibleTab === "area"}
@@ -169,7 +169,7 @@ const QueryWizard = ({}: QueryWizardProps) => {
           </Step.Content>
         </Step>
       </Step.Group>
-      <div className="flex-1 h-full pl-3">
+      <div className="flex-1 h-full">
         <AreaSelect
           options={options}
           setOptions={setOptions}

@@ -53,7 +53,7 @@ const AreaSelect = ({
             className="mb-3"
           />
           <div className="flex flex-1">
-            <Segment className="w-[250px] border mb-0">
+            <Segment className="w-full sm:w-[250px] border mb-0">
               {areaType === "gadm" && (
                 <GADM
                   options={options}
@@ -73,7 +73,7 @@ const AreaSelect = ({
                 <UserAreaUpload setTextPanel={setTextPanel} />
               )} */}
             </Segment>
-            <Segment className="flex-1 border mt-0 ml-3">
+            <Segment className="flex-1 border mt-0 ml-3 hidden sm:block">
               <MapboxGLMap
                 visible={visible}
                 setTheMap={setTheMap}

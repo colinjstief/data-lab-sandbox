@@ -150,6 +150,9 @@ export class ServerActionError extends Error {
 /////////////////
 //// Mapbox /////
 /////////////////
+export interface MapboxAPIResponse<T> extends ServerActionResponse {
+  data?: T | T[];
+}
 
 /////////////////////
 //// Contentful /////

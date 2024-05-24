@@ -275,10 +275,10 @@ const ChatMap = ({}: ChatMapProps) => {
   // console.log("history", history);
 
   return (
-    <div className="flex w-full h-full gap-3">
-      <Segment
+    <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-2 h-[calc(100vh-50px)] md:h-[calc(100vh-90px)]">
+      <div
         data-component="chatBoxContainer"
-        className="flex-1 flex flex-col m-0 justify-between"
+        className="p-4 sm:row-span-2 overflow-auto flex flex-col m-0 justify-between"
       >
         <div
           data-component="chatLog"
@@ -342,8 +342,8 @@ const ChatMap = ({}: ChatMapProps) => {
             />
           </div>
         </div>
-      </Segment>
-      <Segment data-component="mapContainer" className="flex-1 m-0">
+      </div>
+      <div data-component="mapContainer" className="sm:row-span-2">
         <MapboxGLMap
           visible={true}
           setTheMap={setTheMap}
@@ -352,7 +352,7 @@ const ChatMap = ({}: ChatMapProps) => {
             zoom: 2,
           }}
         />
-      </Segment>
+      </div>
     </div>
   );
 };
