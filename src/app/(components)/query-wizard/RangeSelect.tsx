@@ -80,7 +80,7 @@ const RangeSelect = ({
       <Segment className="flex justify-end">
         <Button
           disabled={!options.dataset}
-          onClick={() => setVisibleTab("version")}
+          onClick={() => setVisibleTab("group")}
         >
           Next
         </Button>

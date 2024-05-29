@@ -20,7 +20,7 @@ const SigninPage = async ({
   return (
     <>
       <Header title={title} description={description} />
-      <div className="p-5 sm:mx-auto sm:max-w-lg">
+      <div className="p-5 sm:mx-auto md:max-w-lg">
         <SigninForm />
       </div>
     </>

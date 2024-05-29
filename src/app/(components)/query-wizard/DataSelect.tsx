@@ -75,7 +75,7 @@ const DataSelect = ({
         </div>
       </Segment>
       <Segment className="flex justify-end">
-        <Button onClick={() => setVisibleTab("segment")}>Next</Button>
+        <Button onClick={() => setVisibleTab("range")}>Next</Button>
       </Segment>
     </Segment.Group>
   );

@@ -43,7 +43,6 @@ const Results = ({
       });
       try {
         const res = await queryData({ options });
-        console.log("res =>", res);
         if (res.data) {
           setResults(JSON.stringify(res.data, null, 2));
           setMessage("");

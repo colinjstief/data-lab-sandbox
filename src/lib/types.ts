@@ -13,6 +13,30 @@ export const signinSchema = z.object({
 });
 export type SignInData = z.infer<typeof signinSchema>;
 
+const sizeInMB = (sizeInBytes: number, decimalsNum = 2) => {
+  const result = sizeInBytes / (1024 * 1024);
+  return +result.toFixed(decimalsNum);
+};
+
+export const PDFExportFormSchema = z.object({
+  title: z.string().min(1, "Title required"),
+  notes: z.string().optional(),
+  mapImage: z.string().min(1, "Map image required"),
+  logoImage: z
+    .custom<FileList>()
+    .optional()
+    .nullable()
+    .refine((files) => {
+      return Array.from(files ?? []).every((file) => sizeInMB(file.size) <= 4);
+    }, `The maximum image size is 4 MB`)
+    .refine((files) => {
+      return Array.from(files ?? []).every((file) =>
+        ["image/png", "image/jpg", "image/jpeg"].includes(file.type)
+      );
+    }, "File type is not supported"),
+});
+export type PDFExportForm = z.infer<typeof PDFExportFormSchema>;
+
 export interface AsyncStatus {
   status: string;
   message: string;
@@ -145,6 +169,13 @@ export class ServerActionError extends Error {
     this.status = "error";
     this.name = "ServerActionError";
   }
+}
+
+/////////////////////////////////////
+//// Data Lab Sandbox response //////
+/////////////////////////////////////
+export interface DataLabSandboxResponse<T> extends ServerActionResponse {
+  data?: T | T[];
 }
 
 /////////////////

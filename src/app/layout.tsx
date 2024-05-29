@@ -1,5 +1,6 @@
 import "semantic-ui-css/semantic.min.css";
 import "mapbox-gl/dist/mapbox-gl.css";
+import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "./globals.css";
 

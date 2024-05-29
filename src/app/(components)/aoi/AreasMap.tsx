@@ -3,7 +3,7 @@
 import { useRef, useCallback, useState, useEffect } from "react";
 import { Map, MapRef } from "react-map-gl";
 import { GeoJsonLayer } from "@deck.gl/layers";
-import { MapViewState, WebMercatorViewport } from "@deck.gl/core";
+import { MapViewState } from "@deck.gl/core";
 
 import { MB_KEY } from "@/lib/keys";
 import { RWAPIArea } from "@/lib/types";
