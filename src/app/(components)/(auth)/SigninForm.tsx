@@ -49,6 +49,7 @@ const SigninForm = () => {
       status: "loading",
       message: "Reticulating splines...",
     });
+
     const user = await signIn("credentials", {
       email: "",
       password: "",
@@ -76,6 +77,7 @@ const SigninForm = () => {
   };
 
   const onSubmit = async (data: SignInData) => {
+    console.log("c");
     setAsyncStatus({
       status: "loading",
       message: "Reticulating splines...",
@@ -110,7 +112,9 @@ const SigninForm = () => {
   });
 
   useEffect(() => {
+    console.log("a");
     if (rwToken) {
+      console.log("b");
       tryToken({ rwToken });
     }
   });
@@ -154,7 +158,7 @@ const SigninForm = () => {
           {!!asyncStatus.message && <p>{asyncStatus.message}</p>}
         </Message>
       )}
-      <Divider horizontal>Or</Divider>
+      {/* <Divider horizontal>Or</Divider>
       <div className="flex gap-2">
         <Button
           className="flex-1"
@@ -172,7 +176,7 @@ const SigninForm = () => {
         >
           <Icon name="facebook" /> Facebook
         </Button>
-      </div>
+      </div> */}
     </>
   );
 };
