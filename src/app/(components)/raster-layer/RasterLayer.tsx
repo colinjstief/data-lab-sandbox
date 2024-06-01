@@ -21,6 +21,11 @@ const tcdOptions = [
   { key: 75, value: 75, text: 75 },
 ];
 
+const colorwhatOptions = [
+  { key: 10, value: 10, text: 10 },
+  { key: 15, value: 15, text: 15 },
+];
+
 const RasterLayer = ({}: RasterLayerProps) => {
   const router = useRouter();
   const pathname = usePathname();
