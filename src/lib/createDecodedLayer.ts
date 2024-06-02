@@ -1,6 +1,18 @@
 import { TileLayer, TileLayerProps } from "@deck.gl/geo-layers";
 import { BitmapLayer } from "@deck.gl/layers";
 
+interface Uniform {
+  name: string;
+  type: string;
+  value: any;
+}
+
+interface DecodedLayerProps extends TileLayerProps {
+  zoom: number;
+  uniformVariables: Uniform[];
+  shaderInjections: {};
+}
+
 export const createDecodedLayer = (props: DecodedLayerProps): TileLayer => {
   return new TileLayer({
     ...props,
@@ -49,16 +61,4 @@ class ExtendedBitmapLayer extends BitmapLayer {
     opts.uniforms = { ...opts.uniforms, ...uniforms };
     super.draw(opts);
   }
-}
-
-interface Uniform {
-  name: string;
-  type: string;
-  value: any;
-}
-
-interface DecodedLayerProps extends TileLayerProps {
-  zoom: number;
-  uniformVariables: Uniform[];
-  shaderInjections: {};
 }

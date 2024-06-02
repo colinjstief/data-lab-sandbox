@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Map, MapRef } from "react-map-gl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ReactSlider from "react-slider";
@@ -19,11 +19,6 @@ const tcdOptions = [
   { key: 30, value: 30, text: 30 },
   { key: 50, value: 50, text: 50 },
   { key: 75, value: 75, text: 75 },
-];
-
-const colorwhatOptions = [
-  { key: 10, value: 10, text: 10 },
-  { key: 15, value: 15, text: 15 },
 ];
 
 const RasterLayer = ({}: RasterLayerProps) => {
@@ -68,25 +63,40 @@ const RasterLayer = ({}: RasterLayerProps) => {
     router.push(`${pathname}${query}`);
   };
 
+  const [byteColors, setByteColors] = useState({
+    red: 220,
+    green: 72,
+    blue: 33,
+  });
+
+  const [intensityFactor, setIntensityFactor] = useState(0.5);
+
   const umd_tree_cover_loss = createDecodedLayer({
     id: "umd_tree_cover_loss",
     data: `https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_${tcd}/{z}/{x}/{y}.png`,
     maxZoom: 12,
     minZoom: 0,
     zoom: zoom,
-    zoomOffset: 1,
+    zoomOffset: 2,
     uniformVariables: [
       { name: "zoom", type: "float", value: zoom },
       { name: "startYear", type: "float", value: startYear },
       { name: "endYear", type: "float", value: endYear },
+      { name: "byteRed", type: "float", value: byteColors.red },
+      { name: "byteGreen", type: "float", value: byteColors.green },
+      { name: "byteBlue", type: "float", value: byteColors.blue },
     ],
     shaderInjections: {
       "fs:#decl": `
         uniform float zoom;
         uniform float startYear;
         uniform float endYear;
+        uniform float byteRed;
+        uniform float byteGreen;
+        uniform float byteBlue;
     `,
       "fs:DECKGL_FILTER_COLOR": `
+
         float domainMin = 0.0;
         float domainMax = 255.0;
         float rangeMin = 0.0;
@@ -102,15 +112,18 @@ const RasterLayer = ({}: RasterLayerProps) => {
 
         if (year >= startYear && year <= endYear && year >= 2001.) {
             color.a = scaleIntensity / 255.;
-            color.r = 220.0 / 255.0;
-            color.g = (72.0 - zoom + 102.0 - 3.0 * scaleIntensity / zoom) / 255.0;
-            color.b = (33.0 - zoom + 153.0 - intensity / zoom) / 255.0;  
+            color.r = byteRed / 255.0;
+            color.g = (byteGreen - zoom + 102.0 - 3.0 * scaleIntensity / zoom) / 255.0;
+            color.b = (byteBlue - zoom + 153.0 - intensity / zoom) / 255.0;  
         } else {
             discard;
         }
     `,
     },
   });
+
+  // color.g = (72.0 - zoom + 102.0 - (3.0 * scaleIntensity) / zoom) / 255.0;
+  // color.b = (33.0 - zoom + 153.0 - intensity / zoom) / 255.0;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-10 h-[calc(100vh-50px)] sm:h-[calc(100vh-90px)]">
