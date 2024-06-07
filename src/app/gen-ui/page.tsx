@@ -1,6 +1,7 @@
 import { getAssetByType } from "@/lib/apis/contentful";
 import { NextPageParams, NextPageSearchParams } from "@/lib/types";
 import Header from "@/app/(components)/(layout)/Header";
+import LayerLegendItem from "@/app/(components)/(map)/LayerLegendItem";
 
 const GenUIPage = async ({
   params,
@@ -18,7 +19,9 @@ const GenUIPage = async ({
     <>
       <Header title={title} description={description} />
       <div className="p-5">
-        <p>Gen UI</p>
+        <div className="sm:max-w-sm">
+          <LayerLegendItem />
+        </div>
       </div>
     </>
   );
