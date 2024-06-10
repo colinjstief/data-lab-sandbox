@@ -11,7 +11,7 @@ const GenUIPage = async ({
   searchParams: NextPageSearchParams;
 }) => {
   const res = await getAssetByType({ type: "page" });
-  const thisPage = res.data.filter((item) => item.fields.value === "gen-ui");
+  const thisPage = res.data.filter((item) => item.fields.value === "warehouse");
   const title = thisPage.length > 0 ? thisPage[0].fields.label : "Loading...";
   const description =
     thisPage.length > 0 ? thisPage[0].fields.description : "Loading...";

@@ -111,7 +111,7 @@ const LayerLegendItem = ({}: LayerLegendItemProps) => {
                 <button
                   key={option.key}
                   className={`py-1 px-2 border-[1px] flex-1 ${
-                    10 === option.value
+                    3 === option.value
                       ? "border-slate-500 bg-slate-200"
                       : "border-slate-200"
                   }`}
@@ -123,7 +123,7 @@ const LayerLegendItem = ({}: LayerLegendItemProps) => {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center gap-2 border px-2 rounded-full h-[30px] w-full">
+      <div className="flex items-center justify-center gap-2 border px-2 rounded-full h-[35px] w-full">
         <Info
           style={{
             width: "15px",
