@@ -66,7 +66,7 @@ const AOI = () => {
       <div className="sm:row-span-2">
         <AreasMap
           setTheMap={setTheMap}
-          userAreas={userAreas}
+          userAreas={[]}
           selectedArea={selectedArea}
         />
       </div>
