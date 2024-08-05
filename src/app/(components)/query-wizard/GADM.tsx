@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import mapboxgl, { LngLatBounds } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import bbox from "@turf/bbox";
 import { BBox, Geometry } from "geojson";
 

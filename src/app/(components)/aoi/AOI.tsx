@@ -26,7 +26,8 @@ const AOI = () => {
         message: "Reticulating splines...",
       });
       const res = await getUserAreas({ withGeometry: true });
-      const areas = res.data as RWAPIArea[];
+      const areasAll = res.data as RWAPIArea[];
+      const areas = areasAll.filter((area) => !!area.geostore);
 
       if (areas) {
         setAsyncStatus({
@@ -66,7 +67,7 @@ const AOI = () => {
       <div className="sm:row-span-2">
         <AreasMap
           setTheMap={setTheMap}
-          userAreas={[]}
+          userAreas={userAreas}
           selectedArea={selectedArea}
         />
       </div>

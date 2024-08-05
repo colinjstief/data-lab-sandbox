@@ -10,8 +10,8 @@ const MapImage = ({ userArea }: { userArea: RWAPIArea }) => {
   const [imageURL, setImageURL] = useState<string>("");
 
   useEffect(() => {
-    const startGetUserAreas = async () => {
-      const geojson = userArea.geostore.attributes.geojson.features[0];
+    const startGetMapImage = async () => {
+      const geojson = userArea.geostore.attributes.geojson.features[0]; // This doesn't exist if it's a saved GADM/WDPA
       const geojsonString = JSON.stringify(geojson);
       const res = await getStaticImageURL({ geojson: geojsonString });
       const url = res.data as string;
@@ -20,10 +20,10 @@ const MapImage = ({ userArea }: { userArea: RWAPIArea }) => {
         setImageURL(url);
       }
     };
-    //startGetUserAreas();
+    //startGetMapImage();
   }, []);
 
-  console.log(imageURL);
+  //.log(imageURL);
 
   return <div className="h-[100px] w-[100px] bg-slate-200"></div>;
 };
