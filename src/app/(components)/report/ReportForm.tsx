@@ -44,10 +44,10 @@ const ReportForm = ({ theMap }: ReportFormProps) => {
     const cropContext = cropCanvas.getContext("2d");
 
     if (cropContext) {
-      // const newWidth = 512;
-      // const newHeight = 300;
-      const newWidth = 256;
-      const newHeight = 150;
+      const newWidth = 512;
+      const newHeight = 300;
+      // const newWidth = 256;
+      // const newHeight = 150;
 
       cropCanvas.width = newWidth;
       cropCanvas.height = newHeight;

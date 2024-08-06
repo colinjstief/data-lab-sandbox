@@ -1,7 +1,6 @@
 "use server";
 
 import { PDFDocument } from "pdf-lib";
-import sharp from "sharp";
 import { NextRequest, NextResponse } from "next/server";
 
 import { PDFExportFormSchema } from "@/lib/types";
@@ -36,8 +35,8 @@ export async function POST(request: NextRequest) {
       page.drawImage(mapPNG, {
         x: 50,
         y: height - 400,
-        width: 256,
-        height: 150,
+        width: 512,
+        height: 300,
       });
     }
 
