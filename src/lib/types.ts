@@ -21,7 +21,9 @@ const sizeInMB = (sizeInBytes: number, decimalsNum = 2) => {
 export const PDFExportFormSchema = z.object({
   title: z.string().min(1, "Title required"),
   notes: z.string().optional(),
-  mapImage: z.string().min(1, "Map image required"),
+  mapImage: z
+    .instanceof(Blob)
+    .refine((blob) => blob.size > 0, "Map image required"),
   logoImage: z
     .custom<FileList>()
     .optional()

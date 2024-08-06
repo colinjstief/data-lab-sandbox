@@ -1,6 +1,7 @@
 "use server";
 
 import { PDFDocument } from "pdf-lib";
+import sharp from "sharp";
 import { NextRequest, NextResponse } from "next/server";
 
 import { PDFExportFormSchema } from "@/lib/types";
@@ -28,7 +29,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (mapImage) {
-      const mapPNG = await pdfDoc.embedPng(mapImage);
+      const arrayBuffer = await mapImage.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const mapPNG = await pdfDoc.embedPng(buffer);
 
       page.drawImage(mapPNG, {
         x: 50,

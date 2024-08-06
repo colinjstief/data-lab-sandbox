@@ -35,7 +35,7 @@ const ReportForm = ({ theMap }: ReportFormProps) => {
 
   const formValues = watch();
 
-  const exportMap = () => {
+  const exportMap = async () => {
     if (!theMap) return;
 
     const mapCanvas = theMap.getCanvas();
@@ -43,31 +43,37 @@ const ReportForm = ({ theMap }: ReportFormProps) => {
     const cropCanvas = document.createElement("canvas");
     const cropContext = cropCanvas.getContext("2d");
 
-    // const newWidth = 512;
-    // const newHeight = 300;
-    const newWidth = 256;
-    const newHeight = 150;
+    if (cropContext) {
+      // const newWidth = 512;
+      // const newHeight = 300;
+      const newWidth = 256;
+      const newHeight = 150;
 
-    cropCanvas.width = newWidth;
-    cropCanvas.height = newHeight;
+      cropCanvas.width = newWidth;
+      cropCanvas.height = newHeight;
 
-    const startingX = (mapCanvas.width - newWidth) / 2;
-    const startingY = (mapCanvas.height - newHeight) / 2;
+      const startingX = (mapCanvas.width - newWidth) / 2;
+      const startingY = (mapCanvas.height - newHeight) / 2;
 
-    cropContext?.drawImage(
-      mapCanvas,
-      startingX,
-      startingY,
-      newWidth,
-      newHeight,
-      0,
-      0,
-      newWidth,
-      newHeight
-    );
+      cropContext?.drawImage(
+        mapCanvas,
+        startingX,
+        startingY,
+        newWidth,
+        newHeight,
+        0,
+        0,
+        newWidth,
+        newHeight
+      );
 
-    const mapImageUrl = cropCanvas.toDataURL("image/png");
-    setValue("mapImage", mapImageUrl);
+      cropCanvas.toBlob((blob) => {
+        setValue("mapImage", blob as Blob);
+      });
+      // const imageArrayBuffer = await imageBlob?.arrayBuffer();
+      // const mapImageUrl = cropCanvas.toDataURL("image/png");
+      // setValue("mapImage", mapImageUrl);
+    }
   };
 
   const asyncPresets =
@@ -197,7 +203,11 @@ const ReportForm = ({ theMap }: ReportFormProps) => {
             </div>
             <div className="w-full h-[80px] overflow-clip">
               <img
-                src={formValues.mapImage ? formValues.mapImage : map.src}
+                src={
+                  formValues.mapImage
+                    ? URL.createObjectURL(formValues.mapImage)
+                    : map.src
+                }
                 alt="Map"
               />
             </div>
